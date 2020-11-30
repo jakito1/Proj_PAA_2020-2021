@@ -41,4 +41,26 @@ class SocialNetworkTest {
         int result = socialNetwork.getUsers().size();
         assertEquals(expResult, result);
     }
+
+
+/**
+     * Test of constructModel method, of class SocialNetwork.
+     */
+    @Test
+    void constructModel_numEdges() {
+        DirectGraph<User, Relationship>  graph = socialNetwork.constructModel();
+        int expResult = 365;
+        int result = graph.numEdges();
+        assertEquals(expResult, result);
+    }
+    /**
+     * Test of constructModel method, of class SocialNetwork.
+     */
+    @Test
+    void constructModel_numVerices() {
+        DirectGraph<User, Relationship>  graph = socialNetwork.constructModel();
+        int expResult = 50;
+        int result = graph.numVertices();
+        assertEquals(expResult, result);
+    }
 }
