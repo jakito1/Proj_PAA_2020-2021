@@ -124,3 +124,124 @@ public class DirectGraph<V, E> implements Digraph<V, E> {
         return false;
 
     }
+
+
+
+    /**
+     * Insere uma nova aresta entre dois vertices
+     *
+     * @param outbound vertice outbound
+     * @param inbound vertice inbound
+     * @param edgeElement o elemento da nova aresta
+     * @return aresta criada entre os dois vertices
+     * @throws InvalidVertexException se um ou ambos os vertices forem invalidos
+     * @throws InvalidEdgeException se ja existir uma aresta igual aquela que
+     * queremos inserir
+     */
+    @Override
+    public Edge<E, V> insertEdge(Vertex<V> outbound, Vertex<V> inbound, E edgeElement) throws InvalidVertexException, InvalidEdgeException {
+        MyVertex v1 = checkVertice(inbound);
+        MyVertex v2 = checkVertice(outbound);
+
+        MyEdge aresta = new MyEdge(edgeElement, inbound, outbound);
+
+        v1.addEdge(edgeElement, aresta);
+        v2.addEdge(edgeElement, aresta);
+
+        // this.vertices.replace(v1.element(), v1);
+        // this.vertices.replace(v2.element(), v2);
+        return aresta;
+    }
+
+    /**
+     * Insere uma nova aresta entre dois vertices
+     *
+     * @param outboundElement elemento guardado no vertice outbound
+     * @param inboundElement elemento guardado no vertice inbound
+     * @param edgeElement elemento a guardar na nova aresta
+     * @return aresta criada entre os dois vertices
+     * @throws InvalidVertexException se um ou ambos os vertices nao existirem
+     * no grafo
+     * @throws InvalidEdgeException se ja existir uma aresta igual aquele que
+     * queremos inserir
+     */
+    @Override
+    public Edge<E, V> insertEdge(V outboundElement, V inboundElement, E edgeElement) throws InvalidVertexException, InvalidEdgeException {
+        Vertex<V> a = vertices.get(outboundElement);
+        Vertex<V> b = vertices.get(inboundElement);
+
+        return insertEdge(a, b, edgeElement);
+    }
+
+    /**
+     * Retorna o numero de vertices existentes
+     *
+     * @return numero de vertices existentes
+     */
+    @Override
+    public int numVertices() {
+        return vertices.size();
+    }
+
+    /**
+     * Retorna o numero de arestas existentes
+     *
+     * @return numero de arestas existentes
+     */
+    @Override
+    public int numEdges() {
+
+        return edges().size();
+    }
+
+    /**
+     * Retorna uma colecao dos vertices existentes
+     *
+     * @return lista de vertices existentes
+     */
+    @Override
+    public Collection<Vertex<V>> vertices() {
+        return vertices.values();
+    }
+
+    /**
+     * Retorna uma colecao das arestas existentes
+     *
+     * @return lista de arestas existentes
+     */
+    @Override
+    public Collection<Edge<E, V>> edges() {
+        ArrayList<Edge<E, V>> list = new ArrayList<>();
+
+        for (Vertex<V> v : this.vertices.values()) {
+            list.addAll(this.incidentEdges(v));
+
+        }
+
+        return list;
+    }
+
+    /**
+     * Retorna o vertice oposto a outro vertice, sendo que estes estao ligados
+     * por uma aresta
+     *
+     * @param v vertice que conhecemos
+     * @param e aresta que liga o vertice que conhecemos a outro
+     * @return o vertice oposto ao vertice que conhecemos
+     * @throws InvalidVertexException se o vertice que conhecemos for invalido
+     * @throws InvalidEdgeException se a aresta nao existir
+     */
+    @Override
+    public Vertex<V> opposite(Vertex<V> v, Edge<E, V> e) throws InvalidVertexException, InvalidEdgeException {
+        checkVertice(v);
+        MyEdge edge = checkEdge(e);
+        if (edge.inbound == v) {
+            return edge.outbound;
+        } else if (edge.outbound == v) {
+            return edge.inbound;
+        } else {
+            throw new InvalidVertexException("INVALID VERTEX");
+        }
+
+    }
+
