@@ -52,5 +52,16 @@ public class SocialNetwork {
         return this.graph;
     }
 
+    public DirectGraph<User, Relationship> getGraph(){
+        return this.graph;
+    }
+
+    public HashMap<Integer, User> getUsers(){
+        return this.users;
+    }
+
+    public HashMap<String, ArrayList<String>> getRelationShips(){
+        return this.relationships;
+    }
 
 }
