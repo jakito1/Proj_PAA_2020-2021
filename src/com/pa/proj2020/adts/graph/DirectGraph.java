@@ -368,3 +368,133 @@ public class DirectGraph<V, E> implements Digraph<V, E> {
         }
         return (MyVertex) vertice;
     }
+    /**
+     * Verifica se uma aresta é valida
+     *
+     * @param edge aresta que pretendemos validar
+     * @return a aresta validada ou caso seja null ou nao exista
+     */
+    private MyEdge checkEdge(Edge<E, V> edge) {
+        if (edge == null) {
+            throw new InvalidEdgeException("NULL EDGE");
+        }
+
+        MyVertex v1 = checkVertice(edge.vertices()[0]);
+        MyVertex v2 = checkVertice(edge.vertices()[1]);
+
+        if (!v1.getEdges().containsValue(edge) && !v2.getEdges().containsValue(edge)) {
+            throw new InvalidEdgeException("EDGE DOESNT EXIST");
+        }
+
+        return (MyEdge) edge;
+    }
+
+    /**
+     * Verifica se a lista de vertices tem um determinado vertice
+     *
+     * @param vElement vertice que pretendemos procurar na lista de vertices
+     * @return true se o vertice estiver na lista ou false se nao estiver
+     */
+    public boolean containVertice(V vElement) {
+        return this.vertices.containsKey(vElement);
+    }
+
+
+    /**
+     * Classe auxiliar com as informacoes relativas a uma aresta, nomeadamente o
+     * vertice inbound, o vertice outbound e o elemento contido na aresta
+     */
+    private class MyEdge implements Edge<E, V> {
+
+        private E elemento;
+        private final Vertex<V> inbound;
+        private final Vertex<V> outbound;
+
+        public MyEdge(E elemento, Vertex<V> vertice1, Vertex<V> vertice2) {
+            this.elemento = elemento;
+            this.inbound = vertice1;
+            this.outbound = vertice2;
+        }
+
+        @Override
+        public E element() {
+            if (elemento == null) {
+                throw new InvalidEdgeException("NULL EDGE");
+            }
+            return elemento;
+        }
+
+        @Override
+        public Vertex<V>[] vertices() {
+            Vertex[] vertices = new Vertex[2];
+            vertices[1] = inbound;
+            vertices[0] = outbound;
+            return vertices;
+        }
+
+        @Override
+        public String toString() {
+            return elemento.toString();
+        }
+
+    }
+
+    /**
+     * Classe auxiliar com as informacoes relativas a um vertice, nomeadamente,
+     * o elemento que cada vertice guarda
+     */
+    private class MyVertex implements Vertex<V> {
+
+        private V elemento;
+        private final HashMap<E, Edge<E, V>> edges;
+
+        public MyVertex(V elemento) {
+            this.elemento = elemento;
+            this.edges = new HashMap<E, Edge<E, V>>();
+        }
+
+        public HashMap<E, Edge<E, V>> getEdges() {
+
+            return edges;
+        }
+
+        public Edge<E, V> addEdge(E element, Edge<E, V> edge) {
+            return edges.put(element, edge);
+        }
+
+        public void removeEdge(Edge<E, V> e) {
+
+            edges.remove(e.element());
+
+        }
+
+        public E replaceEdge(E newElement, Edge<E, V> e) {
+
+            Edge<E, V> eRemoved = edges.remove(e.element());
+            E elem = null;
+            if (eRemoved != null) {
+                elem = eRemoved.element();
+                ((MyEdge) eRemoved).elemento = newElement;
+                edges.put(newElement, eRemoved);
+            }
+
+            return elem;
+
+        }
+
+        @Override
+        public V element() {
+            if (elemento == null) {
+                throw new InvalidVertexException("NULL VERTEX");
+            }
+            return elemento;
+        }
+
+        @Override
+        public String toString() {
+            return elemento.toString();
+        }
+
+    }
+
+}
