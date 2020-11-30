@@ -1,16 +1,29 @@
 package com.pa.proj2020.adts.graph;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
+
 import java.util.ArrayList;
 import java.util.Collection;
-import static org.junit.jupiter.api.Assertions.*;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
 
 class DirectGraphTest {
 
-    private DirectGraph<String, Integer> graph;
-    private ArrayList<String> vertices;
-    private Vertex<String> v1, v2, v3, v4, v5;
-    private Edge<Integer, String> e1, e2, e3, e4, e5, e6, e7;
+    private final DirectGraph<String, Integer> graph;
+    private final ArrayList<String> vertices;
+    private final Vertex<String> v1;
+    private final Vertex<String> v2;
+    private final Vertex<String> v3;
+    private final Vertex<String> v4;
+    private final Vertex<String> v5;
+    private final Edge<Integer, String> e1;
+    private final Edge<Integer, String> e2;
+    private final Edge<Integer, String> e3;
+    private final Edge<Integer, String> e4;
+    private final Edge<Integer, String> e5;
+    private final Edge<Integer, String> e6;
+    private final Edge<Integer, String> e7;
 
     public DirectGraphTest() {
         graph = new DirectGraph<>();
@@ -57,7 +70,6 @@ class DirectGraphTest {
                 edge1 = edge;
             }
         }
-        ;
         Collection<Edge<Integer, String>> result = graph.incidentEdges(v1);
         Collection<Edge<Integer, String>> expResult = result;
         expResult.clear();
@@ -121,5 +133,133 @@ class DirectGraphTest {
         assertEquals(expResult, result);
 
     }
+
+    /**
+     * Test of insertEdge method, of class DirectGraph.
+     */
+    @Test
+    public void testInsertEdge_3args_1() {
+        Vertex<String> inbound = null;
+        Vertex<String> outbound = null;
+
+        for (Edge<Integer, String> edge : graph.edges()) {
+            if (edge.element() == 1 && edge.vertices()[0].element().equalsIgnoreCase("Vertice1")
+                    && edge.vertices()[1].element().equalsIgnoreCase("Vertice2")) {
+                outbound = edge.vertices()[0];
+                inbound = edge.vertices()[1];
+            }
+
+        }
+
+        graph.insertEdge(outbound, inbound, 10);
+    }
+
+    /**
+     * Test of insertEdge method, of class DirectGraph.
+     */
+    @Test
+    public void testInsertEdge_3args_2() {
+
+        DirectGraph<String, Integer> digraph = graph;
+        Vertex<String> inbound = null;
+        Vertex<String> outbound = null;
+
+        for (Vertex<String> v : digraph.vertices()) {
+            if (v.element().equalsIgnoreCase("Vertice1")) {
+                inbound = v;
+            }
+            if (v.element().equalsIgnoreCase("Vertice2")) {
+                outbound = v;
+            }
+        }
+
+        Edge<Integer, String> expResult = null;
+        Edge<Integer, String> result = digraph.insertEdge(outbound, inbound, 25);
+        assertNotEquals(expResult, result);
+
+    }
+
+    /**
+     * Test of numVertices method, of class DirectGraph.
+     */
+    @Test
+    public void testNumVertices() {
+        int expResult = 5;
+        int result = graph.numVertices();
+        assertEquals(expResult, result);
+
+    }
+
+    /**
+     * Test of numEdges method, of class DirectGraph.
+     */
+    @Test
+    public void testNumEdges() {
+        int expResult = 7;
+        int result = graph.numEdges();
+        assertEquals(expResult, result);
+    }
+
+    /**
+     * Test of opposite method, of class DirectGraph.
+     */
+    @Test
+    public void testOpposite() {
+        Vertex expResult = v1;
+        Vertex result = graph.opposite(v2, e1);
+        assertEquals(expResult, result);
+    }
+
+    /**
+     * Test of removeVertex method, of class DirectGraph.
+     */
+    @Test
+    public void testRemoveVertex() {
+        Object expResult = "Vertice1";
+        Object result = graph.removeVertex(v1);
+        assertEquals(expResult, result);
+    }
+
+    /**
+     * Test of removeEdge method, of class DirectGraph.
+     */
+    @Test
+    public void testRemoveEdge() {
+        Object expResult = e1.element();
+        Object result = graph.removeEdge(e1);
+        assertEquals(expResult, result);
+    }
+
+    /**
+     * Test of replace method, of class DirectGraph.
+     */
+    @Test
+    public void testReplace_Vertex_GenericType() {
+        Object expResult = v1.element();
+        Object result = graph.replace(v1, "Vertice6");
+        assertEquals(expResult, result);
+    }
+
+    /**
+     * Test of replace method, of class DirectGraph.
+     */
+    @Test
+    public void testReplace_Edge_GenericType() {
+        Object expResult = e1.element();
+        Object result = graph.replace(e1, 8);
+        assertEquals(expResult, result);
+    }
+
+    /**
+     * Test of containVertice method, of class DirectGraph.
+     */
+    @Test
+    public void testContainVertice() {
+        Object vElement = null;
+        boolean expResult = true;
+        boolean result = graph.containVertice(v1.element());
+        assertEquals(expResult, result);
+    }
+
 
 }
