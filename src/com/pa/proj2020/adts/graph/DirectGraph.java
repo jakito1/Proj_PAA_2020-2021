@@ -245,3 +245,126 @@ public class DirectGraph<V, E> implements Digraph<V, E> {
 
     }
 
+ /**
+     * Adiciona a lista de vertices um determinado vertice com um elemento
+     *
+     * @param vElement elemento do vertice que queremos criar
+     * @return o vertice criado e adicionado a lista de vertices
+     * @throws InvalidVertexException se o vertice ja existir
+     */
+    @Override
+    public Vertex<V> insertVertex(V vElement) throws InvalidVertexException {
+        if (vertices.containsKey(vElement)) {
+            //return vertices.get(vElement);
+            throw new InvalidVertexException("EXISTING VERTEX");
+        }
+        MyVertex vertice = new MyVertex(vElement);
+        vertices.put(vElement, vertice);
+        return vertice;
+    }
+
+    /**
+     * Remove um vertice da lista de vertices existentes
+     *
+     * @param v vertice que queremos remover
+     * @return o elemento do vertice removido
+     * @throws InvalidVertexException se o vertice for invalido ou nao existir
+     */
+    @Override
+    public V removeVertex(Vertex<V> v) throws InvalidVertexException {
+        MyVertex vertice = checkVertice(v);
+        //HashSet<Edge<E, V>> list = new HashSet<>();
+        HashSet<Vertex<V>> listVerticesOpostos = new HashSet<>();
+
+        for (Edge<E, V> edge : vertice.getEdges().values()) {
+            listVerticesOpostos.add(this.opposite(v, edge));
+        }
+
+        for (Vertex<V> vertex : listVerticesOpostos) {
+            MyVertex v1 = checkVertice(vertex);
+
+            for (Edge<E, V> e : vertice.getEdges().values()) {
+                v1.removeEdge(e);
+
+            }
+        }
+
+        vertices.remove(v.element());
+        return v.element();
+    }
+
+    /**
+     * Remove uma aresta da lista de arestas existentes
+     *
+     * @param e aresta que queremos remover
+     * @return o elemento da aresta removida
+     * @throws InvalidEdgeException se a aresta nao existir
+     */
+    @Override
+    public E removeEdge(Edge<E, V> e) throws InvalidEdgeException {
+        checkEdge(e);
+
+        for (Vertex<V> vertex : vertices.values()) {
+            MyVertex v = (MyVertex) vertex;
+            v.removeEdge(e);
+        }
+
+        return e.element();
+    }
+
+    /**
+     * Substitui o elemento associado a um determinado vertice
+     *
+     * @param v vertice que queremos substituir o elemento
+     * @param newElement novo elemento que queremos atribuir a um vertice
+     * @return o novo elemento associado ao vertice
+     * @throws InvalidVertexException se o vertice for invalido ou nao existir
+     */
+    @Override
+    public V replace(Vertex<V> v, V newElement) throws InvalidVertexException {
+        Vertex<V> vRemoved = vertices.remove(v.element());
+        V elem = vRemoved.element();
+        ((MyVertex) vRemoved).elemento = newElement;
+        vertices.put(newElement, vRemoved);
+        return elem;
+
+    }
+
+    /**
+     * Substitui o elemento associado a uma determinada aresta
+     *
+     * @param e aresta que queremos substituir o elemento
+     * @param newElement novo elemento que queremos atribuir a uma aresta
+     * @return o novo elemento associado a aresta
+     * @throws InvalidEdgeException se a aresta nao existir ou for invalida
+     */
+    @Override
+    public E replace(Edge<E, V> e, E newElement) throws InvalidEdgeException {
+        MyVertex v1 = checkVertice(e.vertices()[0]);
+        MyVertex v2 = checkVertice(e.vertices()[1]);
+
+        E elem = v1.replaceEdge(newElement, e);
+        v2.replaceEdge(newElement, e);
+
+        replace(v1, v1.element());
+        replace(v2, v2.element());
+
+        return elem;
+
+    }
+
+    /**
+     * Verifica se um vertice é valido
+     *
+     * @param vertice vertice que pretendemos validar
+     * @return o vertice validado ou caso este seja null ou nao exista
+     */
+    private MyVertex checkVertice(Vertex<V> vertice) {
+        if (vertice == null) {
+            throw new InvalidVertexException("NULL VERTEX");
+        }
+        if (!this.vertices.containsValue(vertice)) {
+            throw new InvalidVertexException("VERTEX DOESNT EXIST");
+        }
+        return (MyVertex) vertice;
+    }
