@@ -128,9 +128,8 @@ class DirectGraphTest {
             }
         }
 
-        boolean expResult = true;
         boolean result = graph.areAdjacent(outbound, inbound);
-        assertEquals(expResult, result);
+        assertEquals(true, result);
 
     }
 
@@ -205,9 +204,8 @@ class DirectGraphTest {
      */
     @Test
     public void testOpposite() {
-        Vertex expResult = v1;
         Vertex result = graph.opposite(v2, e1);
-        assertEquals(expResult, result);
+        assertEquals(v1, result);
     }
 
     /**
@@ -255,11 +253,8 @@ class DirectGraphTest {
      */
     @Test
     public void testContainVertice() {
-        Object vElement = null;
-        boolean expResult = true;
         boolean result = graph.containVertice(v1.element());
-        assertEquals(expResult, result);
+        assertEquals(true, result);
     }
-
 
 }
