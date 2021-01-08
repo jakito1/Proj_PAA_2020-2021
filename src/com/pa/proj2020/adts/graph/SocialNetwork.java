@@ -174,78 +174,7 @@ public class SocialNetwork {
                 this.insertEdge(user, userVertex.element());
             }
         }
-
-
-//        if(graph.containVertice(this.users.get(idUser))){
-//            for(User userInVertices : graph.getVertices().keySet()){
-//                if(userInVertices.getID() == idUser){
-//                    userInVertices.setType(Type.ADICIONADO); //user adicionado
-//                }
-//            }
-//        } else {
-//            graph.insertVertex(this.users.get(idUser));
-
-
-//            HashSet<User> vertices = new HashSet<>(graph.getVertices().keySet());
-//            for(User user : vertices){
-//                boolean exists = false;
-//                for(Interest interest : interests.values()){
-//
-//                    if(interest.getIdsOfUsers().contains(String.valueOf(idUser)) &&
-//                            interest.getIdsOfUsers().contains(String.valueOf(user.getID())) && user.getID() != idUser &&
-//                    user.getType().equals(Type.ADICIONADO)){
-//
-//
-//                        for(Edge<Relationship, User> edge : graph.incidentEdges(graph.getVertices().get(user))){
-//                            System.out.println("aaaaaaaaaaaaaaaaaaaaaaaaaaaa");
-//                            System.out.println(user);
-//                            System.out.println(edge.vertices()[1].element().getID());
-//                            System.out.println(idUser);
-//                            System.out.println(edge.element().getClass());
-//                            System.out.println("aaaaaaaaaaaaaaaaaaaaaaaaaaaa");
-//                            if(edge.vertices()[1].element().getID() == user.getID() && (edge.element() instanceof RelationshipIndirect)){
-//                                ((RelationshipIndirect)edge.element()).addInterest(interest);
-//                                exists = true;
-//                            }
-//                        }
-//                        if(!exists){
-//                            graph.insertEdge(user, this.users.get(idUser), new RelationshipIndirect(interest));
-//                        }
-//                    }
-//                }
-//
-//
-//            }
-
-
     }
-
-
-//        for(String id : relationships.get(idUser)){
-//
-//            if(!graph.containVertice(this.users.get(Integer.parseInt(id)))){
-//                this.users.get(Integer.parseInt(id)).setType(Type.INCLUIDO);
-//                graph.insertVertex(this.users.get(Integer.parseInt(id)));
-//            }
-//
-//            ArrayList<Interest> tempInterests = new ArrayList<>();
-//
-//            for(Integer idInterest : interests.keySet()){
-//                for(String interest : interests.get(idInterest).getIdsOfUsers()){
-//                    if(interest.equals(String.valueOf(idUser)) && interest.equals(id)){
-//                        tempInterests.add(this.interests.get(interest));
-//                    }
-//                }
-//            }
-//
-//            if(tempInterests.size() !=0){
-//                graph.insertEdge(users.get(idUser), users.get(Integer.parseInt(id)), new RelationshipShared(tempInterests));
-//            } else {
-//                graph.insertEdge(users.get(idUser), users.get(Integer.parseInt(id)), new RelationshipSimple());
-//            }
-//        }
-
-//    }
 
 
     public Logging getLog() {
