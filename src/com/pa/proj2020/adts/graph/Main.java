@@ -25,9 +25,10 @@ public class Main extends Application {
 
         socialNetwork.constructModelIteractive(1);
 
-//        socialNetwork.constructModelIteractive(9);
-//        socialNetwork.constructModelIteractive(11);
-//        socialNetwork.constructModelIteractive(14);
+        socialNetwork.constructModelIteractive(9);
+        socialNetwork.constructModelIteractive(11);
+        socialNetwork.constructModelIteractive(14);
+        System.out.println(socialNetwork.toString());
 
         Graph<User, Relationship> g = socialNetwork.getGraph();
 

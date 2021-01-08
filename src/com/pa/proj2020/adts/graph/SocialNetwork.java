@@ -177,6 +177,29 @@ public class SocialNetwork {
     }
 
 
+    public int minPath(Vertex<User> origin, Vertex<User> end, ArrayList<User> path){
+        return this.graph.minCostPath(origin, end, path);
+    }
+
+    @Override
+    public String toString() {
+        ArrayList<User> path = new ArrayList<>();
+        Vertex<User> user1 = null;
+        Vertex<User> user2 = null;
+        for(Vertex<User> user : this.graph.vertices()){
+            if(user.element().getID() == 1){
+                user1 = user;
+            } else if(user.element().getID() == 11){
+                user2 = user;
+            }
+        }
+
+        minPath(user1, user2, path);
+        return "SocialNetwork{" +
+                "minPath=" + path.toString() +
+                '}';
+    }
+
     public Logging getLog() {
         return log;
     }
