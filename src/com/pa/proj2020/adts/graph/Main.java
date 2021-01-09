@@ -30,6 +30,13 @@ public class Main extends Application {
         socialNetwork.constructModelIteractive(14);
         System.out.println(socialNetwork.toString());
 
+        System.out.println("---------------------------------------------------------------------------------");
+        System.out.println(socialNetwork.addedUsersStats());
+        System.out.println(socialNetwork.includedUsersStats());
+        System.out.println(socialNetwork.interestMostSharedStats());
+        System.out.println(socialNetwork.userWithMoreDirectRelationshipsStats());
+        System.out.println("---------------------------------------------------------------------------------");
+
         Graph<User, Relationship> g = socialNetwork.getGraph();
 
         //Graph<User, Relationship> g = socialNetwork.constructModelTotal(); //Build Graph automatico

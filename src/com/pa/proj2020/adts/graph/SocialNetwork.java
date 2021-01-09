@@ -11,6 +11,7 @@ public class SocialNetwork {
     private final HashMap<Integer, ArrayList<String>> relationships;
     private final HashMap<Integer, Interest> interests;
     private final Logging log = Logging.getInstance();
+    private Statistics statistics;
 
     /**
      * Cria um objeto SocialNetwork
@@ -21,6 +22,7 @@ public class SocialNetwork {
         users = new HashMap<>();
         relationships = new HashMap<>();
         interests = new HashMap<>();
+        statistics = new Statistics();
     }
 
     /**
@@ -165,6 +167,7 @@ public class SocialNetwork {
             if (!graph.containVertice(userRelationship)) {
                 userRelationship.setType(Type.INCLUIDO);
                 this.graph.insertVertex(userRelationship);
+                this.statistics.addUsersIncluded(user, userRelationship);
                 userRelationship.addListInterest(this.interestsOfUser(userRelationship.getID()));
             }
         }
@@ -198,6 +201,19 @@ public class SocialNetwork {
         return "SocialNetwork{" +
                 "minPath=" + path.toString() +
                 '}';
+    }
+
+    public String addedUsersStats(){
+        return this.statistics.addedUsersStats(this.graph);
+    }
+    public String includedUsersStats(){
+        return this.statistics.includedUsersStats(this.graph);
+    }
+    public String userWithMoreDirectRelationshipsStats(){
+        return this.statistics.userWithMoreDirectRelationshipsStats(this.graph);
+    }
+    public String interestMostSharedStats(){
+        return this.statistics.interestMostSharedStats(this.graph);
     }
 
     public Logging getLog() {
