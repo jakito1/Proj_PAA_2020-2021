@@ -8,7 +8,7 @@ import java.util.stream.Collectors;
 
 public class SocialNetwork implements Originator {
 
-    private final DirectGraph<User, Relationship> graph;
+    private DirectGraph<User, Relationship> graph;
     private final Logging log = Logging.getInstance();
     private final Statistics statistics;
     private Map<Integer, User> users;
@@ -242,6 +242,7 @@ public class SocialNetwork implements Originator {
         users = (Map<Integer, User>) tempList.get(0);
         relationships = (Map<Integer, ArrayList<String>>) tempList.get(2);
         interests = (Map<Integer, Interest>) tempList.get(3);
+        graph = constructModelTotal();
     }
 
     static class MyMemento implements Memento {
