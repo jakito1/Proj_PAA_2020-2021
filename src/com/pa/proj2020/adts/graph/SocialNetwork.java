@@ -129,7 +129,7 @@ public class SocialNetwork implements Originator {
     }
 
 
-    public void constructModelIteractive(int idUser) {
+    public void constructModelIterative(int idUser) {
 
         if (relationships.isEmpty() || users.isEmpty()) {
             this.initializeData();

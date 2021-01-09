@@ -23,11 +23,11 @@ public class Main extends Application {
         SocialNetwork socialNetwork = new SocialNetwork();
         socialNetwork.initializeData();
 
-        socialNetwork.constructModelIteractive(1);
+        socialNetwork.constructModelIterative(1);
 
-        socialNetwork.constructModelIteractive(9);
-        socialNetwork.constructModelIteractive(11);
-        socialNetwork.constructModelIteractive(14);
+        socialNetwork.constructModelIterative(9);
+        socialNetwork.constructModelIterative(11);
+        socialNetwork.constructModelIterative(14);
         System.out.println(socialNetwork.toString());
 
         System.out.println("---------------------------------------------------------------------------------");
