@@ -92,13 +92,13 @@ public class SmartGraphPanel<V, E> extends Pane {
     private final double repulsionForce;
     private final double attractionForce;
     private final double attractionScale;
+    private final AnimationTimer timer;
     private boolean initialized = false;
     /*
     INTERACTION WITH VERTICES AND EDGES
      */
     private Consumer<SmartGraphVertex<V>> vertexClickConsumer = null;
     private Consumer<SmartGraphEdge<E, V>> edgeClickConsumer = null;
-    private final AnimationTimer timer;
 
     /**
      * Constructs a visualization of the graph referenced by
@@ -653,7 +653,7 @@ public class SmartGraphPanel<V, E> extends Pane {
     }
 
     private void removeEdge(SmartGraphEdgeBase e) {
-        getChildren().remove((Node) e);
+        getChildren().remove(e);
 
         SmartArrow attachedArrow = e.getAttachedArrow();
         if (attachedArrow != null) {

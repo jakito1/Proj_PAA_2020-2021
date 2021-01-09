@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 public class Statistics {
-    private HashMap<User, ArrayList<User>> usersIncluded;
+    private final HashMap<User, ArrayList<User>> usersIncluded;
 
 
     public Statistics() {
@@ -15,8 +15,8 @@ public class Statistics {
         return usersIncluded;
     }
 
-    public void addUsersIncluded(User user, User userIncluded){
-        if(!this.usersIncluded.containsKey(user)){
+    public void addUsersIncluded(User user, User userIncluded) {
+        if (!this.usersIncluded.containsKey(user)) {
             this.usersIncluded.put(user, new ArrayList<>());
         }
         ArrayList<User> list = new ArrayList<>(this.usersIncluded.get(user));
@@ -25,25 +25,25 @@ public class Statistics {
 
     }
 
-    public String addedUsersStats(DirectGraph<User, Relationship> graph){
+    public String addedUsersStats(DirectGraph<User, Relationship> graph) {
         String s = "******************** Statistic Users Added ********************\n";
         s = s + "Number of users: " + graph.getVertices().size() + "\n";
         s = s + "List of ids and names of users: " + graph.getVertices().size() + "\n";
 
 
-        for(Vertex<User> userVertex : graph.vertices()){
+        for (Vertex<User> userVertex : graph.vertices()) {
             s = s + "ID: " + userVertex.element().getID() + "   Name:" + userVertex.element().getName() + "\n";
         }
 
         return s;
     }
 
-    public String includedUsersStats(DirectGraph<User, Relationship> graph){
+    public String includedUsersStats(DirectGraph<User, Relationship> graph) {
         String s = "******************** Statistic Users Included by User Added ********************\n";
 
-        for(User user: this.usersIncluded.keySet()){
+        for (User user : this.usersIncluded.keySet()) {
             s = s + "User: " + user.getName() + " has included: \n";
-            for(User userIncluded : this.usersIncluded.get(user)){
+            for (User userIncluded : this.usersIncluded.get(user)) {
                 s = s + "   " + userIncluded.getName() + "\n";
             }
             s = s + "\n";
@@ -53,29 +53,29 @@ public class Statistics {
     }
 
 
-    public String userWithMoreDirectRelationshipsStats(DirectGraph<User, Relationship> graph){
+    public String userWithMoreDirectRelationshipsStats(DirectGraph<User, Relationship> graph) {
         String s = "******************** Statistic User With More Direct Relationships ********************\n";
 
         User user = null;
         int edges = 0;
         int count = 0;
 
-        for(Vertex<User> userVertex : graph.vertices()){
+        for (Vertex<User> userVertex : graph.vertices()) {
             count = 0;
 
-            for(Edge<Relationship, User> edge : graph.incidentEdges(userVertex)){
-                if(!(edge.element() instanceof RelationshipIndirect)){
+            for (Edge<Relationship, User> edge : graph.incidentEdges(userVertex)) {
+                if (!(edge.element() instanceof RelationshipIndirect)) {
                     count++;
                 }
             }
 
-            if(count > edges){
+            if (count > edges) {
                 edges = count;
                 user = userVertex.element();
             }
         }
 
-        if(user != null){
+        if (user != null) {
             s = s + "ID: " + user.getID() + "   Name: " + user.getName() + "\n";
         } else {
             s = "Not found\n";
@@ -84,7 +84,7 @@ public class Statistics {
         return s;
     }
 
-    public String interestMostSharedStats(DirectGraph<User, Relationship> graph){
+    public String interestMostSharedStats(DirectGraph<User, Relationship> graph) {
         String s = "******************** Statistic interest Most Shared ********************\n";
 
         Interest interest = null;
@@ -92,34 +92,34 @@ public class Statistics {
         int number = 0;
         int count = 0;
 
-        for(Vertex<User> userVertex : graph.vertices()){
+        for (Vertex<User> userVertex : graph.vertices()) {
             count = 0;
 
-            for(Edge<Relationship, User> edge : graph.incidentEdges(userVertex)){
-                if((edge.element() instanceof RelationshipShared)){
-                    interests.addAll(((RelationshipShared)edge.element()).getInterests());
-                } else if((edge.element() instanceof RelationshipIndirect)){
-                    interests.addAll(((RelationshipIndirect)edge.element()).getListOfInterests());
+            for (Edge<Relationship, User> edge : graph.incidentEdges(userVertex)) {
+                if ((edge.element() instanceof RelationshipShared)) {
+                    interests.addAll(((RelationshipShared) edge.element()).getInterests());
+                } else if ((edge.element() instanceof RelationshipIndirect)) {
+                    interests.addAll(((RelationshipIndirect) edge.element()).getListOfInterests());
                 }
             }
 
         }
 
-        for(Interest interestOfList : interests){
+        for (Interest interestOfList : interests) {
             count = 0;
-            for(Interest interestOfList2 : interests){
-                if(interestOfList.equals(interestOfList2)){
+            for (Interest interestOfList2 : interests) {
+                if (interestOfList.equals(interestOfList2)) {
                     count++;
                 }
             }
-            if(count > number){
+            if (count > number) {
                 interest = interestOfList;
                 number = count;
             }
 
         }
 
-        if(interest != null){
+        if (interest != null) {
             s = s + "ID: " + interest.getId() + "   Name: " + interest.getName() + "\n";
         } else {
             s = "Not found\n";
@@ -127,7 +127,6 @@ public class Statistics {
 
         return s;
     }
-
 
 
 }

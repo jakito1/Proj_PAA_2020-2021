@@ -1,8 +1,8 @@
 package com.pa.proj2020.adts.graph;
 
 public interface Originator {
-    public Memento createMemento();
+    Memento createMemento();
 
-    public void setMemento(Memento savedState);
+    void setMemento(Memento savedState);
 }
 

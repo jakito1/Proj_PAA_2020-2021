@@ -9,8 +9,8 @@ public class User {
 
     private final String name;
     private final int id;
-    private Type type; //adicionado ou incluido
     private final Set<Interest> interests;
+    private Type type; //adicionado ou incluido
 
     public User(String name, int id, Type type) {
         if (name == null || id <= 0) {

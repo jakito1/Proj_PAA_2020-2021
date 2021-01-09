@@ -400,6 +400,110 @@ public class DirectGraph<V, E> implements Digraph<V, E> {
         //return this.vertices.containsKey(vElement);
     }
 
+    /**
+     * Retorna a lista de vertices na pesquisa em largura
+     *
+     * @param v representa o vertice de inicio da pesquisa em largura
+     * @return lista de vertice atraves da pesquisa em largura
+     */
+    private ArrayList<Vertex<V>> BFS(Vertex<V> v) {
+        ArrayList<Vertex<V>> path = new ArrayList<>();
+        Set<Vertex<V>> visited = new HashSet<>();
+        Queue<Vertex<V>> queue = new LinkedList<>();
+        visited.add(v);
+        queue.add(v);
+        while (!queue.isEmpty()) {
+            Vertex<V> vLook = queue.remove();
+            path.add(vLook);
+            for (Edge<E, V> edge : outboundEdges(vLook)) {
+                if (!visited.contains(edge.vertices()[1])) {
+                    visited.add(edge.vertices()[1]);
+                    queue.add(edge.vertices()[1]);
+                }
+            }
+        }
+        return path;
+    }
+
+    /**
+     * Procura o caminho de menor valor entre dois vertices
+     *
+     * @param origin    representa o vertice de origem
+     * @param parents   representa os vertices que tem uma determinada distancia
+     *                  do vertice de origem
+     * @param distances representa a distance a que cada vertice se deve
+     *                  encontrar o vertice de origem
+     */
+    private void dijkstra(Vertex<V> origin, HashMap<Vertex<V>, Vertex<V>> parents, HashMap<Vertex<V>, Integer> distances) {
+        HashSet<Vertex<V>> unvisited = new HashSet<>(BFS(origin));
+        for (Vertex<V> v : unvisited) {
+            distances.put(v, Integer.MAX_VALUE);
+            parents.put(v, null);
+        }
+        distances.put(origin, 0);
+        while (!unvisited.isEmpty()) {
+            Vertex<V> lowestCostVertex = minimumCost(unvisited, distances);
+            unvisited.remove(lowestCostVertex);
+            for (Edge<E, V> edge : outboundEdges(lowestCostVertex)) {
+                Vertex<V> oppositeVertex = edge.vertices()[1];
+                if (unvisited.contains(oppositeVertex)) {
+                    int distanceBetweenVertex = 1 + distances.get(lowestCostVertex);
+                    if (distances.get(oppositeVertex) > distanceBetweenVertex) {
+                        distances.put(oppositeVertex, distanceBetweenVertex);
+                        parents.put(oppositeVertex, lowestCostVertex);
+                    }
+                }
+            }
+        }
+
+    }
+
+    /**
+     * Permite calcular o custo mais baixo
+     *
+     * @param unvisited representa os vertices ainda nao visitados
+     * @param distances representa a distancia a que cada vertice esta do
+     *                  vertice de origem
+     * @return o custo mais baixo nos vertices nao visitados
+     */
+    private Vertex<V> minimumCost(Set<Vertex<V>> unvisited, HashMap<Vertex<V>, Integer> distances) {
+        int min = Integer.MAX_VALUE;
+        Vertex<V> minCostVertex = null;
+        for (Vertex<V> v : unvisited) {
+            if (distances.get(v) <= min) {
+                minCostVertex = v;
+                min = distances.get(v);
+            }
+        }
+        return minCostVertex;
+    }
+
+    /**
+     * Permite obter a lista de vertices que se encontram no caminho mais curto
+     * entre o vertice de origem e o destino
+     *
+     * @param origin representa o vertice a partir do qual queremos calcular a
+     *               distancia ate um determinado vertice
+     * @param end    representa o vertice que queremos chegar a partir do vertice
+     *               de origem
+     * @param path   representa a lista que contem o caminho mais curto entre os
+     *               dois vertices
+     * @return o caminho mais curto entre dois vertices
+     */
+    public int minCostPath(Vertex<V> origin, Vertex<V> end, ArrayList<V> path) {
+        HashMap<Vertex<V>, Vertex<V>> parents = new HashMap<>();
+        HashMap<Vertex<V>, Integer> distances = new HashMap<>();
+        path.clear();
+        dijkstra(origin, parents, distances);
+        int cost = distances.get(end);
+        Vertex<V> v = end;
+        System.out.println("Parents: " + parents + "\nDistances: " + distances);
+        do {
+            path.add(0, v.element());
+            v = parents.get(v);
+        } while (!v.element().equals(origin.element()));
+        return cost;
+    }
 
     /**
      * Classe auxiliar com as informacoes relativas a uma aresta, nomeadamente o
@@ -496,111 +600,6 @@ public class DirectGraph<V, E> implements Digraph<V, E> {
             return elemento.toString();
         }
 
-    }
-
-    /**
-     * Retorna a lista de vertices na pesquisa em largura
-     *
-     * @param v representa o vertice de inicio da pesquisa em largura
-     * @return lista de vertice atraves da pesquisa em largura
-     */
-    private ArrayList<Vertex<V>> BFS(Vertex<V> v) {
-        ArrayList<Vertex<V>> path = new ArrayList<>();
-        Set<Vertex<V>> visited = new HashSet<>();
-        Queue<Vertex<V>> queue = new LinkedList<>();
-        visited.add(v);
-        queue.add(v);
-        while (!queue.isEmpty()) {
-            Vertex<V> vLook = queue.remove();
-            path.add(vLook);
-            for (Edge<E, V> edge : outboundEdges(vLook)) {
-                if (!visited.contains(edge.vertices()[1])) {
-                    visited.add(edge.vertices()[1]);
-                    queue.add(edge.vertices()[1]);
-                }
-            }
-        }
-        return path;
-    }
-
-    /**
-     * Procura o caminho de menor valor entre dois vertices
-     *
-     * @param origin representa o vertice de origem
-     * @param parents representa os vertices que tem uma determinada distancia
-     * do vertice de origem
-     * @param distances representa a distance a que cada vertice se deve
-     * encontrar o vertice de origem
-     */
-    private void dijkstra(Vertex<V> origin, HashMap<Vertex<V>, Vertex<V>> parents, HashMap<Vertex<V>, Integer> distances) {
-        HashSet<Vertex<V>> unvisited = new HashSet<>(BFS(origin));
-        for (Vertex<V> v : unvisited) {
-            distances.put(v, Integer.MAX_VALUE);
-            parents.put(v, null);
-        }
-        distances.put(origin, 0);
-        while (!unvisited.isEmpty()) {
-            Vertex<V> lowestCostVertex = minimumCost(unvisited, distances);
-            unvisited.remove(lowestCostVertex);
-            for (Edge<E, V> edge : outboundEdges(lowestCostVertex)) {
-                Vertex<V> oppositeVertex = edge.vertices()[1];
-                if (unvisited.contains(oppositeVertex)) {
-                    int distanceBetweenVertex = 1 + distances.get(lowestCostVertex);
-                    if (distances.get(oppositeVertex) > distanceBetweenVertex) {
-                        distances.put(oppositeVertex, distanceBetweenVertex);
-                        parents.put(oppositeVertex, lowestCostVertex);
-                    }
-                }
-            }
-        }
-
-    }
-
-    /**
-     * Permite calcular o custo mais baixo
-     *
-     * @param unvisited representa os vertices ainda nao visitados
-     * @param distances representa a distancia a que cada vertice esta do
-     * vertice de origem
-     * @return o custo mais baixo nos vertices nao visitados
-     */
-    private Vertex<V> minimumCost(Set<Vertex<V>> unvisited, HashMap<Vertex<V>, Integer> distances) {
-        int min = Integer.MAX_VALUE;
-        Vertex<V> minCostVertex = null;
-        for (Vertex<V> v : unvisited) {
-            if (distances.get(v) <= min) {
-                minCostVertex = v;
-                min = distances.get(v);
-            }
-        }
-        return minCostVertex;
-    }
-
-    /**
-     * Permite obter a lista de vertices que se encontram no caminho mais curto
-     * entre o vertice de origem e o destino
-     *
-     * @param origin representa o vertice a partir do qual queremos calcular a
-     * distancia ate um determinado vertice
-     * @param end representa o vertice que queremos chegar a partir do vertice
-     * de origem
-     * @param path representa a lista que contem o caminho mais curto entre os
-     * dois vertices
-     * @return o caminho mais curto entre dois vertices
-     */
-    public int minCostPath(Vertex<V> origin, Vertex<V> end, ArrayList<V> path) {
-        HashMap<Vertex<V>, Vertex<V>> parents = new HashMap<>();
-        HashMap<Vertex<V>, Integer> distances = new HashMap<>();
-        path.clear();
-        dijkstra(origin, parents, distances);
-        int cost = distances.get(end);
-        Vertex<V> v = end;
-        System.out.println("Parents: " + parents + "\nDistances: " + distances);
-        do {
-            path.add(0, v.element());
-            v = parents.get(v);
-        } while (!v.element().equals(origin.element()));
-        return cost;
     }
 
 }

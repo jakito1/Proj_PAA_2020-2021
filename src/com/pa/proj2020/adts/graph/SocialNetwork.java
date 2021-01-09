@@ -1,16 +1,19 @@
 package com.pa.proj2020.adts.graph;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
-public class SocialNetwork implements Originator{
+public class SocialNetwork implements Originator {
 
     private final DirectGraph<User, Relationship> graph;
-    private final Map<Integer, User> users;
-    private final Map<Integer, ArrayList<String>> relationships;
-    private final Map<Integer, Interest> interests;
     private final Logging log = Logging.getInstance();
-    private Statistics statistics;
+    private final Statistics statistics;
+    private Map<Integer, User> users;
+    private Map<Integer, ArrayList<String>> relationships;
+    private Map<Integer, Interest> interests;
 
     /**
      * Cria um objeto SocialNetwork
@@ -117,7 +120,7 @@ public class SocialNetwork implements Originator{
             relationship = new RelationshipSimple();
             this.graph.insertEdge(user1, user2, relationship);
             log.addRelationshipDirect(user1.getID(), user2.getID(), 0);
-        } else if (!tempInterests.isEmpty() && relationshipDirect) {
+        } else if (!tempInterests.isEmpty()) {
             relationship = new RelationshipShared(tempInterests);
             this.graph.insertEdge(user1, user2, relationship);
             log.addRelationshipDirect(user1.getID(), user2.getID(), tempInterests.size());
@@ -167,7 +170,7 @@ public class SocialNetwork implements Originator{
     }
 
 
-    public int minPath(Vertex<User> origin, Vertex<User> end, ArrayList<User> path){
+    public int minPath(Vertex<User> origin, Vertex<User> end, ArrayList<User> path) {
         return this.graph.minCostPath(origin, end, path);
     }
 
@@ -176,10 +179,10 @@ public class SocialNetwork implements Originator{
         ArrayList<User> path = new ArrayList<>();
         Vertex<User> user1 = null;
         Vertex<User> user2 = null;
-        for(Vertex<User> user : this.graph.vertices()){
-            if(user.element().getID() == 1){
+        for (Vertex<User> user : this.graph.vertices()) {
+            if (user.element().getID() == 1) {
                 user1 = user;
-            } else if(user.element().getID() == 11){
+            } else if (user.element().getID() == 11) {
                 user2 = user;
             }
         }
@@ -191,15 +194,18 @@ public class SocialNetwork implements Originator{
     }
 
 
-    public String addedUsersStats(){
+    public String addedUsersStats() {
         return this.statistics.addedUsersStats(this.graph);
     }
-    public String includedUsersStats(){
+
+    public String includedUsersStats() {
         return this.statistics.includedUsersStats(this.graph);
     }
-    public String userWithMoreDirectRelationshipsStats(){
+
+    public String userWithMoreDirectRelationshipsStats() {
         return this.statistics.userWithMoreDirectRelationshipsStats(this.graph);
     }
+
     public String interestMostSharedStats() {
         return this.statistics.interestMostSharedStats(this.graph);
     }
@@ -227,15 +233,18 @@ public class SocialNetwork implements Originator{
 
     @Override
     public Memento createMemento() {
-        return null;
+        return new MyMemento(this);
     }
 
     @Override
     public void setMemento(Memento savedState) {
-
+        List tempList = savedState.getState();
+        users = (Map<Integer, User>) tempList.get(0);
+        relationships = (Map<Integer, ArrayList<String>>) tempList.get(2);
+        interests = (Map<Integer, Interest>) tempList.get(3);
     }
 
-    class MyMemento implements Memento {
+    static class MyMemento implements Memento {
         private Map<Integer, User> users;
         private Map<Integer, ArrayList<String>> relationships;
         private Map<Integer, Interest> interests;
@@ -247,15 +256,22 @@ public class SocialNetwork implements Originator{
             load(stateToSave);
         }
 
-        private void load(SocialNetwork stateToSave){
+        private void load(SocialNetwork stateToSave) {
             users = stateToSave.getUsers().entrySet().stream()
-                    .collect(Collectors.toMap(e -> e.getKey(), e -> e.getValue()));
-            //stateToSave.g
+                    .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
+            relationships = stateToSave.getRelationships().entrySet().stream()
+                    .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
+            interests = stateToSave.getInterests().entrySet().stream()
+                    .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
         }
 
         @Override
-        public List<Product> getState() {
-            return state;
+        public <T> List<T> getState() {
+            List<T> returnList = new ArrayList<>();
+            returnList.add(0, (T) users);
+            returnList.add(1, (T) relationships);
+            returnList.add(2, (T) interests);
+            return returnList;
         }
     }
 }

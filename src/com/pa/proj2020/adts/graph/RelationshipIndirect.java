@@ -7,8 +7,8 @@ import java.util.Set;
 public class RelationshipIndirect implements Relationship {
 
     private final Set<Interest> listOfInterests;
-    private int number;
     private final User[] users;
+    private int number;
 
     public RelationshipIndirect() {
         listOfInterests = new HashSet<>();
