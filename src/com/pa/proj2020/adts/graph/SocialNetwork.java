@@ -1,15 +1,14 @@
 package com.pa.proj2020.adts.graph;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
+import java.util.*;
+import java.util.stream.Collectors;
 
-public class SocialNetwork {
+public class SocialNetwork implements Originator{
 
     private final DirectGraph<User, Relationship> graph;
-    private final HashMap<Integer, User> users;
-    private final HashMap<Integer, ArrayList<String>> relationships;
-    private final HashMap<Integer, Interest> interests;
+    private final Map<Integer, User> users;
+    private final Map<Integer, ArrayList<String>> relationships;
+    private final Map<Integer, Interest> interests;
     private final Logging log = Logging.getInstance();
     private Statistics statistics;
 
@@ -68,18 +67,6 @@ public class SocialNetwork {
         return this.graph;
     }
 
-    public DirectGraph<User, Relationship> getGraph() {
-        return this.graph;
-    }
-
-    public HashMap<Integer, User> getUsers() {
-        return this.users;
-    }
-
-    public HashMap<Integer, ArrayList<String>> getRelationShips() {
-        return this.relationships;
-    }
-
 
     public List<Interest> interestsOfUser(int idUser) {
         if (idUser < 0) {
@@ -105,7 +92,7 @@ public class SocialNetwork {
         }
 
         List<Interest> tempInterests = new ArrayList<>();
-        boolean relatioshipDirect = false;
+        boolean relationshipDirect = false;
         Relationship relationship;
 
         for (Interest interest : this.interests.values()) {
@@ -116,21 +103,21 @@ public class SocialNetwork {
         }
 
         if (this.relationships.get(user1.getID()).contains(String.valueOf(user2.getID()))) {
-            relatioshipDirect = true;
+            relationshipDirect = true;
         }
 
         //HashSet<Edge<Relationship, User>> tempEdges = new HashSet<>(this.graph.edges());
         //tempEdges
 
-        if (!tempInterests.isEmpty() && !relatioshipDirect) {
+        if (!tempInterests.isEmpty() && !relationshipDirect) {
             relationship = new RelationshipIndirect(tempInterests);
             this.graph.insertEdge(user1, user2, relationship);
             log.addRelationshipIndirect(user1.getID(), user2.getID(), tempInterests.size());
-        } else if (tempInterests.isEmpty() && relatioshipDirect) {
+        } else if (tempInterests.isEmpty() && relationshipDirect) {
             relationship = new RelationshipSimple();
             this.graph.insertEdge(user1, user2, relationship);
             log.addRelationshipDirect(user1.getID(), user2.getID(), 0);
-        } else if (!tempInterests.isEmpty() && relatioshipDirect) {
+        } else if (!tempInterests.isEmpty() && relationshipDirect) {
             relationship = new RelationshipShared(tempInterests);
             this.graph.insertEdge(user1, user2, relationship);
             log.addRelationshipDirect(user1.getID(), user2.getID(), tempInterests.size());
@@ -203,6 +190,7 @@ public class SocialNetwork {
                 '}';
     }
 
+<<<<<<< Updated upstream
     public String addedUsersStats(){
         return this.statistics.addedUsersStats(this.graph);
     }
@@ -214,17 +202,59 @@ public class SocialNetwork {
     }
     public String interestMostSharedStats(){
         return this.statistics.interestMostSharedStats(this.graph);
+=======
+    public DirectGraph<User, Relationship> getGraph() {
+        return this.graph;
+    }
+
+    public Map<Integer, User> getUsers() {
+        return this.users;
+>>>>>>> Stashed changes
     }
 
     public Logging getLog() {
         return log;
     }
 
-    public HashMap<Integer, ArrayList<String>> getRelationships() {
+    public Map<Integer, ArrayList<String>> getRelationships() {
         return relationships;
     }
 
-    public HashMap<Integer, Interest> getInterests() {
+    public Map<Integer, Interest> getInterests() {
         return interests;
+    }
+
+    @Override
+    public Memento createMemento() {
+        return null;
+    }
+
+    @Override
+    public void setMemento(Memento savedState) {
+
+    }
+
+    private class MyMemento implements Memento {
+        private Map<Integer, User> users;
+        private Map<Integer, ArrayList<String>> relationships;
+        private Map<Integer, Interest> interests;
+
+        public MyMemento(SocialNetwork stateToSave) {
+            users = new HashMap<>();
+            relationships = new HashMap<>();
+            interests = new HashMap<>();
+            load(stateToSave);
+        }
+
+        private void load(SocialNetwork stateToSave){
+            users = stateToSave.getUsers().entrySet().stream()
+                    .collect(Collectors.toMap(e -> e.getKey(), e -> e.getValue()));
+            //stateToSave.g
+        }
+
+        @Override
+        public List<Product> getState() {
+            return state;
+        }
     }
 }
