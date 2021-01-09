@@ -190,7 +190,7 @@ public class SocialNetwork implements Originator{
                 '}';
     }
 
-<<<<<<< Updated upstream
+
     public String addedUsersStats(){
         return this.statistics.addedUsersStats(this.graph);
     }
@@ -200,16 +200,17 @@ public class SocialNetwork implements Originator{
     public String userWithMoreDirectRelationshipsStats(){
         return this.statistics.userWithMoreDirectRelationshipsStats(this.graph);
     }
-    public String interestMostSharedStats(){
+    public String interestMostSharedStats() {
         return this.statistics.interestMostSharedStats(this.graph);
-=======
+    }
+
     public DirectGraph<User, Relationship> getGraph() {
         return this.graph;
     }
 
     public Map<Integer, User> getUsers() {
         return this.users;
->>>>>>> Stashed changes
+
     }
 
     public Logging getLog() {
@@ -234,7 +235,7 @@ public class SocialNetwork implements Originator{
 
     }
 
-    private class MyMemento implements Memento {
+    class MyMemento implements Memento {
         private Map<Integer, User> users;
         private Map<Integer, ArrayList<String>> relationships;
         private Map<Integer, Interest> interests;
