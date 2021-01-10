@@ -7,12 +7,12 @@ import java.util.List;
 
 public class SocialNetwork implements Originator, Serializable {
 
-    private DirectGraph<User, Relationship> graph;
     private final HashMap<Integer, User> users;
     private final HashMap<Integer, ArrayList<String>> relationships;
     private final HashMap<Integer, Interest> interests;
     private final Logging log = Logging.getInstance();
-    private Statistics statistics;
+    private DirectGraph<User, Relationship> graph;
+    private final Statistics statistics;
 
     /**
      * Cria um objeto SocialNetwork
@@ -99,7 +99,8 @@ public class SocialNetwork implements Originator, Serializable {
         return list;
 
     }
-    public void insertEdge(User user1, User user2){
+
+    public void insertEdge(User user1, User user2) {
         this.insertEdge(user1, user2, false);
     }
 
@@ -143,7 +144,7 @@ public class SocialNetwork implements Originator, Serializable {
     }
 
 
-    public void addIndirectRelationships(int idUser){
+    public void addIndirectRelationships(int idUser) {
         User user = this.users.get(idUser);
 
         for (Vertex<User> userVertex : this.graph.vertices()) {
@@ -194,7 +195,7 @@ public class SocialNetwork implements Originator, Serializable {
     }
 
 
-    public int minPath(Vertex<User> origin, Vertex<User> end, ArrayList<User> path){
+    public int minPath(Vertex<User> origin, Vertex<User> end, ArrayList<User> path) {
         return this.graph.minCostPath(origin, end, path);
     }
 
@@ -203,10 +204,10 @@ public class SocialNetwork implements Originator, Serializable {
         ArrayList<User> path = new ArrayList<>();
         Vertex<User> user1 = null;
         Vertex<User> user2 = null;
-        for(Vertex<User> user : this.graph.vertices()){
-            if(user.element().getID() == 1){
+        for (Vertex<User> user : this.graph.vertices()) {
+            if (user.element().getID() == 1) {
                 user1 = user;
-            } else if(user.element().getID() == 11){
+            } else if (user.element().getID() == 11) {
                 user2 = user;
             }
         }
@@ -218,17 +219,17 @@ public class SocialNetwork implements Originator, Serializable {
     }
 
 
-    public List<String> getUsersNotInserted(){
+    public List<String> getUsersNotInserted() {
         ArrayList<String> list = new ArrayList<>();
 
         ArrayList<Integer> tempList = new ArrayList<>();
 
-        for(Vertex<User> user : this.graph.vertices()){
+        for (Vertex<User> user : this.graph.vertices()) {
             tempList.add(user.element().getID());
         }
 
-        for(Integer id : this.users.keySet()){
-            if(!tempList.contains(id)){
+        for (Integer id : this.users.keySet()) {
+            if (!tempList.contains(id)) {
                 list.add(this.users.get(id).toString());
             }
         }
@@ -236,16 +237,19 @@ public class SocialNetwork implements Originator, Serializable {
     }
 
 
-    public String addedUsersStats(){
+    public String addedUsersStats() {
         return this.statistics.addedUsersStats(this.graph);
     }
-    public String includedUsersStats(){
+
+    public String includedUsersStats() {
         return this.statistics.includedUsersStats(this.graph);
     }
-    public String userWithMoreDirectRelationshipsStats(){
+
+    public String userWithMoreDirectRelationshipsStats() {
         return this.statistics.userWithMoreDirectRelationshipsStats(this.graph);
     }
-    public String interestMostSharedStats(){
+
+    public String interestMostSharedStats() {
         return this.statistics.interestMostSharedStats(this.graph);
     }
 
@@ -260,8 +264,8 @@ public class SocialNetwork implements Originator, Serializable {
     public HashMap<Integer, Interest> getInterests() {
         return interests;
     }
-	
-	@Override
+
+    @Override
     public Memento createMemento() {
         return new MyMemento(this.graph);
     }
@@ -275,8 +279,8 @@ public class SocialNetwork implements Originator, Serializable {
             e.printStackTrace();
         }
     }
-	
-	static class MyMemento implements Memento {
+
+    static class MyMemento implements Memento {
         private byte[] state;
 
         public MyMemento(DirectGraph<User, Relationship> stateToSave) {
@@ -303,6 +307,6 @@ public class SocialNetwork implements Originator, Serializable {
             return state;
         }
     }
-	
-	
+
+
 }
