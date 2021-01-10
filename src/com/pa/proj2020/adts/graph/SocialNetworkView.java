@@ -521,7 +521,7 @@ public class SocialNetworkView{
                         }
                     }
 
-            okIterativeButton.update();
+            graphView.update();
         });
 
 
