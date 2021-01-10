@@ -1,9 +1,10 @@
 package com.pa.proj2020.adts.graph;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Interest {
+public class Interest implements Serializable {
     private final int id;
     private final String name;
     private final ArrayList<String> idsOfUsers;

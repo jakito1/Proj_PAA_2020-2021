@@ -23,6 +23,8 @@
  */
 package com.pa.proj2020.adts.graph;
 
+import java.io.Serializable;
+
 /**
  * An edge connects two {@link Vertex} of type <code>V</code> and stores
  * an element of type <code>E</code>.
@@ -34,7 +36,7 @@ package com.pa.proj2020.adts.graph;
  * @see Graph
  * @see Digraph
  */
-public interface Edge<E, V> {
+public interface Edge<E, V> extends Serializable {
 
     /**
      * Returns the element stored in the edge.

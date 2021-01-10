@@ -1,12 +1,9 @@
 package com.pa.proj2020.adts.graph;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.stream.Collectors;
+import java.io.*;
+import java.util.*;
 
-public class SocialNetwork implements Originator {
+public class SocialNetwork implements Originator, Serializable {
 
     private DirectGraph<User, Relationship> graph;
     private final Logging log = Logging.getInstance();
@@ -238,41 +235,39 @@ public class SocialNetwork implements Originator {
 
     @Override
     public void setMemento(Memento savedState) {
-        List tempList = savedState.getState();
-        users = (Map<Integer, User>) tempList.get(0);
-        relationships = (Map<Integer, ArrayList<String>>) tempList.get(2);
-        interests = (Map<Integer, Interest>) tempList.get(3);
-        graph = constructModelTotal();
+        ByteArrayInputStream temp = new ByteArrayInputStream(savedState.getState());
+        try {
+            graph = (DirectGraph<User, Relationship>) new ObjectInputStream(temp).readObject();
+        } catch (IOException | ClassNotFoundException e) {
+            e.printStackTrace();
+        }
     }
 
     static class MyMemento implements Memento {
-        private Map<Integer, User> users;
-        private Map<Integer, ArrayList<String>> relationships;
-        private Map<Integer, Interest> interests;
+        private byte[] state;
 
         public MyMemento(SocialNetwork stateToSave) {
-            users = new HashMap<>();
-            relationships = new HashMap<>();
-            interests = new HashMap<>();
             load(stateToSave);
         }
 
         private void load(SocialNetwork stateToSave) {
-            users = stateToSave.getUsers().entrySet().stream()
-                    .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
-            relationships = stateToSave.getRelationships().entrySet().stream()
-                    .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
-            interests = stateToSave.getInterests().entrySet().stream()
-                    .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
+            ByteArrayOutputStream bos = new ByteArrayOutputStream();
+            ObjectOutputStream oos = null;
+            try {
+                oos = new ObjectOutputStream(bos);
+                oos.writeObject(stateToSave.getGraph());
+                oos.flush();
+                oos.close();
+                bos.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            state = bos.toByteArray();
         }
 
         @Override
-        public <T> List<T> getState() {
-            List<T> returnList = new ArrayList<>();
-            returnList.add(0, (T) users);
-            returnList.add(1, (T) relationships);
-            returnList.add(2, (T) interests);
-            return returnList;
+        public byte[] getState() {
+            return state;
         }
     }
 }

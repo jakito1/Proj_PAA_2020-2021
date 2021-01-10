@@ -23,6 +23,7 @@
  */
 package com.pa.proj2020.adts.graph;
 
+import java.io.Serializable;
 import java.util.Collection;
 
 /**
@@ -40,7 +41,7 @@ import java.util.Collection;
  * @see Edge
  * @see Vertex
  */
-public interface Digraph<V, E> extends Graph<V, E> {
+public interface Digraph<V, E> extends Graph<V, E>, Serializable {
 
     /**
      * Returns a vertex's <i>incident</i> edges as a collection.

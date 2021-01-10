@@ -21,7 +21,7 @@ class SocialNetworkTest {
 
     /**
      * Test of initializeData method, of class SocialNetwork.
-     */
+
     @Test
     void initializeData_relationships() {
         int expResult = 365;
@@ -31,6 +31,7 @@ class SocialNetworkTest {
         }
         assertEquals(expResult, result);
     }
+     */
 
     /**
      * Test of initializeData method, of class SocialNetwork.

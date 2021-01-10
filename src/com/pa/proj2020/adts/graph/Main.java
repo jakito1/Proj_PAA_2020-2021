@@ -21,13 +21,21 @@ public class Main extends Application {
     @Override
     public void start(Stage ignored) {
         SocialNetwork socialNetwork = new SocialNetwork();
+        Caretaker caretaker = new Caretaker(socialNetwork);
         socialNetwork.initializeData();
 
         socialNetwork.constructModelIterative(1);
 
         socialNetwork.constructModelIterative(9);
         socialNetwork.constructModelIterative(11);
+
+        System.out.printf("Antes restore: " + socialNetwork.getGraph().vertices().size() + "\n");
+        caretaker.saveState();
         socialNetwork.constructModelIterative(14);
+        System.out.printf("Após inserção: " + socialNetwork.getGraph().vertices().size() + "\n");
+        //caretaker.restoreState();
+        System.out.printf("Após restore: " + socialNetwork.getGraph().vertices().size() + "\n");
+
         System.out.println(socialNetwork.toString());
 
         System.out.println("---------------------------------------------------------------------------------");

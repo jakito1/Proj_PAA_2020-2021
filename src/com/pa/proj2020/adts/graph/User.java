@@ -1,11 +1,12 @@
 package com.pa.proj2020.adts.graph;
 
+import java.io.Serializable;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-public class User {
+public class User implements Serializable {
 
     private final String name;
     private final int id;

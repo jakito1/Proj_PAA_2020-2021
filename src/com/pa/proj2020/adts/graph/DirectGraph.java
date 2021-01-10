@@ -1,8 +1,9 @@
 package com.pa.proj2020.adts.graph;
 
+import java.io.Serializable;
 import java.util.*;
 
-public class DirectGraph<V, E> implements Digraph<V, E> {
+public class DirectGraph<V, E> implements Digraph<V, E>, Serializable {
     private final HashMap<V, Vertex<V>> vertices;
 
     /**
@@ -509,7 +510,7 @@ public class DirectGraph<V, E> implements Digraph<V, E> {
      * Classe auxiliar com as informacoes relativas a uma aresta, nomeadamente o
      * vertice inbound, o vertice outbound e o elemento contido na aresta
      */
-    private class MyEdge implements Edge<E, V> {
+    private class MyEdge implements Edge<E, V>, Serializable{
 
         private final Vertex<V> inbound;
         private final Vertex<V> outbound;
@@ -548,7 +549,7 @@ public class DirectGraph<V, E> implements Digraph<V, E> {
      * Classe auxiliar com as informacoes relativas a um vertice, nomeadamente,
      * o elemento que cada vertice guarda
      */
-    private class MyVertex implements Vertex<V> {
+    private class MyVertex implements Vertex<V>, Serializable {
 
         private final HashMap<E, Edge<E, V>> edges;
         private V elemento;

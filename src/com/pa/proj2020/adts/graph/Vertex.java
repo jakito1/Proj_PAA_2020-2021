@@ -23,6 +23,8 @@
  */
 package com.pa.proj2020.adts.graph;
 
+import java.io.Serializable;
+
 /**
  * A vertex contains an element of type <code>V</code> and is used both in
  * graphs and digraphs.
@@ -31,7 +33,7 @@ package com.pa.proj2020.adts.graph;
  * @see Graph
  * @see Digraph
  */
-public interface Vertex<V> {
+public interface Vertex<V> extends Serializable {
 
     /**
      * Returns the element stored in the vertex.
