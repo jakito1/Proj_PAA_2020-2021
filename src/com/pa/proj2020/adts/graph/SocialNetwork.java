@@ -6,6 +6,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class SocialNetwork implements Originator, Serializable {
 
@@ -269,6 +270,10 @@ public class SocialNetwork implements Originator, Serializable {
         return this.statistics.interestMostSharedStats(this.graph);
     }
 
+    public Map<User, Integer> topFiveUsersWithMostRelationshipsStats() {
+        return this.statistics.topFiveUsersWithMostRelationshipsStats(this.graph);
+    }
+
     public Logging getLog() {
         return log;
     }
@@ -279,6 +284,9 @@ public class SocialNetwork implements Originator, Serializable {
 
     public HashMap<Integer, Interest> getInterests() {
         return interests;
+    }
+    public Map<Interest, Integer> topFiveInterestsStats(){
+        return this.statistics.topFiveInterestsStats(this.graph);
     }
 
     @Override

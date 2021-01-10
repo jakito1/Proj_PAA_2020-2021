@@ -39,4 +39,9 @@ public class Interest implements Serializable {
     public ArrayList<String> getIdsOfUsers() {
         return idsOfUsers;
     }
+
+    @Override
+    public String toString() {
+        return this.name;
+    }
 }

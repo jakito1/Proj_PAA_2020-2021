@@ -7,6 +7,10 @@ package com.pa.proj2020.adts.graph;
 import java.util.ArrayList;
 import javafx.application.Platform;
 import javafx.scene.Node;
+import javafx.scene.chart.BarChart;
+import javafx.scene.chart.CategoryAxis;
+import javafx.scene.chart.NumberAxis;
+import javafx.scene.chart.XYChart;
 import javafx.scene.control.*;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.BorderPane;
@@ -17,6 +21,8 @@ import javafx.geometry.Insets;
 import javafx.scene.layout.VBox;
 import javafx.scene.layout.HBox;
 import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javafx.geometry.Pos;
@@ -97,7 +103,7 @@ public class SocialNetworkView{
         MenuItem menuStats3 = new MenuItem("Statistic User With More Direct Relationships");
         MenuItem menuStats4 = new MenuItem("Statistic Interest Most Shared");
         MenuItem menuStats5 = new MenuItem("Bar chart with the number of relationships of\n the 5 users with the most relationships");
-        MenuItem menuStats6 = new MenuItem("Bar chart with the number of relationships of\n the 5 users with the most relationships");
+        MenuItem menuStats6 = new MenuItem("Bar chart with the top 5 interest");
 
         menuOptions.getItems().addAll(menuExit, menuUndo, menuAddUser, menuAddIndirectRelationship, menuDijkstra);
         menuOptions1.getItems().addAll(menuSaveGraph, menuUpdateGraph, menuSaveLog, menuUpdateLog);
@@ -139,6 +145,16 @@ public class SocialNetworkView{
             this.addStatInterestMostShared();
 
         });
+
+        menuStats5.setOnAction(e -> {
+            this.addStatTopFiveUsersWithMostRelationships();
+
+        });
+
+        menuStats6.setOnAction(e -> {
+            this.addStatTopFiveInterestsStats();
+        });
+
 
         menuUndo.setOnAction(e -> {
 
@@ -611,6 +627,55 @@ public class SocialNetworkView{
         list.getItems().add(this.socialNetwork.interestMostSharedStats());
 
         pane.setCenter(list);
+    }
+
+    public void addStatTopFiveUsersWithMostRelationships(){
+
+        CategoryAxis xaxis = new CategoryAxis();
+        NumberAxis yaxis = new NumberAxis();
+        xaxis.setLabel("Users");
+        yaxis.setLabel("Relationships");
+
+        BarChart<String, Integer> bar = new BarChart(xaxis, yaxis);
+        bar.setTitle("Top Five Users With Most Relationships");
+
+
+        XYChart.Series<String, Integer> series = new XYChart.Series<>();
+        Map<User, Integer> map = new HashMap<>(this.socialNetwork.topFiveUsersWithMostRelationshipsStats());
+
+        for(User user : map.keySet()){
+            series.getData().add(new XYChart.Data<>(user.toString(), map.get(user)));
+            System.out.println("User: " + user.toString() + " Relationships: " + map.get(user));
+        }
+
+        bar.getData().add(series);
+
+        pane.setCenter(bar);
+    }
+
+
+    public void addStatTopFiveInterestsStats(){
+
+        CategoryAxis xaxis = new CategoryAxis();
+        NumberAxis yaxis = new NumberAxis();
+        xaxis.setLabel("Interests");
+        yaxis.setLabel("Users");
+
+        BarChart<String, Integer> bar = new BarChart(xaxis, yaxis);
+        bar.setTitle("Top Five Interests");
+
+
+        XYChart.Series<String, Integer> series = new XYChart.Series<>();
+        Map<Interest, Integer> map = new HashMap<>(this.socialNetwork.topFiveInterestsStats());
+
+        for(Interest interest : map.keySet()){
+            series.getData().add(new XYChart.Data<>(interest.getName(), map.get(interest)));
+            System.out.println("User: " + interest.toString() + " Relationships: " + map.get(interest));
+        }
+
+        bar.getData().add(series);
+
+        pane.setCenter(bar);
     }
 
 
