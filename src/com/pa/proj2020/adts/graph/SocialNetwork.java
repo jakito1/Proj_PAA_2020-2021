@@ -4,20 +4,15 @@ import java.io.*;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
-<<<<<<< Updated upstream
 public class SocialNetwork implements Originator, Serializable {
-=======
-public class SocialNetwork implements Originator, Serializable{
->>>>>>> Stashed changes
 
-    private final Logging log = Logging.getInstance();
-    private final Statistics statistics;
     private DirectGraph<User, Relationship> graph;
-    private final Map<Integer, User> users;
-    private final Map<Integer, ArrayList<String>> relationships;
-    private final Map<Integer, Interest> interests;
+    private final HashMap<Integer, User> users;
+    private final HashMap<Integer, ArrayList<String>> relationships;
+    private final HashMap<Integer, Interest> interests;
+    private final Logging log = Logging.getInstance();
+    private Statistics statistics;
 
     /**
      * Cria um objeto SocialNetwork
@@ -75,6 +70,18 @@ public class SocialNetwork implements Originator, Serializable{
         return this.graph;
     }
 
+    public DirectGraph<User, Relationship> getGraph() {
+        return this.graph;
+    }
+
+    public HashMap<Integer, User> getUsers() {
+        return this.users;
+    }
+
+    public HashMap<Integer, ArrayList<String>> getRelationShips() {
+        return this.relationships;
+    }
+
 
     public List<Interest> interestsOfUser(int idUser) {
         if (idUser < 0) {
@@ -102,7 +109,7 @@ public class SocialNetwork implements Originator, Serializable{
         }
 
         List<Interest> tempInterests = new ArrayList<>();
-        boolean relationshipDirect = false;
+        boolean relatioshipDirect = false;
         Relationship relationship;
 
         for (Interest interest : this.interests.values()) {
@@ -113,23 +120,12 @@ public class SocialNetwork implements Originator, Serializable{
         }
 
         if (this.relationships.get(user1.getID()).contains(String.valueOf(user2.getID()))) {
-            relationshipDirect = true;
+            relatioshipDirect = true;
         }
 
         //HashSet<Edge<Relationship, User>> tempEdges = new HashSet<>(this.graph.edges());
         //tempEdges
 
-<<<<<<< Updated upstream
-        if (!tempInterests.isEmpty() && !relationshipDirect) {
-            relationship = new RelationshipIndirect(tempInterests);
-            this.graph.insertEdge(user1, user2, relationship);
-            log.addRelationshipIndirect(user1.getID(), user2.getID(), tempInterests.size());
-        } else if (tempInterests.isEmpty() && relationshipDirect) {
-            relationship = new RelationshipSimple();
-            this.graph.insertEdge(user1, user2, relationship);
-            log.addRelationshipDirect(user1.getID(), user2.getID(), 0);
-        } else if (!tempInterests.isEmpty()) {
-=======
         if (!tempInterests.isEmpty() && !relatioshipDirect && addIndirect) {
             relationship = new RelationshipIndirect(tempInterests);
             this.graph.insertEdge(user1, user2, relationship);
@@ -139,7 +135,6 @@ public class SocialNetwork implements Originator, Serializable{
             this.graph.insertEdge(user1, user2, relationship);
             log.addRelationshipDirect(user1.getID(), user2.getID(), 0);
         } else if (!tempInterests.isEmpty() && relatioshipDirect && !addIndirect) {
->>>>>>> Stashed changes
             relationship = new RelationshipShared(tempInterests);
             this.graph.insertEdge(user1, user2, relationship);
             log.addRelationshipDirect(user1.getID(), user2.getID(), tempInterests.size());
@@ -148,9 +143,6 @@ public class SocialNetwork implements Originator, Serializable{
     }
 
 
-<<<<<<< Updated upstream
-    public void constructModelIterative(int idUser) {
-=======
     public void addIndirectRelationships(int idUser){
         User user = this.users.get(idUser);
 
@@ -161,8 +153,7 @@ public class SocialNetwork implements Originator, Serializable{
         }
     }
 
-    public void constructModelIteractive(int idUser) {
->>>>>>> Stashed changes
+    public void constructModelIterative(int idUser) {
 
         if (relationships.isEmpty() || users.isEmpty()) {
             this.initializeData();
@@ -203,7 +194,7 @@ public class SocialNetwork implements Originator, Serializable{
     }
 
 
-    public int minPath(Vertex<User> origin, Vertex<User> end, ArrayList<User> path) {
+    public int minPath(Vertex<User> origin, Vertex<User> end, ArrayList<User> path){
         return this.graph.minCostPath(origin, end, path);
     }
 
@@ -212,10 +203,10 @@ public class SocialNetwork implements Originator, Serializable{
         ArrayList<User> path = new ArrayList<>();
         Vertex<User> user1 = null;
         Vertex<User> user2 = null;
-        for (Vertex<User> user : this.graph.vertices()) {
-            if (user.element().getID() == 1) {
+        for(Vertex<User> user : this.graph.vertices()){
+            if(user.element().getID() == 1){
                 user1 = user;
-            } else if (user.element().getID() == 11) {
+            } else if(user.element().getID() == 11){
                 user2 = user;
             }
         }
@@ -227,9 +218,6 @@ public class SocialNetwork implements Originator, Serializable{
     }
 
 
-<<<<<<< Updated upstream
-    public String addedUsersStats() {
-=======
     public List<String> getUsersNotInserted(){
         ArrayList<String> list = new ArrayList<>();
 
@@ -249,49 +237,31 @@ public class SocialNetwork implements Originator, Serializable{
 
 
     public String addedUsersStats(){
->>>>>>> Stashed changes
         return this.statistics.addedUsersStats(this.graph);
     }
-
-    public String includedUsersStats() {
+    public String includedUsersStats(){
         return this.statistics.includedUsersStats(this.graph);
     }
-
-    public String userWithMoreDirectRelationshipsStats() {
+    public String userWithMoreDirectRelationshipsStats(){
         return this.statistics.userWithMoreDirectRelationshipsStats(this.graph);
     }
-
-    public String interestMostSharedStats() {
+    public String interestMostSharedStats(){
         return this.statistics.interestMostSharedStats(this.graph);
-    }
-
-    public DirectGraph<User, Relationship> getGraph() {
-        return this.graph;
-    }
-
-    public Map<Integer, User> getUsers() {
-        return this.users;
-
     }
 
     public Logging getLog() {
         return log;
     }
 
-    public Map<Integer, ArrayList<String>> getRelationships() {
+    public HashMap<Integer, ArrayList<String>> getRelationships() {
         return relationships;
     }
 
-    public Map<Integer, Interest> getInterests() {
+    public HashMap<Integer, Interest> getInterests() {
         return interests;
     }
-<<<<<<< Updated upstream
-
-    @Override
-=======
 	
 	@Override
->>>>>>> Stashed changes
     public Memento createMemento() {
         return new MyMemento(this);
     }
@@ -305,13 +275,8 @@ public class SocialNetwork implements Originator, Serializable{
             e.printStackTrace();
         }
     }
-<<<<<<< Updated upstream
-
-    static class MyMemento implements Memento {
-=======
 	
 	static class MyMemento implements Memento {
->>>>>>> Stashed changes
         private byte[] state;
 
         public MyMemento(SocialNetwork stateToSave) {
@@ -338,9 +303,6 @@ public class SocialNetwork implements Originator, Serializable{
             return state;
         }
     }
-<<<<<<< Updated upstream
-=======
 	
 	
->>>>>>> Stashed changes
 }

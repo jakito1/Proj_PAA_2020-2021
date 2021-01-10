@@ -1,35 +1,17 @@
-<<<<<<< Updated upstream
-=======
 import com.pa.proj2020.adts.graph.SocialNetwork;
->>>>>>> Stashed changes
 import com.pa.proj2020.adts.graph.SocialNetworkView;
 import javafx.application.Application;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 
 public class Main extends Application {
-<<<<<<< Updated upstream
-
-=======
     private SocialNetwork socialNetwork;
->>>>>>> Stashed changes
     public static void main(String[] args) {
         launch(args);
     }
 
     @Override
     public void start(Stage primaryStage) {
-<<<<<<< Updated upstream
-        SocialNetworkView socialNetworkView = new SocialNetworkView();
-        socialNetworkView.startCentralConsole();
-
-        Scene scene = new Scene(socialNetworkView, 630, 350);
-
-        primaryStage.setTitle("Projeto PA");
-        primaryStage.setScene(scene);
-
-        primaryStage.show();
-=======
 
         SocialNetwork socialNetwork = new SocialNetwork();
         socialNetwork.initializeData();
@@ -50,6 +32,6 @@ public class Main extends Application {
 //        primaryStage.setScene(scene);
 //
 //        primaryStage.show();
->>>>>>> Stashed changes
     }
 }
+
