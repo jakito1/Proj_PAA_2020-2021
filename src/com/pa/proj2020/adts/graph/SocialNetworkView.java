@@ -215,11 +215,11 @@ public class SocialNetworkView extends BorderPane{
         SocialNetwork socialNetwork = new SocialNetwork();
         socialNetwork.initializeData();
 
-        socialNetwork.constructModelIteractive(1);
+        socialNetwork.constructModelIterative(1);
 
-        socialNetwork.constructModelIteractive(9);
-        socialNetwork.constructModelIteractive(11);
-        socialNetwork.constructModelIteractive(14);
+        socialNetwork.constructModelIterative(9);
+        socialNetwork.constructModelIterative(11);
+        socialNetwork.constructModelIterative(14);
 
 
         Graph<User, Relationship> g = socialNetwork.getGraph();
