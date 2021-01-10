@@ -33,10 +33,10 @@ public class Main extends Application {
         caretaker.saveState();
         socialNetwork.constructModelIterative(14);
         System.out.printf("Após inserção: " + socialNetwork.getGraph().vertices().size() + "\n");
-        //caretaker.restoreState();
+        caretaker.restoreState();
         System.out.printf("Após restore: " + socialNetwork.getGraph().vertices().size() + "\n");
 
-        System.out.println(socialNetwork.toString());
+        //System.out.println(socialNetwork.toString());
 
         System.out.println("---------------------------------------------------------------------------------");
         System.out.println(socialNetwork.addedUsersStats());

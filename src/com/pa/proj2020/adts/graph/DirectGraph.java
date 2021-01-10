@@ -510,7 +510,7 @@ public class DirectGraph<V, E> implements Digraph<V, E>, Serializable {
      * Classe auxiliar com as informacoes relativas a uma aresta, nomeadamente o
      * vertice inbound, o vertice outbound e o elemento contido na aresta
      */
-    private class MyEdge implements Edge<E, V>, Serializable{
+    private class MyEdge implements Edge<E, V>, Serializable {
 
         private final Vertex<V> inbound;
         private final Vertex<V> outbound;

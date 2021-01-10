@@ -1,16 +1,19 @@
 package com.pa.proj2020.adts.graph;
 
 import java.io.*;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 public class SocialNetwork implements Originator, Serializable {
 
-    private DirectGraph<User, Relationship> graph;
     private final Logging log = Logging.getInstance();
     private final Statistics statistics;
-    private Map<Integer, User> users;
-    private Map<Integer, ArrayList<String>> relationships;
-    private Map<Integer, Interest> interests;
+    private DirectGraph<User, Relationship> graph;
+    private final Map<Integer, User> users;
+    private final Map<Integer, ArrayList<String>> relationships;
+    private final Map<Integer, Interest> interests;
 
     /**
      * Cria um objeto SocialNetwork
@@ -259,10 +262,10 @@ public class SocialNetwork implements Originator, Serializable {
                 oos.flush();
                 oos.close();
                 bos.close();
+                state = bos.toByteArray();
             } catch (IOException e) {
                 e.printStackTrace();
             }
-            state = bos.toByteArray();
         }
 
         @Override
