@@ -141,12 +141,14 @@ public class SocialNetworkView{
         });
 
         menuUndo.setOnAction(e -> {
-            System.out.println(this.socialNetwork.getGraph().numVertices());
+
+            System.out.println("Size: antes " + this.socialNetwork.getGraph().numVertices());
 
             this.caretaker.restoreState();
 
-            System.out.println(this.socialNetwork.getGraph().numVertices());
+            System.out.println("Size: depois " + this.socialNetwork.getGraph().numVertices());
             this.graphView.update();
+            pane.setLeft(this.graphView);
 
         });
 
@@ -356,9 +358,7 @@ public class SocialNetworkView{
         texts.setPrefSize(230, 20);
 
         addUserButton.setOnAction(e -> {
-            System.out.println("Size: " + this.socialNetwork.getGraph().numVertices());
             this.socialNetwork.constructModelIterative(Integer.parseInt(((String)texts.getValue()).split(" ")[0]));
-            System.out.println("Size: " + this.socialNetwork.getGraph().numVertices());
             texts.getItems().remove(texts.getValue());
 
             this.caretaker.saveState();
@@ -521,7 +521,7 @@ public class SocialNetworkView{
                         }
                     }
 
-            graphView.update();
+            okIterativeButton.update();
         });
 
 
@@ -553,7 +553,7 @@ public class SocialNetworkView{
             this.socialNetwork.initializeData();
         }
 
-        graphView = new SmartGraphPanel(graph, strategy);
+        graphView = new SmartGraphPanel(this.socialNetwork.getGraph(), strategy);
 
         this.updateColorsVertexGraph();
         this.updateColorsEdgesGraph();
