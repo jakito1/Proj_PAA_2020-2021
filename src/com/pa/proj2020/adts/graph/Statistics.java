@@ -26,7 +26,7 @@ public class Statistics {
     }
 
     public String addedUsersStats(DirectGraph<User, Relationship> graph) {
-        String s = "******************** Statistic Users Added ********************\n";
+        String s = "STATISTIC USERS ADDED\n";
         s = s + "Number of users: " + graph.getVertices().size() + "\n";
         s = s + "List of ids and names of users: " + graph.getVertices().size() + "\n";
 
@@ -39,7 +39,7 @@ public class Statistics {
     }
 
     public String includedUsersStats(DirectGraph<User, Relationship> graph) {
-        String s = "******************** Statistic Users Included by User Added ********************\n";
+        String s = "STATISTIC USERS INCLUDED BY USER ADDED\n";
 
         for (User user : this.usersIncluded.keySet()) {
             s = s + "User: " + user.getName() + " has included: \n";
@@ -54,7 +54,7 @@ public class Statistics {
 
 
     public String userWithMoreDirectRelationshipsStats(DirectGraph<User, Relationship> graph) {
-        String s = "******************** Statistic User With More Direct Relationships ********************\n";
+        String s = "STATISTIC USER WITH MORE DIRECT RELATIONSHIPS\n";
 
         User user = null;
         int edges = 0;
@@ -85,7 +85,7 @@ public class Statistics {
     }
 
     public String interestMostSharedStats(DirectGraph<User, Relationship> graph) {
-        String s = "******************** Statistic interest Most Shared ********************\n";
+        String s = "STATISTIC INTEREST MOST SHARED\n";
 
         Interest interest = null;
         ArrayList<Interest> interests = new ArrayList<>();
