@@ -1,22 +1,25 @@
 package com.pa.proj2020.adts.graph;
 
+import java.util.Stack;
+
 public class Caretaker {
     private final SocialNetwork socialNetwork;
-    private Memento undo;
+    private final Stack<Memento> undo;
 
     public Caretaker(SocialNetwork socialNetwork) {
         this.socialNetwork = socialNetwork;
+        undo = new Stack<>();
     }
 
     public void saveState() {
-        undo = socialNetwork.createMemento();
+        undo.push(socialNetwork.createMemento());
     }
 
     public void restoreState() throws NoMementoException {
-        if (undo == null) {
+        if (undo.empty()) {
             throw new NoMementoException("Nothing to undo.");
         }
 
-        socialNetwork.setMemento(undo);
+        socialNetwork.setMemento(undo.pop());
     }
 }

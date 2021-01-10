@@ -1,11 +1,11 @@
 import com.pa.proj2020.adts.graph.SocialNetwork;
 import com.pa.proj2020.adts.graph.SocialNetworkView;
 import javafx.application.Application;
-import javafx.scene.Scene;
 import javafx.stage.Stage;
 
 public class Main extends Application {
     private SocialNetwork socialNetwork;
+
     public static void main(String[] args) {
         launch(args);
     }
