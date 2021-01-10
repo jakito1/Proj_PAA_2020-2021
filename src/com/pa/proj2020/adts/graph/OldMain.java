@@ -9,7 +9,7 @@ import smartgraph.view.graphview.SmartCircularSortedPlacementStrategy;
 import smartgraph.view.graphview.SmartGraphPanel;
 import smartgraph.view.graphview.SmartPlacementStrategy;
 
-public class Main extends Application {
+public class OldMain extends Application {
 
     /**
      * @param args the command line arguments

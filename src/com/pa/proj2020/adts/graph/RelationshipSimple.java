@@ -7,6 +7,6 @@ public class RelationshipSimple implements Relationship {
 
     @Override
     public String toString() {
-        return "RelationshipSimple{}";
+        return "";
     }
 }

@@ -29,8 +29,6 @@ public class RelationshipShared implements Relationship {
 
     @Override
     public String toString() {
-        return "RelationshipShared{" +
-                "interests=" + getNumberInterests() +
-                '}';
+        return "";
     }
 }

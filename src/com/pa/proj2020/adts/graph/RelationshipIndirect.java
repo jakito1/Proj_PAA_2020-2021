@@ -62,8 +62,7 @@ public class RelationshipIndirect implements Relationship {
 
     @Override
     public String toString() {
-        return "RelationshipIndirect{" +
-                "number=" + getNumber() +
-                '}';
+        return "[" + getNumber() +
+                ']';
     }
 }

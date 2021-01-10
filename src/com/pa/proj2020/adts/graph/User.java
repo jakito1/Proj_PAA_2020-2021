@@ -59,7 +59,7 @@ public class User implements Serializable {
 
     @Override
     public String toString() {
-        return String.valueOf(this.id);
+        return this.id + " : " + this.name;
     }
 
     public Type getType() {
