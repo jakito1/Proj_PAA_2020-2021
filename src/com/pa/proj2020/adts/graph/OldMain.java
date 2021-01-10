@@ -31,13 +31,18 @@ public class OldMain extends Application {
 
         System.out.printf("Antes restore: " + socialNetwork.getGraph().vertices().size() + "\n");
         System.out.printf("Antes restore: " + socialNetwork.getGraph().edges().size() + "\n");
-        caretaker.saveState();
+        //caretaker.saveState();
+        socialNetwork.exportSerialization();
         socialNetwork.constructModelIterative(14);
         System.out.printf("Após inserção: " + socialNetwork.getGraph().vertices().size() + "\n");
         System.out.printf("Após inserção: " + socialNetwork.getGraph().edges().size() + "\n");
-        caretaker.restoreState();
+        //caretaker.restoreState();
+        socialNetwork.importSerialization();
         System.out.printf("Após restore: " + socialNetwork.getGraph().vertices().size() + "\n");
         System.out.printf("Após restore: " + socialNetwork.getGraph().edges().size() + "\n");
+
+
+
 
 
         System.out.println("---------------------------------------------------------------------------------");
