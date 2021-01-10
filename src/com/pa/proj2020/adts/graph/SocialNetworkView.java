@@ -95,7 +95,7 @@ public class SocialNetworkView{
         MenuItem menuStats1 = new MenuItem("Statistic Users Added");
         MenuItem menuStats2 = new MenuItem("Statistic Users Included by User Added");
         MenuItem menuStats3 = new MenuItem("Statistic User With More Direct Relationships");
-        MenuItem menuStats4 = new MenuItem("Statistic interest Most Shared");
+        MenuItem menuStats4 = new MenuItem("Statistic Interest Most Shared");
         MenuItem menuStats5 = new MenuItem("Bar chart with the number of relationships of\n the 5 users with the most relationships");
         MenuItem menuStats6 = new MenuItem("Bar chart with the number of relationships of\n the 5 users with the most relationships");
 
@@ -117,6 +117,26 @@ public class SocialNetworkView{
 
         menuDijkstra.setOnAction(e -> {
             this.addDijkstra();
+
+        });
+
+        menuStats1.setOnAction(e -> {
+            this.addStatUsersAdded();
+
+        });
+
+        menuStats2.setOnAction(e -> {
+            this.addStatUsersIncludedByUserAdded();
+
+        });
+
+        menuStats3.setOnAction(e -> {
+            this.addStatUserWithMoreDirectRelationships();
+
+        });
+
+        menuStats4.setOnAction(e -> {
+            this.addStatInterestMostShared();
 
         });
 
@@ -412,6 +432,9 @@ public class SocialNetworkView{
 
     }
 
+
+
+
     public void addDijkstra(){
 
         Button dijkstraButton = new Button("Dijkstra");
@@ -492,10 +515,6 @@ public class SocialNetworkView{
                                     }
                                 }
 
-
-
-
-
                         }catch (NullPointerException ex){
                             Text text = new Text("There's no path, please try again");
                             ((VBox)this.pane.getCenter()).getChildren().add(text);
@@ -542,12 +561,11 @@ public class SocialNetworkView{
         SmartGraphDemoContainer smartGraphView = new SmartGraphDemoContainer(this.graphView);
         smartGraphView.setManaged(true);
         smartGraphView.setMinWidth(600);
-        smartGraphView.setMaxWidth(700);
+        smartGraphView.setMaxWidth(650);
 
         pane = new BorderPane();
         pane.setTop(this.createMenu());
         pane.setLeft(smartGraphView);
-
 
         Scene scene = new Scene(pane, 1024, 600);
 
@@ -559,8 +577,42 @@ public class SocialNetworkView{
     public void updateGraphColors(){
         this.updateColorsVertexGraph();
         this.updateColorsEdgesGraph();
-
     }
+
+
+    public void addStatUsersAdded(){
+        ListView<String> list = new ListView<>();
+        list.setMaxSize(350, 500);
+        list.getItems().add(this.socialNetwork.addedUsersStats());
+
+        pane.setCenter(list);
+    }
+
+    public void addStatUsersIncludedByUserAdded(){
+        ListView<String> list = new ListView<>();
+        list.setMaxSize(350, 500);
+        list.getItems().add(this.socialNetwork.includedUsersStats());
+
+
+        pane.setCenter(list);
+    }
+
+    public void addStatUserWithMoreDirectRelationships(){
+        ListView<String> list = new ListView<>();
+        list.setMaxSize(350, 100);
+        list.getItems().add(this.socialNetwork.userWithMoreDirectRelationshipsStats());
+
+        pane.setCenter(list);
+    }
+
+    public void addStatInterestMostShared(){
+        ListView<String> list = new ListView<>();
+        list.setMaxSize(350, 100);
+        list.getItems().add(this.socialNetwork.interestMostSharedStats());
+
+        pane.setCenter(list);
+    }
+
 
 
     public Node createGraphView(){
