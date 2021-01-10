@@ -23,6 +23,7 @@ public class RelationshipShared implements Relationship {
         return interests;
     }
 
+
     public int getNumberInterests() {
         return interests.size();
     }

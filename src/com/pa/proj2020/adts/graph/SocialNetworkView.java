@@ -20,20 +20,15 @@ import javafx.scene.text.Text;
 import javafx.geometry.Insets;
 import javafx.scene.layout.VBox;
 import javafx.scene.layout.HBox;
-import java.io.IOException;
+
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 import javafx.scene.image.Image;
-import javafx.scene.layout.Background;
-import javafx.scene.layout.BackgroundImage;
-import javafx.scene.layout.BackgroundPosition;
-import javafx.scene.layout.BackgroundRepeat;
-import javafx.scene.layout.BackgroundSize;
 import javafx.stage.StageStyle;
 import smartgraph.view.containers.SmartGraphDemoContainer;
 import smartgraph.view.graphview.SmartCircularSortedPlacementStrategy;
@@ -559,7 +554,7 @@ public class SocialNetworkView{
 
     }
 
-
+    
     /**
      * Cria uma janela com a informacao associadao ao SocialNetworkView
      */
@@ -570,6 +565,14 @@ public class SocialNetworkView{
         }
 
         graphView = new SmartGraphPanel(this.socialNetwork.getGraph(), strategy);
+
+        graphView.setVertexDoubleClickAction(graphVertex -> {
+            this.addInformationVertex(graphVertex.getUnderlyingVertex());
+        });
+
+        graphView.setEdgeDoubleClickAction(graphEdge -> {
+            this.addInformationEdge(graphEdge.getUnderlyingEdge());
+        });
 
         this.updateColorsVertexGraph();
         this.updateColorsEdgesGraph();
@@ -678,9 +681,36 @@ public class SocialNetworkView{
         pane.setCenter(bar);
     }
 
+    public void addInformationVertex(Vertex<User> user){
+
+        ListView<String> list = new ListView<>();
+        list.setMaxSize(350, 100);
+
+        list.getItems().add(user.element().toString());
+        list.getItems().add(" ");
+        list.getItems().add("List Of Interests");
+
+            for(Interest interest : this.socialNetwork.interestsOfUser(user.element().getID())){
+                list.getItems().add(interest.toString());
+            }
+
+        pane.setCenter(list);
+    }
+
+    public void addInformationEdge(Edge<Relationship, User> edge){
+
+        if(edge.element() instanceof RelationshipIndirect){
+            ListView<String> list = new ListView<>();
+            list.setMaxSize(350, 100);
+            list.getItems().add(((RelationshipIndirect) edge.element()).getListOfInterestsString());
+            pane.setCenter(list);
+        }
+
+    }
 
 
-    public Node createGraphView(){
+
+    public void createGraphView(){
         graphView = new SmartGraphPanel(graph, strategy);
 
         this.updateColorsVertexGraph();
@@ -690,7 +720,6 @@ public class SocialNetworkView{
         smartGraphView.setManaged(true);
         smartGraphView.setMinWidth(600);
 
-        return smartGraphView;
     }
 
     public void updateColorsVertexGraph(){

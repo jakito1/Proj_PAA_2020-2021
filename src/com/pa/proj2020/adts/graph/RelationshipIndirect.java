@@ -44,6 +44,15 @@ public class RelationshipIndirect implements Relationship {
         return listOfInterests;
     }
 
+    public String getListOfInterestsString(){
+        String s = "List Of Interest\n";
+        for(Interest interest : listOfInterests){
+            s = s + interest.toString() + "\n";
+        }
+
+        return s;
+    }
+
     public int getNumber() {
         return listOfInterests.size();
     }
