@@ -470,7 +470,7 @@ public class SocialNetworkView{
                                 }
                             }
 
-                                for(int i=1; i< path.size()-1; i++) {
+                                for(int i=0; i< path.size()-1; i++) {
                                     Vertex<User> userVertex = null;
                                     Vertex<User> userVertex2 = null;
 
