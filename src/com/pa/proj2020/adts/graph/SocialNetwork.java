@@ -1,6 +1,8 @@
 package com.pa.proj2020.adts.graph;
 
 import java.io.*;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -11,8 +13,8 @@ public class SocialNetwork implements Originator, Serializable {
     private final HashMap<Integer, ArrayList<String>> relationships;
     private final HashMap<Integer, Interest> interests;
     private final Logging log = Logging.getInstance();
-    private DirectGraph<User, Relationship> graph;
     private final Statistics statistics;
+    private DirectGraph<User, Relationship> graph;
 
     /**
      * Cria um objeto SocialNetwork
@@ -95,6 +97,7 @@ public class SocialNetwork implements Originator, Serializable {
                 log.addInterest(idUser, interest.getId());
             }
         }
+        updateLog();
 
         return list;
 
@@ -140,6 +143,7 @@ public class SocialNetwork implements Originator, Serializable {
             this.graph.insertEdge(user1, user2, relationship);
             log.addRelationshipDirect(user1.getID(), user2.getID(), tempInterests.size());
         }
+        updateLog();
 
     }
 
@@ -216,6 +220,18 @@ public class SocialNetwork implements Originator, Serializable {
         return "SocialNetwork{" +
                 "minPath=" + path.toString() +
                 '}';
+    }
+
+    private void updateLog() {
+        try {
+            new File("outputFiles/").mkdirs();
+            FileWriter fileWriter = new FileWriter("outputFiles/LogFile " +
+                    LocalDateTime.now().format(DateTimeFormatter.ofPattern("dd-MM-yyyy HH-mm-ss")) + ".log");
+            fileWriter.write(log.toString());
+            fileWriter.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
 
