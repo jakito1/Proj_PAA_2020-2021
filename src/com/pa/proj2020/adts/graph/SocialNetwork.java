@@ -109,7 +109,7 @@ public class SocialNetwork implements Originator, Serializable {
         }
 
         List<Interest> tempInterests = new ArrayList<>();
-        boolean relatioshipDirect = false;
+        boolean relationshipDirect = false;
         Relationship relationship;
 
         for (Interest interest : this.interests.values()) {
@@ -120,21 +120,21 @@ public class SocialNetwork implements Originator, Serializable {
         }
 
         if (this.relationships.get(user1.getID()).contains(String.valueOf(user2.getID()))) {
-            relatioshipDirect = true;
+            relationshipDirect = true;
         }
 
         //HashSet<Edge<Relationship, User>> tempEdges = new HashSet<>(this.graph.edges());
         //tempEdges
 
-        if (!tempInterests.isEmpty() && !relatioshipDirect && addIndirect) {
+        if (!tempInterests.isEmpty() && !relationshipDirect && addIndirect) {
             relationship = new RelationshipIndirect(tempInterests);
             this.graph.insertEdge(user1, user2, relationship);
             log.addRelationshipIndirect(user1.getID(), user2.getID(), tempInterests.size());
-        } else if (tempInterests.isEmpty() && relatioshipDirect && !addIndirect) {
+        } else if (tempInterests.isEmpty() && relationshipDirect && !addIndirect) {
             relationship = new RelationshipSimple();
             this.graph.insertEdge(user1, user2, relationship);
             log.addRelationshipDirect(user1.getID(), user2.getID(), 0);
-        } else if (!tempInterests.isEmpty() && relatioshipDirect && !addIndirect) {
+        } else if (!tempInterests.isEmpty() && relationshipDirect && !addIndirect) {
             relationship = new RelationshipShared(tempInterests);
             this.graph.insertEdge(user1, user2, relationship);
             log.addRelationshipDirect(user1.getID(), user2.getID(), tempInterests.size());
@@ -263,7 +263,7 @@ public class SocialNetwork implements Originator, Serializable {
 	
 	@Override
     public Memento createMemento() {
-        return new MyMemento(this);
+        return new MyMemento(this.graph);
     }
 
     @Override
@@ -279,16 +279,16 @@ public class SocialNetwork implements Originator, Serializable {
 	static class MyMemento implements Memento {
         private byte[] state;
 
-        public MyMemento(SocialNetwork stateToSave) {
+        public MyMemento(DirectGraph<User, Relationship> stateToSave) {
             load(stateToSave);
         }
 
-        private void load(SocialNetwork stateToSave) {
+        private void load(DirectGraph<User, Relationship> stateToSave) {
             ByteArrayOutputStream bos = new ByteArrayOutputStream();
             ObjectOutputStream oos = null;
             try {
                 oos = new ObjectOutputStream(bos);
-                oos.writeObject(stateToSave.getGraph());
+                oos.writeObject(stateToSave);
                 oos.flush();
                 oos.close();
                 bos.close();
