@@ -60,23 +60,6 @@ public class SocialNetworkView{
         this.graph = this.socialNetwork.getGraph();
         this.caretaker = new Caretaker(socialNetwork);
 
-        this.caretaker.saveState();
-
-        System.out.println(this.socialNetwork.getGraph().numVertices());
-        socialNetwork.constructModelIterative(1);
-        this.caretaker.saveState();
-
-        socialNetwork.constructModelIterative(9);
-        System.out.println(this.socialNetwork.getGraph().numVertices());
-
-        this.caretaker.saveState();
-        System.out.println(this.socialNetwork.getGraph().numVertices());
-        this.caretaker.restoreState();
-        System.out.println(this.socialNetwork.getGraph().numVertices());
-        this.caretaker.restoreState();
-        System.out.println(this.socialNetwork.getGraph().numVertices());
-        this.caretaker.saveState();
-
         this.createGraphView();
     }
 
