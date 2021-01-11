@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Scanner;
 
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 
 public class MemoryPersistence {
 
@@ -42,7 +43,7 @@ public class MemoryPersistence {
 
     protected void exportJSON() {
         try {
-            JSONObject obj = new JSONObject();
+            Gson gson = new GsonBuilder().setPrettyPrinting().create();
             FileOutputStream fileOut = new FileOutputStream("outputFiles/exportSerialization");
             ObjectOutputStream out = new ObjectOutputStream(fileOut);
             out.writeObject(socialNetwork.getGraph());
