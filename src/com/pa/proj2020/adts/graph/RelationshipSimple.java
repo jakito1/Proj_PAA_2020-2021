@@ -1,12 +1,22 @@
 package com.pa.proj2020.adts.graph;
 
-import java.util.ArrayList;
-
+/**
+ * Classe que permite criar um Relacionamento Direto Simples
+ */
 public class RelationshipSimple implements Relationship {
-    private ArrayList<Interest> interests;
 
-    public RelationshipSimple(){
-        interests = new ArrayList<>();
+    /**
+     * Cria um Relacionamento Direto Simples
+     */
+    public RelationshipSimple() {
     }
 
+    /**
+     * Método que retorna uma string com a informação do relacionamento Direto Simples
+     * @return um string com a informação do relacionamento direto simples
+     */
+    @Override
+    public String toString() {
+        return "";
+    }
 }
