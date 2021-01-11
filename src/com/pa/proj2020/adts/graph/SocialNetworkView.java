@@ -1,9 +1,5 @@
 package com.pa.proj2020.adts.graph;
 
-
-
-
-
 import java.util.ArrayList;
 import javafx.application.Platform;
 import javafx.scene.Node;
@@ -46,6 +42,7 @@ public class SocialNetworkView{
     private BorderPane pane;
     private Caretaker caretaker;
 
+
     /**
      * Permite criar um novo SocialNetworkView
      */
@@ -54,6 +51,7 @@ public class SocialNetworkView{
         stage = new Stage(StageStyle.DECORATED);
 
     }
+
 
     public SocialNetworkView(SocialNetwork socialNetwork){
         this();
@@ -64,12 +62,14 @@ public class SocialNetworkView{
         this.createGraphView();
     }
 
+
     /**
      * Inicia o SocialNetworkView
      */
     public void startCentralConsole() {
         this.createCenter();
     }
+
 
     /**
      * Cria um Menu no SocialNetworkView com varias opcoes
@@ -164,33 +164,11 @@ public class SocialNetworkView{
         });
 
 
-
-//        menuUndo.setOnAction(e -> {
-//            caretaker.requestRestore(this.webGenerator);
-//            this.graphView.update();
-//
-//        });
-
-//        menuSave.setOnAction(e -> {
-//
-//            this.webdaojson = new WebDAOJSON(this.webGenerator.getName());
-//
-//            webdaojson.printGraph(this.webGenerator);
-//
-//        });
-//
-//        menuUpdate.setOnAction(e -> {
-//            this.webdaojson = new WebDAOJSON(this.webGenerator.getName());
-//            WebDAOJSON test = (WebDAOJSON) this.webdaojson;
-//            WebGenerator web1 = null;
-//            web1 = ((WebGenerator) test.updateGraph());
-//
-//        });
-
         menuBar.getMenus().addAll(menuOptions, menuOptions1, menuOptions2);
 
         return menuBar;
     }
+
 
     /**
      * Cria a janela inicial do WebGeneratorView
@@ -252,7 +230,7 @@ public class SocialNetworkView{
         center.getChildren().addAll(welcomeText, imageView);
 
         TextField relationshipsField = new TextField();
-        relationshipsField.setText("interest_names.csv");
+        relationshipsField.setText("relationships.csv");
         relationshipsField.setMaxWidth(250);
         relationshipsField.setMinWidth(250);
 
@@ -281,12 +259,12 @@ public class SocialNetworkView{
         center.getChildren().addAll(hBox1);
 
         TextField userNamesField = new TextField();
-        userNamesField.setText("relationships.csv");
+        userNamesField.setText("user_names.csv");
         userNamesField.setMaxWidth(250);
         userNamesField.setMinWidth(250);
 
         TextField interestNamesField = new TextField();
-        interestNamesField.setText("user_names.csv");
+        interestNamesField.setText("interest_names.csv");
         interestNamesField.setMaxWidth(250);
         interestNamesField.setMinWidth(250);
 
@@ -322,6 +300,8 @@ public class SocialNetworkView{
 
         okIteractiveButton.setOnAction(e -> {
             stage.close();
+            this.socialNetwork.setFileNames(userNamesField.getText(), relationshipsField.getText(),
+                    interestNamesField.getText(), interestsField.getText());
             this.createCenterSocialNetworkView();
             this.graphView.setAutomaticLayout(true);
 
@@ -331,6 +311,8 @@ public class SocialNetworkView{
 
         okTotalButton.setOnAction(e -> {
             stage.close();
+            this.socialNetwork.setFileNames(userNamesField.getText(), relationshipsField.getText(),
+                    interestNamesField.getText(), interestsField.getText());
             this.socialNetwork.constructModelTotal();
             this.createCenterSocialNetworkView();
 
@@ -355,6 +337,11 @@ public class SocialNetworkView{
         stage.show();
 
     }
+
+    public void setFilenames(String userNamesFile, String relationshipsFile, String interestNamesFile, String interestsFile){
+        this.socialNetwork.setFileNames(userNamesFile, relationshipsFile, interestNamesFile, interestsFile);
+    }
+
 
     public void createNodeAddUser(){
         Button updateButton = new Button("UPDATE COLORS");
@@ -400,7 +387,6 @@ public class SocialNetworkView{
     }
 
 
-
     public void createNodeAddIndirectRelationships(){
         Button updateButton = new Button("UPDATE COLORS");
         Button addUserButton = new Button("ADD INDIRECT RELATIONSHIPS");
@@ -442,8 +428,6 @@ public class SocialNetworkView{
         pane.setCenter(center2);
 
     }
-
-
 
 
     public void addDijkstra(){
@@ -535,15 +519,6 @@ public class SocialNetworkView{
             graphView.update();
         });
 
-
-
-//        HBox hBox2 = new HBox();
-//        hBox2.setPadding(new Insets(10));
-//        hBox2.setSpacing(10);
-//        hBox2.setAlignment(Pos.CENTER);
-//
-//        hBox2.getChildren().addAll(addUserButton, updateButton);
-
         VBox center2 = new VBox();
         center2.setPadding(new Insets(-10, 12, 15, 12));
         center2.setSpacing(15);
@@ -554,7 +529,7 @@ public class SocialNetworkView{
 
     }
 
-    
+
     /**
      * Cria uma janela com a informacao associadao ao SocialNetworkView
      */

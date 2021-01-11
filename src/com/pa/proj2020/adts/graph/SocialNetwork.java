@@ -16,6 +16,7 @@ public class SocialNetwork implements Originator, Serializable {
     private final Logging log = Logging.getInstance();
     private final Statistics statistics;
     private DirectGraph<User, Relationship> graph;
+    private String userNamesFile, relationshipsFile, interestNamesFile, interestsFile;
 
     /**
      * Cria um objeto SocialNetwork
@@ -27,6 +28,34 @@ public class SocialNetwork implements Originator, Serializable {
         relationships = new HashMap<>();
         interests = new HashMap<>();
         statistics = new Statistics();
+        this.checkFilenames();
+
+    }
+
+    public SocialNetwork(String userNamesFile, String relationshipsFile, String interestNamesFile, String interestsFile){
+        this();
+        this.userNamesFile = userNamesFile;
+        this.relationshipsFile = relationshipsFile;
+        this.interestNamesFile = interestNamesFile;
+        this.interestsFile = interestsFile;
+    }
+
+    public void checkFilenames(){
+        if(this.userNamesFile == null || this.relationshipsFile == null || this.interestNamesFile == null || this.interestsFile == null){
+            this.userNamesFile = "user_names.csv";
+            this.relationshipsFile = "relationships.csv";
+            this.interestNamesFile = "interest_names.csv";
+            this.interestsFile = "interests.csv";
+        }
+
+    }
+
+    public void setFileNames(String userNamesFile, String relationshipsFile, String interestNamesFile, String interestsFile){
+        this.userNamesFile = userNamesFile;
+        this.relationshipsFile = relationshipsFile;
+        this.interestNamesFile = interestNamesFile;
+        this.interestsFile = interestsFile;
+        this.checkFilenames();
     }
 
     /**
