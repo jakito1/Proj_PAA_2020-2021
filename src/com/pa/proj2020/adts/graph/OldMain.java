@@ -23,9 +23,7 @@ public class OldMain extends Application {
     @Override
     public void start(Stage ignored) {
         SocialNetwork socialNetwork = new SocialNetwork();
-        Caretaker caretaker = new Caretaker(socialNetwork);
         socialNetwork.initializeData();
-        Gson gson = new GsonBuilder().setPrettyPrinting().create();
 
         socialNetwork.constructModelIterative(1);
 
@@ -34,16 +32,13 @@ public class OldMain extends Application {
 
         System.out.printf("Antes restore: " + socialNetwork.getGraph().vertices().size() + "\n");
         System.out.printf("Antes restore: " + socialNetwork.getGraph().edges().size() + "\n");
-        //caretaker.saveState();
         socialNetwork.exportSerialization();
         socialNetwork.constructModelIterative(14);
         System.out.printf("Após inserção: " + socialNetwork.getGraph().vertices().size() + "\n");
         System.out.printf("Após inserção: " + socialNetwork.getGraph().edges().size() + "\n");
-        //caretaker.restoreState();
         socialNetwork.importSerialization();
         System.out.printf("Após restore: " + socialNetwork.getGraph().vertices().size() + "\n");
         System.out.printf("Após restore: " + socialNetwork.getGraph().edges().size() + "\n");
-
 
 
 

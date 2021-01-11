@@ -445,7 +445,9 @@ public class SocialNetwork implements Originator, Serializable {
     public void setMemento(Memento savedState) {
         ByteArrayInputStream temp = new ByteArrayInputStream(savedState.getState());
         try {
-            graph = (DirectGraph<User, Relationship>) new ObjectInputStream(temp).readObject();
+            HashMap<User, Vertex<User>> hashMap = new HashMap<>();
+            hashMap = (HashMap<User, Vertex<User>>) new ObjectInputStream(temp).readObject();
+            graph = new DirectGraph<>(hashMap);
         } catch (IOException | ClassNotFoundException e) {
             e.printStackTrace();
         }
@@ -459,6 +461,16 @@ public class SocialNetwork implements Originator, Serializable {
         graph = memoryPersistence.importSerialization();
     }
 
+    public void exportJSON(){
+        memoryPersistence.exportJSON();
+    }
+
+    /*
+    public void importJSON(){
+        graph = memoryPersistence.importJSON();
+    }
+     */
+
     static class MyMemento implements Memento {
         private byte[] state;
 
@@ -471,7 +483,7 @@ public class SocialNetwork implements Originator, Serializable {
             ObjectOutputStream oos = null;
             try {
                 oos = new ObjectOutputStream(bos);
-                oos.writeObject(stateToSave);
+                oos.writeObject(stateToSave.getVertices());
                 oos.flush();
                 oos.close();
                 bos.close();

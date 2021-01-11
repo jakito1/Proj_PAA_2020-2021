@@ -92,10 +92,10 @@ public class SocialNetworkView{
         MenuItem menuAddIndirectRelationship = new MenuItem("Add indirect relationships");
         MenuItem menuDijkstra = new MenuItem("Dijkstra");
 
-        MenuItem menuSaveGraph = new MenuItem("SaveGraph");
-        MenuItem menuUpdateGraph = new MenuItem("UpdateGraph");
-        MenuItem menuSaveLog = new MenuItem("SaveLog");
-        MenuItem menuUpdateLog = new MenuItem("UpdateLog");
+        MenuItem menuExportSerialize = new MenuItem("Export to Java Serialize");
+        MenuItem menuImportSerialize = new MenuItem("Import from Java Serialize");
+        MenuItem menuExportJSON = new MenuItem("Export to JSON");
+        //MenuItem menuUpdateLog = new MenuItem("UpdateLog");
 
         MenuItem menuStats1 = new MenuItem("Statistic Users Added");
         MenuItem menuStats2 = new MenuItem("Statistic Users Included by User Added");
@@ -105,7 +105,7 @@ public class SocialNetworkView{
         MenuItem menuStats6 = new MenuItem("Bar chart with the top 5 interest");
 
         menuOptions.getItems().addAll(menuExit, menuUndo, menuAddUser, menuAddIndirectRelationship, menuDijkstra);
-        menuOptions1.getItems().addAll(menuSaveGraph, menuUpdateGraph, menuSaveLog, menuUpdateLog);
+        menuOptions1.getItems().addAll(menuExportSerialize, menuImportSerialize, menuExportJSON);
         menuOptions2.getItems().addAll(menuStats1, menuStats2, menuStats3, menuStats4, menuStats5, menuStats6);
 
         menuExit.setOnAction(e -> Platform.exit());
@@ -123,6 +123,19 @@ public class SocialNetworkView{
         menuDijkstra.setOnAction(e -> {
             this.addDijkstra();
 
+        });
+
+        menuExportSerialize.setOnAction(e -> {
+            this.socialNetwork.exportSerialization();
+        });
+
+        menuImportSerialize.setOnAction(e -> {
+            this.socialNetwork.importSerialization();
+            this.graphView.update();
+        });
+
+        menuExportJSON.setOnAction(e -> {
+            this.socialNetwork.exportJSON();
         });
 
         menuStats1.setOnAction(e -> {
@@ -298,9 +311,9 @@ public class SocialNetworkView{
         nameField.setMinWidth(250);
         center.getChildren().add(nameField);
 
-        Button okIteractiveButton = new Button("START ITERATIVE");
+        Button okInteractiveButton = new Button("START ITERATIVE");
 
-        okIteractiveButton.setOnAction(e -> {
+        okInteractiveButton.setOnAction(e -> {
             stage.close();
             this.socialNetwork.setFileNames(userNamesField.getText(), relationshipsField.getText(),
                     interestNamesField.getText(), interestsField.getText());
@@ -326,7 +339,7 @@ public class SocialNetworkView{
         label5.setTextFill(Color.BLUE);
         label5.setFont(sanSerif1);
 
-        hBox.getChildren().addAll(label5, nameField, okIteractiveButton, okTotalButton);
+        hBox.getChildren().addAll(label5, nameField, okInteractiveButton, okTotalButton);
         hBox.setAlignment(Pos.CENTER);
         center.getChildren().addAll(hBox, welcomeText5);
         BorderPane pane = new BorderPane();

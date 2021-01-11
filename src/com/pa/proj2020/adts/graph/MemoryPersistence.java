@@ -1,11 +1,14 @@
 package com.pa.proj2020.adts.graph;
 
 import java.io.*;
-import java.util.List;
-import java.util.Scanner;
+import java.util.*;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.google.gson.JsonElement;
+import com.google.gson.reflect.TypeToken;
 
 public class MemoryPersistence {
 
@@ -19,7 +22,7 @@ public class MemoryPersistence {
         try {
             FileOutputStream fileOut = new FileOutputStream("outputFiles/exportSerialization");
             ObjectOutputStream out = new ObjectOutputStream(fileOut);
-            out.writeObject(socialNetwork.getGraph());
+            out.writeObject(socialNetwork.getGraph().getVertices());
             out.close();
             fileOut.close();
         } catch (IOException e) {
@@ -28,11 +31,13 @@ public class MemoryPersistence {
     }
 
     protected DirectGraph<User, Relationship> importSerialization() {
-        DirectGraph<User, Relationship> temp = null;
+        DirectGraph<User, Relationship> temp = new DirectGraph<>();
+        HashMap<User, Vertex<User>> hashMap;
         try {
             FileInputStream fileIn = new FileInputStream("outputFiles/exportSerialization");
             ObjectInputStream in = new ObjectInputStream(fileIn);
-            temp = (DirectGraph<User, Relationship>) in.readObject();
+            hashMap = (HashMap<User, Vertex<User>>) in.readObject();
+            temp = new DirectGraph<>(hashMap);
             in.close();
             fileIn.close();
         } catch (IOException | ClassNotFoundException e) {
@@ -44,9 +49,9 @@ public class MemoryPersistence {
     protected void exportJSON() {
         try {
             Gson gson = new GsonBuilder().setPrettyPrinting().create();
-            FileOutputStream fileOut = new FileOutputStream("outputFiles/exportSerialization");
+            FileOutputStream fileOut = new FileOutputStream("outputFiles/exportJSON.json");
             ObjectOutputStream out = new ObjectOutputStream(fileOut);
-            out.writeObject(socialNetwork.getGraph());
+            out.writeObject(gson.toJson(socialNetwork.getGraph().getVertices()));
             out.close();
             fileOut.close();
         } catch (IOException e) {
@@ -54,18 +59,28 @@ public class MemoryPersistence {
         }
     }
 
+    /*
     protected DirectGraph<User, Relationship> importJSON() {
-        DirectGraph<User, Relationship> temp = null;
+        String s;
+        String s2 = new String();
+        DirectGraph<User, Relationship> temp = new DirectGraph<>();
+        Map<User, Vertex<User>> map;
+
         try {
-            FileInputStream fileIn = new FileInputStream("outputFiles/exportSerialization");
+            FileInputStream fileIn = new FileInputStream("outputFiles/exportJSON.json");
             ObjectInputStream in = new ObjectInputStream(fileIn);
-            temp = (DirectGraph<User, Relationship>) in.readObject();
-            in.close();
-            fileIn.close();
+            s = (String) in.readObject();
+
+            s = s.replaceAll("(?s)elemento.*?INCLUIDO", "");
+            System.out.println(s);
+            //Object result = (new Gson()).fromJson(s, Object.class);
+            //map = new Gson().fromJson(s, new TypeToken<HashMap<User, Vertex<User>>>() {}.getType());
         } catch (IOException | ClassNotFoundException e) {
             System.err.println(e.getMessage());
         }
         return temp;
     }
+
+     */
 
 }

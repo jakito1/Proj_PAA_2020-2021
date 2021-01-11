@@ -40,7 +40,7 @@ public class ReadData {
             String[] array = line.split(";", -1);
             data.put(array[0], new ArrayList<>());
             for (int i = 1; i < array.length; i++) {
-                data.get(array[0]).add(array[i]);
+                data.get(array[0]).add(array[i].replace("'", ""));
             }
         }
         return data;
