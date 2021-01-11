@@ -54,7 +54,10 @@ public class SocialNetworkView{
 
     }
 
-
+    /**
+     * Permite criar um novo SocialNetworkView
+     * @param socialNetwork objeto SocialNetwork
+     */
     public SocialNetworkView(SocialNetwork socialNetwork){
         this();
         this.socialNetwork = socialNetwork;
@@ -75,7 +78,6 @@ public class SocialNetworkView{
 
     /**
      * Cria um Menu no SocialNetworkView com varias opcoes
-     *
      * @return o menu criado no SocialNetworkView
      */
     private Node createMenu() {
@@ -173,9 +175,7 @@ public class SocialNetworkView{
 
 
     /**
-     * Cria a janela inicial do WebGeneratorView
-     *
-     * @return a janela criada
+     * Cria a janela inicial do SocialNetworkView
      */
     private void createCenter() {
         Image img = new Image("images/SocialNetworkImage.jpg");
@@ -340,11 +340,21 @@ public class SocialNetworkView{
 
     }
 
+    /**
+     * Método que inicializa os nomes dos ficheiros
+     * @param userNamesFile representa o ficheiro com os nomes dos utilizadores
+     * @param relationshipsFile representa o ficheiro com relationships
+     * @param interestNamesFile representa o ficheiro com o nome dos interesses
+     * @param interestsFile representa o ficheiro com os interesses
+     */
     public void setFilenames(String userNamesFile, String relationshipsFile, String interestNamesFile, String interestsFile){
         this.socialNetwork.setFileNames(userNamesFile, relationshipsFile, interestNamesFile, interestsFile);
     }
 
 
+    /**
+     * Cria o menu de adicao de utilizador
+     */
     public void createNodeAddUser(){
         Button updateButton = new Button("UPDATE COLORS");
         Button addUserButton = new Button("ADD USER");
@@ -389,6 +399,9 @@ public class SocialNetworkView{
     }
 
 
+    /**
+     * Cria o menu de adicao de relacionamentos indiretos
+     */
     public void createNodeAddIndirectRelationships(){
         Button updateButton = new Button("UPDATE COLORS");
         Button addUserButton = new Button("ADD INDIRECT RELATIONSHIPS");
@@ -432,6 +445,9 @@ public class SocialNetworkView{
     }
 
 
+    /**
+     * Cria o menu de Dijkstra
+     */
     public void addDijkstra(){
 
         Button dijkstraButton = new Button("Dijkstra");
@@ -570,12 +586,18 @@ public class SocialNetworkView{
         graphView.init();
     }
 
+    /**
+     * Atualiza as cores do grafo
+     */
     public void updateGraphColors(){
         this.updateColorsVertexGraph();
         this.updateColorsEdgesGraph();
     }
 
 
+    /**
+     * Cria o menu das estatisticas de utilizadores adicionados
+     */
     public void addStatUsersAdded(){
         ListView<String> list = new ListView<>();
         list.setMaxSize(350, 500);
@@ -584,6 +606,9 @@ public class SocialNetworkView{
         pane.setCenter(list);
     }
 
+    /**
+     * Cria o menu das estatisticas de utilizadores incluidos
+     */
     public void addStatUsersIncludedByUserAdded(){
         ListView<String> list = new ListView<>();
         list.setMaxSize(350, 500);
@@ -593,6 +618,9 @@ public class SocialNetworkView{
         pane.setCenter(list);
     }
 
+    /**
+     * Cria o menu das estatisticas de utilizadores com mais relacionamentos diretos
+     */
     public void addStatUserWithMoreDirectRelationships(){
         ListView<String> list = new ListView<>();
         list.setMaxSize(350, 100);
@@ -601,6 +629,9 @@ public class SocialNetworkView{
         pane.setCenter(list);
     }
 
+    /**
+     * Cria o menu das estatisticas de interesse mais partilhado
+     */
     public void addStatInterestMostShared(){
         ListView<String> list = new ListView<>();
         list.setMaxSize(350, 100);
@@ -609,6 +640,9 @@ public class SocialNetworkView{
         pane.setCenter(list);
     }
 
+    /**
+     * Cria o menu das estatisticas de top 5 de utilizadores com mais relacionamentos
+     */
     public void addStatTopFiveUsersWithMostRelationships(){
 
         CategoryAxis xaxis = new CategoryAxis();
@@ -634,6 +668,9 @@ public class SocialNetworkView{
     }
 
 
+    /**
+     * Cria o menu das estatisticas de top 5 interesses
+     */
     public void addStatTopFiveInterestsStats(){
 
         CategoryAxis xaxis = new CategoryAxis();
@@ -658,6 +695,10 @@ public class SocialNetworkView{
         pane.setCenter(bar);
     }
 
+    /**
+     * Cria o menu com a informacao do vertice
+     * @param user vertice
+     */
     public void addInformationVertex(Vertex<User> user){
 
         ListView<String> list = new ListView<>();
@@ -674,6 +715,10 @@ public class SocialNetworkView{
         pane.setCenter(list);
     }
 
+    /**
+     * Cria o menu com a informacao da aresta
+     * @param edge aresta
+     */
     public void addInformationEdge(Edge<Relationship, User> edge){
 
         if(edge.element() instanceof RelationshipIndirect){
@@ -685,8 +730,9 @@ public class SocialNetworkView{
 
     }
 
-
-
+    /**
+     * Cria o GraphView
+     */
     public void createGraphView(){
         graphView = new SmartGraphPanel(graph, strategy);
 
@@ -699,6 +745,9 @@ public class SocialNetworkView{
 
     }
 
+    /**
+     * Atualiza as cores dos vertices
+     */
     public void updateColorsVertexGraph(){
         if(this.socialNetwork.getGraph().numVertices() == 0){
             return;
@@ -706,9 +755,6 @@ public class SocialNetworkView{
 
         for(Vertex<User> userVertex : this.socialNetwork.getGraph().vertices()){
             if(userVertex.element().getType().equals(Type.INCLUIDO)){
-                System.out.println(userVertex.element());
-                System.out.println(userVertex);
-                System.out.println(graphView.getChildren());
                 this.graphView.getStylableVertex(userVertex).setStyleClass("myVertexIncluded");
             } else {
                 this.graphView.getStylableVertex(userVertex).setStyleClass("myVertexAdded");
@@ -716,6 +762,9 @@ public class SocialNetworkView{
         }
     }
 
+    /**
+     * Atualiza as cores das arestas
+     */
     public void updateColorsEdgesGraph(){
         if(this.socialNetwork.getGraph().numEdges() == 0){
             return;

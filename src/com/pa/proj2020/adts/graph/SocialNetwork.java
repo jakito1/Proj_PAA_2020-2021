@@ -8,6 +8,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * Classe responsável pela gestão da Social Network
+ */
 public class SocialNetwork implements Originator, Serializable {
 
     private final HashMap<Integer, User> users;
@@ -34,6 +37,13 @@ public class SocialNetwork implements Originator, Serializable {
 
     }
 
+    /**
+     * Cria um objeto SocialNetwork atraves do usernamefiles, relationshipfiles, interestnamefile e interestfiles
+     * @param userNamesFile representa o ficheiro com os nomes dos utilizadores
+     * @param relationshipsFile representa o ficheiro com relationships
+     * @param interestNamesFile representa o ficheiro com o nome dos interesses
+     * @param interestsFile representa o ficheiro com os interesses
+     */
     public SocialNetwork(String userNamesFile, String relationshipsFile, String interestNamesFile, String interestsFile){
         this();
         this.userNamesFile = userNamesFile;
@@ -42,6 +52,9 @@ public class SocialNetwork implements Originator, Serializable {
         this.interestsFile = interestsFile;
     }
 
+    /**
+     * Método que verifica se os nomes dos ficheiros foram inicializados
+     */
     public void checkFilenames(){
         if(this.userNamesFile == null || this.relationshipsFile == null || this.interestNamesFile == null || this.interestsFile == null){
             this.userNamesFile = "user_names.csv";
@@ -52,6 +65,13 @@ public class SocialNetwork implements Originator, Serializable {
 
     }
 
+    /**
+     * Método que inicializa os nomes dos ficheiros
+     * @param userNamesFile representa o ficheiro com os nomes dos utilizadores
+     * @param relationshipsFile representa o ficheiro com relationships
+     * @param interestNamesFile representa o ficheiro com o nome dos interesses
+     * @param interestsFile representa o ficheiro com os interesses
+     */
     public void setFileNames(String userNamesFile, String relationshipsFile, String interestNamesFile, String interestsFile){
         this.userNamesFile = userNamesFile;
         this.relationshipsFile = relationshipsFile;
@@ -85,9 +105,8 @@ public class SocialNetwork implements Originator, Serializable {
     }
 
     /**
-     * Insere os vertices e arestas no grafo e retorna-o
-     *
-     * @return o grafo
+     * Método que constroi o algoritmo Total
+     * @return grafo com algoritmo total
      */
     public DirectGraph<User, Relationship> constructModelTotal() {
         for (User user : users.values()) {
@@ -104,19 +123,35 @@ public class SocialNetwork implements Originator, Serializable {
         return this.graph;
     }
 
+    /**
+     * Método que retorna o grafo
+     * @return o grafo construido
+     */
     public DirectGraph<User, Relationship> getGraph() {
         return this.graph;
     }
 
+    /**
+     * Metodo que retorna uma colecao com users
+     * @return um hashmap com users
+     */
     public HashMap<Integer, User> getUsers() {
         return this.users;
     }
 
+    /**
+     * Metodo que retorna uma colecao com relacoes
+     * @return um hashmap com relacoes
+     */
     public HashMap<Integer, ArrayList<String>> getRelationShips() {
         return this.relationships;
     }
 
-
+    /**
+     * Metodo que retorna os interesses de um utilizador
+     * @param idUser representa o id do utilizador
+     * @return a lista de interesses do utilizador fornecido
+     */
     public List<Interest> interestsOfUser(int idUser) {
         if (idUser < 0) {
             return null;
@@ -135,10 +170,21 @@ public class SocialNetwork implements Originator, Serializable {
 
     }
 
+    /**
+     * Metodo que insere uma aresta entre dois users
+     * @param user1 representa um utilizador
+     * @param user2 representa outro utilizador
+     */
     public void insertEdge(User user1, User user2) {
         this.insertEdge(user1, user2, false);
     }
 
+    /**
+     * Metodo que insere uma aresta entre dois utilizadores
+     * @param user1 representa um utilizador
+     * @param user2 representa outro utilizador
+     * @param addIndirect true se quiser adicionar relacoes indiretas, false caso contrario
+     */
     public void insertEdge(User user1, User user2, boolean addIndirect) {
         if (user1 == null || user2 == null) {
             return;
@@ -179,7 +225,10 @@ public class SocialNetwork implements Originator, Serializable {
 
     }
 
-
+    /**
+     * Metodo que adiciona relacoes indiretas
+     * @param idUser representa o user
+     */
     public void addIndirectRelationships(int idUser) {
         User user = this.users.get(idUser);
 
@@ -190,6 +239,10 @@ public class SocialNetwork implements Originator, Serializable {
         }
     }
 
+    /**
+     * Método que constroi o algoritmo Iterativo
+     * @param idUser representa o user
+     */
     public void constructModelIterative(int idUser) {
 
         if (relationships.isEmpty() || users.isEmpty()) {
@@ -231,10 +284,21 @@ public class SocialNetwork implements Originator, Serializable {
     }
 
 
+    /**
+     * Metodo que retorna o caminho de menor custo entre dois vertices
+     * @param origin representa um vertice
+     * @param end representa outro vertice
+     * @param path representa o caminho de menor custo
+     * @return o custo do caminho
+     */
     public int minPath(Vertex<User> origin, Vertex<User> end, ArrayList<User> path) {
         return this.graph.minCostPath(origin, end, path);
     }
 
+    /**
+     * Metodo que retorna uma string com a social network
+     * @return uma string com a social network
+     */
     @Override
     public String toString() {
         ArrayList<User> path = new ArrayList<>();
@@ -254,6 +318,9 @@ public class SocialNetwork implements Originator, Serializable {
                 '}';
     }
 
+    /**
+     * Metodo que permite atualizar o Logging
+     */
     private void updateLog() {
         try {
             new File("outputFiles/").mkdirs();
@@ -267,6 +334,10 @@ public class SocialNetwork implements Originator, Serializable {
     }
 
 
+    /**
+     * Metodo que permite obter a lista de utilizadores nao inseridos
+     * @return a lista de utilizadores nao inseridos
+     */
     public List<String> getUsersNotInserted() {
         ArrayList<String> list = new ArrayList<>();
 
@@ -285,46 +356,91 @@ public class SocialNetwork implements Originator, Serializable {
     }
 
 
+    /**
+     * Metodo que retorna a estatistica de utilizadores adicionados
+     * @return estatistica de utilizadores adicionados
+     */
     public String addedUsersStats() {
         return this.statistics.addedUsersStats(this.graph);
     }
 
+    /**
+     * Metodo que retorna a estatistica de utilizadores incluidos
+     * @return estatistica de utilizadores incluidos
+     */
     public String includedUsersStats() {
         return this.statistics.includedUsersStats(this.graph);
     }
 
+    /**
+     * Metodo que retorna a estatistica de utilizadores com mais relacionamentos
+     * @return estatistica de utilizadores com mais relacionamentos
+     */
     public String userWithMoreDirectRelationshipsStats() {
         return this.statistics.userWithMoreDirectRelationshipsStats(this.graph);
     }
 
+    /**
+     * Metodo que retorna a estatistica de interesse mais partilhado
+     * @return estatistica de interesse mais partilhado
+     */
     public String interestMostSharedStats() {
         return this.statistics.interestMostSharedStats(this.graph);
     }
 
+    /**
+     * Metodo que retorna a estatistica de utilizadores com mais relacionamentos
+     * @return estatistica de utilizadores com mais relacionamentos
+     */
     public Map<User, Integer> topFiveUsersWithMostRelationshipsStats() {
         return this.statistics.topFiveUsersWithMostRelationshipsStats(this.graph);
     }
 
+    /**
+     * Metodo que permite obter um Logging
+     * @return um Logging
+     */
     public Logging getLog() {
         return log;
     }
 
+    /**
+     * Metodo que permite obter uma colecao de relacoes
+     * @return um hashmap de relacoes
+     */
     public HashMap<Integer, ArrayList<String>> getRelationships() {
         return relationships;
     }
 
+    /**
+     * Metodo que permite obter uma colecao de interesses
+     * @return um hashmap de interesses
+     */
     public HashMap<Integer, Interest> getInterests() {
         return interests;
     }
+
+    /**
+     * Metodo que permite obter a estatistica do top 5 de interesses
+     * @return a estatistica do top 5 de interesses
+     */
     public Map<Interest, Integer> topFiveInterestsStats(){
         return this.statistics.topFiveInterestsStats(this.graph);
     }
 
+    /**
+     * Metodo que permite criar o memento
+     * @return o novo memento
+     */
     @Override
     public Memento createMemento() {
         return new MyMemento(this.graph);
     }
 
+    /**
+     * Metodo que permite usar o memento
+     * @param savedState representa o novo memento
+     */
     @Override
     public void setMemento(Memento savedState) {
         ByteArrayInputStream temp = new ByteArrayInputStream(savedState.getState());

@@ -5,10 +5,15 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * Classe responsável pela criação de estatisticas
+ */
 public class Statistics {
     private final HashMap<User, ArrayList<User>> usersIncluded;
 
-    
+    /**
+     * Permite criar estatisticas com uma listagem de utilizadores incluidos
+     */
     public Statistics() {
         usersIncluded = new HashMap<>();
     }
@@ -17,6 +22,12 @@ public class Statistics {
         return usersIncluded;
     }
 
+    /**
+     * Método que permite adicionar um utilizador como key e a sua lista de utilizadores que
+     * incluiu como value
+     * @param user representa a key que pretendemos adicionar
+     * @param userIncluded representa um value que pretendemos adicionar à lista associada
+     */
     public void addUsersIncluded(User user, User userIncluded) {
         if (!this.usersIncluded.containsKey(user)) {
             this.usersIncluded.put(user, new ArrayList<>());
@@ -27,7 +38,11 @@ public class Statistics {
 
     }
 
-
+    /**
+     * Método que representa a estatistica relativa ao numero e listagem de utilizadores adicionados
+     * @param graph representa o grafo utilizado
+     * @return uma string com o numero e a listagem de utilizadores adicionados ao grafo
+     */
     public String addedUsersStats(DirectGraph<User, Relationship> graph) {
         String s = "STATISTIC USERS ADDED\n";
         s = s + "Number of users: " + graph.getVertices().size() + "\n";
@@ -40,7 +55,12 @@ public class Statistics {
         return s;
     }
 
-
+    /**
+     * Método que representa a estatistica relativa ao numero e listagem de utilizadores incluidos
+     * por um utilizador adicionado
+     * @param graph representa o grafo utilizador
+     * @return uma string com o numero e a listagem de utilizadores incluidos atraves dos adicionados
+     */
     public String includedUsersStats(DirectGraph<User, Relationship> graph) {
         String s = "STATISTIC USERS INCLUDED BY USER ADDED\n";
 
@@ -55,7 +75,11 @@ public class Statistics {
         return s;
     }
 
-
+    /**
+     * Método que representa a estatistica relativa ao utilizador com mais relacionamentos diretos
+     * @param graph representa o grafo utilizado
+     * @return uma string com o id e o nome do utilizador com mais relacionamentos diretos
+     */
     public String userWithMoreDirectRelationshipsStats(DirectGraph<User, Relationship> graph) {
         String s = "STATISTIC USER WITH MORE DIRECT RELATIONSHIPS\n";
 
@@ -87,6 +111,11 @@ public class Statistics {
         return s;
     }
 
+    /**
+     * Método que representa a estatistica relativa ao interesse mais partilhado
+     * @param graph representa o grafo utilizado
+     * @return uma string com o id e o nome do interesse mais partilhado
+     */
     public String interestMostSharedStats(DirectGraph<User, Relationship> graph) {
         String s = "STATISTIC INTEREST MOST SHARED\n";
 
@@ -128,7 +157,12 @@ public class Statistics {
         return s;
     }
 
-
+    /**
+     * Método que representa a estatistica relativa ao número de relacionamentos dos
+     * 5 utilizadores com mais relacionamentos
+     * @param graph representa o grafo utilizador
+     * @return um hashmap com os 5 utilizadores com mais relationamentos
+     */
     public Map<User, Integer> topFiveUsersWithMostRelationshipsStats(DirectGraph<User, Relationship> graph) {
         Map<User, Integer> map = new HashMap<>();
         List<Vertex<User>> usersList = new ArrayList<>(graph.vertices());
@@ -160,6 +194,11 @@ public class Statistics {
         return map;
     }
 
+    /**
+     * Método que representa a estatistica relativa aos 5 interesses mais partilhados
+     * @param graph representa ao grafo utilizado
+     * @return um hashmap com os 5 intesses mais partilhados
+     */
     public Map<Interest, Integer> topFiveInterestsStats(DirectGraph<User, Relationship> graph) {
         Map<Interest, Integer> map = new HashMap<>();
         List<Interest> interests = new ArrayList<>();
