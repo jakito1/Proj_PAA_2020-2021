@@ -2,6 +2,8 @@ package com.pa.proj2020.adts.graph;
 
 import java.util.ArrayList;
 import javafx.application.Platform;
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.scene.Node;
 import javafx.scene.chart.BarChart;
 import javafx.scene.chart.CategoryAxis;
@@ -158,9 +160,9 @@ public class SocialNetworkView{
             this.caretaker.restoreState();
 
             System.out.println("Size: depois " + this.socialNetwork.getGraph().numVertices());
-            this.graphView.update();
-            pane.setLeft(this.graphView);
 
+            pane.setLeft(this.graphView);
+            this.graphView.update();
         });
 
 
@@ -356,11 +358,11 @@ public class SocialNetworkView{
         texts.setPrefSize(230, 20);
 
         addUserButton.setOnAction(e -> {
-            this.socialNetwork.constructModelIterative(Integer.parseInt(((String)texts.getValue()).split(" ")[0]));
-            texts.getItems().remove(texts.getValue());
 
             this.caretaker.saveState();
 
+            this.socialNetwork.constructModelIterative(Integer.parseInt(((String)texts.getValue()).split(" ")[0]));
+            texts.getItems().remove(texts.getValue());
             graphView.update();
         });
 

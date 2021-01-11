@@ -17,6 +17,7 @@ public class SocialNetwork implements Originator, Serializable {
     private final Statistics statistics;
     private DirectGraph<User, Relationship> graph;
     private String userNamesFile, relationshipsFile, interestNamesFile, interestsFile;
+    MemoryPersistence memoryPersistence;
 
     /**
      * Cria um objeto SocialNetwork
@@ -28,6 +29,7 @@ public class SocialNetwork implements Originator, Serializable {
         relationships = new HashMap<>();
         interests = new HashMap<>();
         statistics = new Statistics();
+		memoryPersistence = new MemoryPersistence(this);
         this.checkFilenames();
 
     }
@@ -331,6 +333,14 @@ public class SocialNetwork implements Originator, Serializable {
         } catch (IOException | ClassNotFoundException e) {
             e.printStackTrace();
         }
+    }
+
+    public void exportSerialization(){
+        memoryPersistence.exportSerialization();
+    }
+
+    public void importSerialization(){
+        graph = memoryPersistence.importSerialization();
     }
 
     static class MyMemento implements Memento {
