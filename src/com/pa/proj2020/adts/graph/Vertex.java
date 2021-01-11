@@ -1,4 +1,4 @@
-/* 
+/*
  * The MIT License
  *
  * Copyright 2019 brunomnsilva@gmail.com.
@@ -23,21 +23,22 @@
  */
 package com.pa.proj2020.adts.graph;
 
+import java.io.Serializable;
+
 /**
  * A vertex contains an element of type <code>V</code> and is used both in
  * graphs and digraphs.
- * 
+ *
  * @param <V> Type of value stored in the vertex.
- * 
  * @see Graph
  * @see Digraph
  */
-public interface Vertex<V> {
-    
+public interface Vertex<V> extends Serializable {
+
     /**
      * Returns the element stored in the vertex.
-     * 
-     * @return      stored element
+     *
+     * @return stored element
      */
-    public V element();
+    V element();
 }
