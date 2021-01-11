@@ -1,46 +1,42 @@
 package com.pa.proj2020.adts.graph;
 
-import java.util.ArrayList;
 import javafx.application.Platform;
-import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
+import javafx.geometry.Insets;
+import javafx.geometry.Pos;
 import javafx.scene.Node;
+import javafx.scene.Scene;
 import javafx.scene.chart.BarChart;
 import javafx.scene.chart.CategoryAxis;
 import javafx.scene.chart.NumberAxis;
 import javafx.scene.chart.XYChart;
 import javafx.scene.control.*;
+import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
-import javafx.geometry.Insets;
-import javafx.scene.layout.VBox;
-import javafx.scene.layout.HBox;
-
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
-import javafx.geometry.Pos;
-import javafx.scene.Scene;
 import javafx.stage.Stage;
-import javafx.scene.image.Image;
 import javafx.stage.StageStyle;
 import smartgraph.view.containers.SmartGraphDemoContainer;
 import smartgraph.view.graphview.SmartCircularSortedPlacementStrategy;
 import smartgraph.view.graphview.SmartGraphPanel;
 import smartgraph.view.graphview.SmartPlacementStrategy;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
-public class SocialNetworkView{
 
+public class SocialNetworkView {
+
+    private final Stage stage;
+    SmartPlacementStrategy strategy;
     private SocialNetwork socialNetwork;
     private SmartGraphPanel<User, Relationship> graphView;
     private Graph<User, Relationship> graph;
-    SmartPlacementStrategy strategy;
-    private final Stage stage;
     private BorderPane pane;
     private Caretaker caretaker;
 
@@ -56,9 +52,10 @@ public class SocialNetworkView{
 
     /**
      * Permite criar um novo SocialNetworkView
+     *
      * @param socialNetwork objeto SocialNetwork
      */
-    public SocialNetworkView(SocialNetwork socialNetwork){
+    public SocialNetworkView(SocialNetwork socialNetwork) {
         this();
         this.socialNetwork = socialNetwork;
         this.graph = this.socialNetwork.getGraph();
@@ -78,6 +75,7 @@ public class SocialNetworkView{
 
     /**
      * Cria um Menu no SocialNetworkView com varias opcoes
+     *
      * @return o menu criado no SocialNetworkView
      */
     private Node createMenu() {
@@ -92,10 +90,10 @@ public class SocialNetworkView{
         MenuItem menuAddIndirectRelationship = new MenuItem("Add indirect relationships");
         MenuItem menuDijkstra = new MenuItem("Dijkstra");
 
-        MenuItem menuSaveGraph = new MenuItem("SaveGraph");
-        MenuItem menuUpdateGraph = new MenuItem("UpdateGraph");
-        MenuItem menuSaveLog = new MenuItem("SaveLog");
-        MenuItem menuUpdateLog = new MenuItem("UpdateLog");
+        MenuItem menuExportSerialize = new MenuItem("Export to Java Serialize");
+        MenuItem menuImportSerialize = new MenuItem("Import from Java Serialize");
+        MenuItem menuExportJSON = new MenuItem("Export to JSON");
+        //MenuItem menuUpdateLog = new MenuItem("UpdateLog");
 
         MenuItem menuStats1 = new MenuItem("Statistic Users Added");
         MenuItem menuStats2 = new MenuItem("Statistic Users Included by User Added");
@@ -105,7 +103,7 @@ public class SocialNetworkView{
         MenuItem menuStats6 = new MenuItem("Bar chart with the top 5 interest");
 
         menuOptions.getItems().addAll(menuExit, menuUndo, menuAddUser, menuAddIndirectRelationship, menuDijkstra);
-        menuOptions1.getItems().addAll(menuSaveGraph, menuUpdateGraph, menuSaveLog, menuUpdateLog);
+        menuOptions1.getItems().addAll(menuExportSerialize, menuImportSerialize, menuExportJSON);
         menuOptions2.getItems().addAll(menuStats1, menuStats2, menuStats3, menuStats4, menuStats5, menuStats6);
 
         menuExit.setOnAction(e -> Platform.exit());
@@ -123,6 +121,19 @@ public class SocialNetworkView{
         menuDijkstra.setOnAction(e -> {
             this.addDijkstra();
 
+        });
+
+        menuExportSerialize.setOnAction(e -> {
+            this.socialNetwork.exportSerialization();
+        });
+
+        menuImportSerialize.setOnAction(e -> {
+            this.socialNetwork.importSerialization();
+            this.graphView.update();
+        });
+
+        menuExportJSON.setOnAction(e -> {
+            this.socialNetwork.exportJSON();
         });
 
         menuStats1.setOnAction(e -> {
@@ -298,9 +309,9 @@ public class SocialNetworkView{
         nameField.setMinWidth(250);
         center.getChildren().add(nameField);
 
-        Button okIteractiveButton = new Button("START ITERATIVE");
+        Button okInteractiveButton = new Button("START ITERATIVE");
 
-        okIteractiveButton.setOnAction(e -> {
+        okInteractiveButton.setOnAction(e -> {
             stage.close();
             this.socialNetwork.setFileNames(userNamesField.getText(), relationshipsField.getText(),
                     interestNamesField.getText(), interestsField.getText());
@@ -326,7 +337,7 @@ public class SocialNetworkView{
         label5.setTextFill(Color.BLUE);
         label5.setFont(sanSerif1);
 
-        hBox.getChildren().addAll(label5, nameField, okIteractiveButton, okTotalButton);
+        hBox.getChildren().addAll(label5, nameField, okInteractiveButton, okTotalButton);
         hBox.setAlignment(Pos.CENTER);
         center.getChildren().addAll(hBox, welcomeText5);
         BorderPane pane = new BorderPane();
@@ -342,12 +353,13 @@ public class SocialNetworkView{
 
     /**
      * Método que inicializa os nomes dos ficheiros
-     * @param userNamesFile representa o ficheiro com os nomes dos utilizadores
+     *
+     * @param userNamesFile     representa o ficheiro com os nomes dos utilizadores
      * @param relationshipsFile representa o ficheiro com relationships
      * @param interestNamesFile representa o ficheiro com o nome dos interesses
-     * @param interestsFile representa o ficheiro com os interesses
+     * @param interestsFile     representa o ficheiro com os interesses
      */
-    public void setFilenames(String userNamesFile, String relationshipsFile, String interestNamesFile, String interestsFile){
+    public void setFilenames(String userNamesFile, String relationshipsFile, String interestNamesFile, String interestsFile) {
         this.socialNetwork.setFileNames(userNamesFile, relationshipsFile, interestNamesFile, interestsFile);
     }
 
@@ -355,7 +367,7 @@ public class SocialNetworkView{
     /**
      * Cria o menu de adicao de utilizador
      */
-    public void createNodeAddUser(){
+    public void createNodeAddUser() {
         Button updateButton = new Button("UPDATE COLORS");
         Button addUserButton = new Button("ADD USER");
 
@@ -371,7 +383,7 @@ public class SocialNetworkView{
 
             this.caretaker.saveState();
 
-            this.socialNetwork.constructModelIterative(Integer.parseInt(((String)texts.getValue()).split(" ")[0]));
+            this.socialNetwork.constructModelIterative(Integer.parseInt(texts.getValue().split(" ")[0]));
             texts.getItems().remove(texts.getValue());
             graphView.update();
         });
@@ -402,12 +414,12 @@ public class SocialNetworkView{
     /**
      * Cria o menu de adicao de relacionamentos indiretos
      */
-    public void createNodeAddIndirectRelationships(){
+    public void createNodeAddIndirectRelationships() {
         Button updateButton = new Button("UPDATE COLORS");
         Button addUserButton = new Button("ADD INDIRECT RELATIONSHIPS");
 
         ComboBox<String> texts = new ComboBox<String>();
-        for(Vertex<User> user : this.socialNetwork.getGraph().vertices()){
+        for (Vertex<User> user : this.socialNetwork.getGraph().vertices()) {
             texts.getItems().add(user.element().toString());
         }
 
@@ -417,7 +429,7 @@ public class SocialNetworkView{
         texts.setPrefSize(230, 20);
 
         addUserButton.setOnAction(e -> {
-            this.socialNetwork.addIndirectRelationships(Integer.parseInt(((String)texts.getValue()).split(" ")[0]));
+            this.socialNetwork.addIndirectRelationships(Integer.parseInt(texts.getValue().split(" ")[0]));
             texts.getItems().remove(texts.getValue());
             graphView.update();
         });
@@ -448,7 +460,7 @@ public class SocialNetworkView{
     /**
      * Cria o menu de Dijkstra
      */
-    public void addDijkstra(){
+    public void addDijkstra() {
 
         Button dijkstraButton = new Button("Dijkstra");
         ArrayList<User> path = new ArrayList<>();
@@ -456,7 +468,7 @@ public class SocialNetworkView{
         ComboBox<String> textsUser1 = new ComboBox<String>();
         ComboBox<String> textsUser2 = new ComboBox<String>();
 
-        for(Vertex<User> user : this.socialNetwork.getGraph().vertices()){
+        for (Vertex<User> user : this.socialNetwork.getGraph().vertices()) {
             textsUser1.getItems().add(user.element().toString());
             textsUser2.getItems().add(user.element().toString());
         }
@@ -476,63 +488,62 @@ public class SocialNetworkView{
             Vertex<User> user2 = null;
 
 
-
-                    for(Vertex<User> userVertex : this.socialNetwork.getGraph().vertices()){
-                        if(userVertex.element().getID() == Integer.parseInt(((String)textsUser1.getValue()).split(" ")[0])){
-                            user1 = userVertex;
-                        } else if(userVertex.element().getID() == Integer.parseInt(((String)textsUser2.getValue()).split(" ")[0])){
-                            user2 = userVertex;
-                        }
-                    }
-
-                    this.updateGraphColors();
-
-            if(((VBox)this.pane.getCenter()).getChildren().get(((VBox)this.pane.getCenter()).getChildren().size()-1) instanceof Text ){
-                ((VBox)this.pane.getCenter()).getChildren().remove(((VBox)this.pane.getCenter()).getChildren().size()-1);
+            for (Vertex<User> userVertex : this.socialNetwork.getGraph().vertices()) {
+                if (userVertex.element().getID() == Integer.parseInt(textsUser1.getValue().split(" ")[0])) {
+                    user1 = userVertex;
+                } else if (userVertex.element().getID() == Integer.parseInt(textsUser2.getValue().split(" ")[0])) {
+                    user2 = userVertex;
+                }
             }
-                    if(user1 != null && user2 != null){
-                        try {
-                            this.socialNetwork.getGraph().minCostPath(user1, user2, path);
-                            graphView.getStylableVertex(user1).setStyleClass("myVertexDijkstra");
-                            for(User user : path){
-                                graphView.getStylableVertex(user).setStyleClass("myVertexDijkstra");
+
+            this.updateGraphColors();
+
+            if (((VBox) this.pane.getCenter()).getChildren().get(((VBox) this.pane.getCenter()).getChildren().size() - 1) instanceof Text) {
+                ((VBox) this.pane.getCenter()).getChildren().remove(((VBox) this.pane.getCenter()).getChildren().size() - 1);
+            }
+            if (user1 != null && user2 != null) {
+                try {
+                    this.socialNetwork.getGraph().minCostPath(user1, user2, path);
+                    graphView.getStylableVertex(user1).setStyleClass("myVertexDijkstra");
+                    for (User user : path) {
+                        graphView.getStylableVertex(user).setStyleClass("myVertexDijkstra");
+                    }
+
+                    for (User user : path) {
+                        for (Edge<Relationship, User> edge : this.socialNetwork.getGraph().outboundEdges(user1)) {
+                            if (edge.vertices()[1].element().equals(user)) {
+                                graphView.getStylableEdge(edge).setStyleClass("myEdgeDijkstra");
                             }
-
-                            for(User user : path){
-                                for(Edge<Relationship, User> edge : this.socialNetwork.getGraph().outboundEdges(user1)){
-                                    if(edge.vertices()[1].element().equals(user)){
-                                        graphView.getStylableEdge(edge).setStyleClass("myEdgeDijkstra");
-                                    }
-                                }
-                            }
-
-                                for(int i=0; i< path.size()-1; i++) {
-                                    Vertex<User> userVertex = null;
-                                    Vertex<User> userVertex2 = null;
-
-                                    for(Vertex<User> userVertex1 : this.socialNetwork.getGraph().vertices()){
-                                        if(userVertex1.element().getID() == path.get(i).getID()){
-                                            userVertex = userVertex1;
-                                        } else if(userVertex1.element().getID() == path.get(i+1).getID()){
-                                            userVertex2 = userVertex1;
-                                        }
-                                    }
-                                    if(userVertex == null || userVertex2 == null){
-                                        break;
-                                    }
-
-                                    for (Edge<Relationship, User> edge : this.socialNetwork.getGraph().outboundEdges(userVertex)) {
-                                        if (edge.vertices()[1].element().equals(userVertex2.element())) {
-                                            graphView.getStylableEdge(edge).setStyleClass("myEdgeDijkstra");
-                                        }
-                                    }
-                                }
-
-                        }catch (NullPointerException ex){
-                            Text text = new Text("There's no path, please try again");
-                            ((VBox)this.pane.getCenter()).getChildren().add(text);
                         }
                     }
+
+                    for (int i = 0; i < path.size() - 1; i++) {
+                        Vertex<User> userVertex = null;
+                        Vertex<User> userVertex2 = null;
+
+                        for (Vertex<User> userVertex1 : this.socialNetwork.getGraph().vertices()) {
+                            if (userVertex1.element().getID() == path.get(i).getID()) {
+                                userVertex = userVertex1;
+                            } else if (userVertex1.element().getID() == path.get(i + 1).getID()) {
+                                userVertex2 = userVertex1;
+                            }
+                        }
+                        if (userVertex == null || userVertex2 == null) {
+                            break;
+                        }
+
+                        for (Edge<Relationship, User> edge : this.socialNetwork.getGraph().outboundEdges(userVertex)) {
+                            if (edge.vertices()[1].element().equals(userVertex2.element())) {
+                                graphView.getStylableEdge(edge).setStyleClass("myEdgeDijkstra");
+                            }
+                        }
+                    }
+
+                } catch (NullPointerException ex) {
+                    Text text = new Text("There's no path, please try again");
+                    ((VBox) this.pane.getCenter()).getChildren().add(text);
+                }
+            }
 
             graphView.update();
         });
@@ -552,7 +563,7 @@ public class SocialNetworkView{
      * Cria uma janela com a informacao associadao ao SocialNetworkView
      */
     public void createCenterSocialNetworkView() {
-        if(this.socialNetwork == null){
+        if (this.socialNetwork == null) {
             this.socialNetwork = new SocialNetwork();
             this.socialNetwork.initializeData();
         }
@@ -589,7 +600,7 @@ public class SocialNetworkView{
     /**
      * Atualiza as cores do grafo
      */
-    public void updateGraphColors(){
+    public void updateGraphColors() {
         this.updateColorsVertexGraph();
         this.updateColorsEdgesGraph();
     }
@@ -598,7 +609,7 @@ public class SocialNetworkView{
     /**
      * Cria o menu das estatisticas de utilizadores adicionados
      */
-    public void addStatUsersAdded(){
+    public void addStatUsersAdded() {
         ListView<String> list = new ListView<>();
         list.setMaxSize(350, 500);
         list.getItems().add(this.socialNetwork.addedUsersStats());
@@ -609,7 +620,7 @@ public class SocialNetworkView{
     /**
      * Cria o menu das estatisticas de utilizadores incluidos
      */
-    public void addStatUsersIncludedByUserAdded(){
+    public void addStatUsersIncludedByUserAdded() {
         ListView<String> list = new ListView<>();
         list.setMaxSize(350, 500);
         list.getItems().add(this.socialNetwork.includedUsersStats());
@@ -621,7 +632,7 @@ public class SocialNetworkView{
     /**
      * Cria o menu das estatisticas de utilizadores com mais relacionamentos diretos
      */
-    public void addStatUserWithMoreDirectRelationships(){
+    public void addStatUserWithMoreDirectRelationships() {
         ListView<String> list = new ListView<>();
         list.setMaxSize(350, 100);
         list.getItems().add(this.socialNetwork.userWithMoreDirectRelationshipsStats());
@@ -632,7 +643,7 @@ public class SocialNetworkView{
     /**
      * Cria o menu das estatisticas de interesse mais partilhado
      */
-    public void addStatInterestMostShared(){
+    public void addStatInterestMostShared() {
         ListView<String> list = new ListView<>();
         list.setMaxSize(350, 100);
         list.getItems().add(this.socialNetwork.interestMostSharedStats());
@@ -643,7 +654,7 @@ public class SocialNetworkView{
     /**
      * Cria o menu das estatisticas de top 5 de utilizadores com mais relacionamentos
      */
-    public void addStatTopFiveUsersWithMostRelationships(){
+    public void addStatTopFiveUsersWithMostRelationships() {
 
         CategoryAxis xaxis = new CategoryAxis();
         NumberAxis yaxis = new NumberAxis();
@@ -657,7 +668,7 @@ public class SocialNetworkView{
         XYChart.Series<String, Integer> series = new XYChart.Series<>();
         Map<User, Integer> map = new HashMap<>(this.socialNetwork.topFiveUsersWithMostRelationshipsStats());
 
-        for(User user : map.keySet()){
+        for (User user : map.keySet()) {
             series.getData().add(new XYChart.Data<>(user.toString(), map.get(user)));
             System.out.println("User: " + user.toString() + " Relationships: " + map.get(user));
         }
@@ -671,7 +682,7 @@ public class SocialNetworkView{
     /**
      * Cria o menu das estatisticas de top 5 interesses
      */
-    public void addStatTopFiveInterestsStats(){
+    public void addStatTopFiveInterestsStats() {
 
         CategoryAxis xaxis = new CategoryAxis();
         NumberAxis yaxis = new NumberAxis();
@@ -685,7 +696,7 @@ public class SocialNetworkView{
         XYChart.Series<String, Integer> series = new XYChart.Series<>();
         Map<Interest, Integer> map = new HashMap<>(this.socialNetwork.topFiveInterestsStats());
 
-        for(Interest interest : map.keySet()){
+        for (Interest interest : map.keySet()) {
             series.getData().add(new XYChart.Data<>(interest.getName(), map.get(interest)));
             System.out.println("User: " + interest.toString() + " Relationships: " + map.get(interest));
         }
@@ -697,9 +708,10 @@ public class SocialNetworkView{
 
     /**
      * Cria o menu com a informacao do vertice
+     *
      * @param user vertice
      */
-    public void addInformationVertex(Vertex<User> user){
+    public void addInformationVertex(Vertex<User> user) {
 
         ListView<String> list = new ListView<>();
         list.setMaxSize(350, 100);
@@ -708,20 +720,21 @@ public class SocialNetworkView{
         list.getItems().add(" ");
         list.getItems().add("List Of Interests");
 
-            for(Interest interest : this.socialNetwork.interestsOfUser(user.element().getID())){
-                list.getItems().add(interest.toString());
-            }
+        for (Interest interest : this.socialNetwork.interestsOfUser(user.element().getID())) {
+            list.getItems().add(interest.toString());
+        }
 
         pane.setCenter(list);
     }
 
     /**
      * Cria o menu com a informacao da aresta
+     *
      * @param edge aresta
      */
-    public void addInformationEdge(Edge<Relationship, User> edge){
+    public void addInformationEdge(Edge<Relationship, User> edge) {
 
-        if(edge.element() instanceof RelationshipIndirect){
+        if (edge.element() instanceof RelationshipIndirect) {
             ListView<String> list = new ListView<>();
             list.setMaxSize(350, 100);
             list.getItems().add(((RelationshipIndirect) edge.element()).getListOfInterestsString());
@@ -733,7 +746,7 @@ public class SocialNetworkView{
     /**
      * Cria o GraphView
      */
-    public void createGraphView(){
+    public void createGraphView() {
         graphView = new SmartGraphPanel(graph, strategy);
 
         this.updateColorsVertexGraph();
@@ -748,13 +761,13 @@ public class SocialNetworkView{
     /**
      * Atualiza as cores dos vertices
      */
-    public void updateColorsVertexGraph(){
-        if(this.socialNetwork.getGraph().numVertices() == 0){
+    public void updateColorsVertexGraph() {
+        if (this.socialNetwork.getGraph().numVertices() == 0) {
             return;
         }
 
-        for(Vertex<User> userVertex : this.socialNetwork.getGraph().vertices()){
-            if(userVertex.element().getType().equals(Type.INCLUIDO)){
+        for (Vertex<User> userVertex : this.socialNetwork.getGraph().vertices()) {
+            if (userVertex.element().getType().equals(Type.INCLUIDO)) {
                 this.graphView.getStylableVertex(userVertex).setStyleClass("myVertexIncluded");
             } else {
                 this.graphView.getStylableVertex(userVertex).setStyleClass("myVertexAdded");
@@ -765,19 +778,18 @@ public class SocialNetworkView{
     /**
      * Atualiza as cores das arestas
      */
-    public void updateColorsEdgesGraph(){
-        if(this.socialNetwork.getGraph().numEdges() == 0){
+    public void updateColorsEdgesGraph() {
+        if (this.socialNetwork.getGraph().numEdges() == 0) {
             return;
         }
 
-        for(Edge<Relationship, User> relationshipEdge : this.socialNetwork.getGraph().edges()){
+        for (Edge<Relationship, User> relationshipEdge : this.socialNetwork.getGraph().edges()) {
 
-            if(relationshipEdge.element() instanceof  RelationshipIndirect ){
+            if (relationshipEdge.element() instanceof RelationshipIndirect) {
                 this.graphView.getStylableEdge(relationshipEdge).setStyleClass("myEdgeIndirect");
-            }else if(relationshipEdge.element() instanceof  RelationshipSimple) {
+            } else if (relationshipEdge.element() instanceof RelationshipSimple) {
                 this.graphView.getStylableEdge(relationshipEdge).setStyleClass("myEdgeDirectSimple");
-            }
-            else {
+            } else {
                 this.graphView.getStylableEdge(relationshipEdge).setStyleClass("myEdgeDirectShared");
             }
         }

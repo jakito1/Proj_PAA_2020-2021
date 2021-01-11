@@ -17,8 +17,8 @@ public class ReadData {
      *
      * @return coleção HashMap
      */
-    public HashMap<String, ArrayList<String>> readData(String filename){
-        if(filename == null || filename.equals("")){
+    public HashMap<String, ArrayList<String>> readData(String filename) {
+        if (filename == null || filename.equals("")) {
             return null;
         }
 
@@ -39,8 +39,8 @@ public class ReadData {
         for (String line : lines) {
             String[] array = line.split(";", -1);
             data.put(array[0], new ArrayList<>());
-            for(int i=1; i< array.length; i++){
-                data.get(array[0]).add(array[i]);
+            for (int i = 1; i < array.length; i++) {
+                data.get(array[0]).add(array[i].replace("'", ""));
             }
         }
         return data;

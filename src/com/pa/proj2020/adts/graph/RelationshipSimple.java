@@ -13,6 +13,7 @@ public class RelationshipSimple implements Relationship {
 
     /**
      * Método que retorna uma string com a informação do relacionamento Direto Simples
+     *
      * @return um string com a informação do relacionamento direto simples
      */
     @Override

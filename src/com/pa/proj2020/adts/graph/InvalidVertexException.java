@@ -1,4 +1,4 @@
-/* 
+/*
  * The MIT License
  *
  * Copyright 2019 brunomnsilva@gmail.com.
@@ -26,7 +26,7 @@ package com.pa.proj2020.adts.graph;
 /**
  * Error when using an invalid vertex in calls of methods in {@link Graph}
  * and {@link Digraph} implementations.
- * 
+ *
  * @see Graph
  * @see Digraph
  */
@@ -39,5 +39,5 @@ public class InvalidVertexException extends RuntimeException {
     public InvalidVertexException(String string) {
         super(string);
     }
-    
+
 }

@@ -1,4 +1,4 @@
-/* 
+/*
  * The MIT License
  *
  * Copyright 2019 brunomnsilva@gmail.com.
@@ -23,11 +23,7 @@
  */
 package com.pa.proj2020.adts.graph;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * ADT Graph implementation that stores a collection of edges (and vertices) and
@@ -37,15 +33,14 @@ import java.util.Map;
  *
  * @param <V> Type of element stored at a vertex
  * @param <E> Type of element stored at an edge
- * 
  * @author brunomnsilva
  */
 public class GraphEdgeList<V, E> implements Graph<V, E> {
 
-    /* inner classes are defined at the end of the class, so are the auxiliary methods 
+    /* inner classes are defined at the end of the class, so are the auxiliary methods
      */
-    private Map<V, Vertex<V>> vertices;
-    private Map<E, Edge<E, V>> edges;
+    private final Map<V, Vertex<V>> vertices;
+    private final Map<E, Edge<E, V>> edges;
 
     /**
      * Creates a empty graph.
@@ -147,7 +142,7 @@ public class GraphEdgeList<V, E> implements Graph<V, E> {
     }
 
     @Override
-    public synchronized Edge<E, V> insertEdge(Vertex<V> u, Vertex<V> v, E edgeElement) 
+    public synchronized Edge<E, V> insertEdge(Vertex<V> u, Vertex<V> v, E edgeElement)
             throws InvalidVertexException, InvalidEdgeException {
 
         if (existsEdgeWith(edgeElement)) {
@@ -166,9 +161,9 @@ public class GraphEdgeList<V, E> implements Graph<V, E> {
     }
 
     @Override
-    public synchronized Edge<E, V> insertEdge(V vElement1, V vElement2, E edgeElement) 
+    public synchronized Edge<E, V> insertEdge(V vElement1, V vElement2, E edgeElement)
             throws InvalidVertexException, InvalidEdgeException {
-        
+
         if (existsEdgeWith(edgeElement)) {
             throw new InvalidEdgeException("There's already an edge with this element.");
         }
@@ -280,6 +275,47 @@ public class GraphEdgeList<V, E> implements Graph<V, E> {
         return sb.toString();
     }
 
+    /**
+     * Checks whether a given vertex is valid and belongs to this graph
+     *
+     * @param v
+     * @return
+     * @throws InvalidVertexException
+     */
+    private MyVertex checkVertex(Vertex<V> v) throws InvalidVertexException {
+        if (v == null) throw new InvalidVertexException("Null vertex.");
+
+        MyVertex vertex;
+        try {
+            vertex = (MyVertex) v;
+        } catch (ClassCastException e) {
+            throw new InvalidVertexException("Not a vertex.");
+        }
+
+        if (!vertices.containsKey(vertex.element)) {
+            throw new InvalidVertexException("Vertex does not belong to this graph.");
+        }
+
+        return vertex;
+    }
+
+    private MyEdge checkEdge(Edge<E, V> e) throws InvalidEdgeException {
+        if (e == null) throw new InvalidEdgeException("Null edge.");
+
+        MyEdge edge;
+        try {
+            edge = (MyEdge) e;
+        } catch (ClassCastException ex) {
+            throw new InvalidVertexException("Not an adge.");
+        }
+
+        if (!edges.containsKey(edge.element)) {
+            throw new InvalidEdgeException("Edge does not belong to this graph.");
+        }
+
+        return edge;
+    }
+
     class MyVertex implements Vertex<V> {
 
         V element;
@@ -334,46 +370,5 @@ public class GraphEdgeList<V, E> implements Graph<V, E> {
             return "Edge{{" + element + "}, vertexOutbound=" + vertexOutbound.toString()
                     + ", vertexInbound=" + vertexInbound.toString() + '}';
         }
-    }
-
-    /**
-     * Checks whether a given vertex is valid and belongs to this graph
-     *
-     * @param v
-     * @return
-     * @throws InvalidVertexException
-     */
-    private MyVertex checkVertex(Vertex<V> v) throws InvalidVertexException {
-        if(v == null) throw new InvalidVertexException("Null vertex.");
-        
-        MyVertex vertex;
-        try {
-            vertex = (MyVertex) v;
-        } catch (ClassCastException e) {
-            throw new InvalidVertexException("Not a vertex.");
-        }
-
-        if (!vertices.containsKey(vertex.element)) {
-            throw new InvalidVertexException("Vertex does not belong to this graph.");
-        }
-
-        return vertex;
-    }
-
-    private MyEdge checkEdge(Edge<E, V> e) throws InvalidEdgeException {
-        if(e == null) throw new InvalidEdgeException("Null edge.");
-        
-        MyEdge edge;
-        try {
-            edge = (MyEdge) e;
-        } catch (ClassCastException ex) {
-            throw new InvalidVertexException("Not an adge.");
-        }
-
-        if (!edges.containsKey(edge.element)) {
-            throw new InvalidEdgeException("Edge does not belong to this graph.");
-        }
-
-        return edge;
     }
 }

@@ -11,6 +11,7 @@ public class RelationshipShared implements Relationship {
 
     /**
      * Cria um Relacionamento Direto com partilha de interesses
+     *
      * @param interests representa a lista de interesses
      */
     public RelationshipShared(List<Interest> interests) {
@@ -19,6 +20,7 @@ public class RelationshipShared implements Relationship {
 
     /**
      * Método que permite adicionar um interesse à lista
+     *
      * @param interest representa o interesse que pretendemos adicionar
      */
     public void addInterest(Interest interest) {
@@ -27,6 +29,7 @@ public class RelationshipShared implements Relationship {
 
     /**
      * Método que permie remover um interesse da lista
+     *
      * @param interest representa o interesse que pretendemos remover
      */
     public void removeInterest(Interest interest) {
@@ -35,6 +38,7 @@ public class RelationshipShared implements Relationship {
 
     /**
      * Método que permite obter a lista de interesses
+     *
      * @return a lista de interesses
      */
     public List<Interest> getInterests() {
@@ -43,6 +47,7 @@ public class RelationshipShared implements Relationship {
 
     /**
      * Mètodo que permite obter o numero de interesses da lista
+     *
      * @return o numero de interesses na lista
      */
     public int getNumberInterests() {
@@ -51,6 +56,7 @@ public class RelationshipShared implements Relationship {
 
     /**
      * Método que retorna uma string com a informação do relacionamento Direto com partilha de interesses
+     *
      * @return uma string com a informação do relacionamento direto com partilha de interesses
      */
     @Override

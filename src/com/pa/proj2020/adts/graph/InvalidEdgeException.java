@@ -1,4 +1,4 @@
-/* 
+/*
  * The MIT License
  *
  * Copyright 2019 brunomnsilva@gmail.com.
@@ -26,7 +26,7 @@ package com.pa.proj2020.adts.graph;
 /**
  * Error when using an invalid edge in calls of methods in {@link Graph}
  * and {@link Digraph} implementations.
- * 
+ *
  * @see Graph
  * @see Digraph
  */
@@ -39,5 +39,5 @@ public class InvalidEdgeException extends RuntimeException {
     public InvalidEdgeException(String string) {
         super(string);
     }
-    
+
 }
