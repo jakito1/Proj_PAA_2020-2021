@@ -1,14 +1,10 @@
 package com.pa.proj2020.adts.graph;
 
-import com.pa.proj2020.adts.graph.*;
+import java.io.Serializable;
+import java.util.*;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.HashSet;
-
-public class DirectGraph<V, E> implements Digraph<V, E> {
-    private HashMap<V, Vertex<V>> vertices;
+public class DirectGraph<V, E> implements Digraph<V, E>, Serializable {
+    private final HashMap<V, Vertex<V>> vertices;
 
     /**
      * Cria um grafo
@@ -39,6 +35,7 @@ public class DirectGraph<V, E> implements Digraph<V, E> {
 
     /**
      * Insere vertices no map
+     *
      * @param vertices
      */
     public void setVertices(HashMap<V, Vertex<V>> vertices) {
@@ -98,7 +95,7 @@ public class DirectGraph<V, E> implements Digraph<V, E> {
      * aresta)
      *
      * @param outbound vertice outbound
-     * @param inbound vertice inbound
+     * @param inbound  vertice inbound
      * @return true se forem adjacentes ou false se nao forem
      * @throws InvalidVertexException se um ou ambos os vertices forem invalidos
      */
@@ -126,17 +123,16 @@ public class DirectGraph<V, E> implements Digraph<V, E> {
     }
 
 
-
     /**
      * Insere uma nova aresta entre dois vertices
      *
-     * @param outbound vertice outbound
-     * @param inbound vertice inbound
+     * @param outbound    vertice outbound
+     * @param inbound     vertice inbound
      * @param edgeElement o elemento da nova aresta
      * @return aresta criada entre os dois vertices
      * @throws InvalidVertexException se um ou ambos os vertices forem invalidos
-     * @throws InvalidEdgeException se ja existir uma aresta igual aquela que
-     * queremos inserir
+     * @throws InvalidEdgeException   se ja existir uma aresta igual aquela que
+     *                                queremos inserir
      */
     @Override
     public Edge<E, V> insertEdge(Vertex<V> outbound, Vertex<V> inbound, E edgeElement) throws InvalidVertexException, InvalidEdgeException {
@@ -157,13 +153,13 @@ public class DirectGraph<V, E> implements Digraph<V, E> {
      * Insere uma nova aresta entre dois vertices
      *
      * @param outboundElement elemento guardado no vertice outbound
-     * @param inboundElement elemento guardado no vertice inbound
-     * @param edgeElement elemento a guardar na nova aresta
+     * @param inboundElement  elemento guardado no vertice inbound
+     * @param edgeElement     elemento a guardar na nova aresta
      * @return aresta criada entre os dois vertices
      * @throws InvalidVertexException se um ou ambos os vertices nao existirem
-     * no grafo
-     * @throws InvalidEdgeException se ja existir uma aresta igual aquele que
-     * queremos inserir
+     *                                no grafo
+     * @throws InvalidEdgeException   se ja existir uma aresta igual aquele que
+     *                                queremos inserir
      */
     @Override
     public Edge<E, V> insertEdge(V outboundElement, V inboundElement, E edgeElement) throws InvalidVertexException, InvalidEdgeException {
@@ -229,7 +225,7 @@ public class DirectGraph<V, E> implements Digraph<V, E> {
      * @param e aresta que liga o vertice que conhecemos a outro
      * @return o vertice oposto ao vertice que conhecemos
      * @throws InvalidVertexException se o vertice que conhecemos for invalido
-     * @throws InvalidEdgeException se a aresta nao existir
+     * @throws InvalidEdgeException   se a aresta nao existir
      */
     @Override
     public Vertex<V> opposite(Vertex<V> v, Edge<E, V> e) throws InvalidVertexException, InvalidEdgeException {
@@ -245,7 +241,7 @@ public class DirectGraph<V, E> implements Digraph<V, E> {
 
     }
 
- /**
+    /**
      * Adiciona a lista de vertices um determinado vertice com um elemento
      *
      * @param vElement elemento do vertice que queremos criar
@@ -315,7 +311,7 @@ public class DirectGraph<V, E> implements Digraph<V, E> {
     /**
      * Substitui o elemento associado a um determinado vertice
      *
-     * @param v vertice que queremos substituir o elemento
+     * @param v          vertice que queremos substituir o elemento
      * @param newElement novo elemento que queremos atribuir a um vertice
      * @return o novo elemento associado ao vertice
      * @throws InvalidVertexException se o vertice for invalido ou nao existir
@@ -333,7 +329,7 @@ public class DirectGraph<V, E> implements Digraph<V, E> {
     /**
      * Substitui o elemento associado a uma determinada aresta
      *
-     * @param e aresta que queremos substituir o elemento
+     * @param e          aresta que queremos substituir o elemento
      * @param newElement novo elemento que queremos atribuir a uma aresta
      * @return o novo elemento associado a aresta
      * @throws InvalidEdgeException se a aresta nao existir ou for invalida
@@ -368,6 +364,7 @@ public class DirectGraph<V, E> implements Digraph<V, E> {
         }
         return (MyVertex) vertice;
     }
+
     /**
      * Verifica se uma aresta é valida
      *
@@ -396,19 +393,128 @@ public class DirectGraph<V, E> implements Digraph<V, E> {
      * @return true se o vertice estiver na lista ou false se nao estiver
      */
     public boolean containVertice(V vElement) {
-        return this.vertices.containsKey(vElement);
+        for (V user : this.vertices.keySet()) {
+            if (((User) user).getID() == ((User) vElement).getID()) return true;
+        }
+        return false;
+
+        //return this.vertices.containsKey(vElement);
     }
 
+    /**
+     * Retorna a lista de vertices na pesquisa em largura
+     *
+     * @param v representa o vertice de inicio da pesquisa em largura
+     * @return lista de vertice atraves da pesquisa em largura
+     */
+    private ArrayList<Vertex<V>> BFS(Vertex<V> v) {
+        ArrayList<Vertex<V>> path = new ArrayList<>();
+        Set<Vertex<V>> visited = new HashSet<>();
+        Queue<Vertex<V>> queue = new LinkedList<>();
+        visited.add(v);
+        queue.add(v);
+        while (!queue.isEmpty()) {
+            Vertex<V> vLook = queue.remove();
+            path.add(vLook);
+            for (Edge<E, V> edge : outboundEdges(vLook)) {
+                if (!visited.contains(edge.vertices()[1])) {
+                    visited.add(edge.vertices()[1]);
+                    queue.add(edge.vertices()[1]);
+                }
+            }
+        }
+        return path;
+    }
+
+    /**
+     * Procura o caminho de menor valor entre dois vertices
+     *
+     * @param origin    representa o vertice de origem
+     * @param parents   representa os vertices que tem uma determinada distancia
+     *                  do vertice de origem
+     * @param distances representa a distance a que cada vertice se deve
+     *                  encontrar o vertice de origem
+     */
+    private void dijkstra(Vertex<V> origin, HashMap<Vertex<V>, Vertex<V>> parents, HashMap<Vertex<V>, Integer> distances) {
+        HashSet<Vertex<V>> unvisited = new HashSet<>(BFS(origin));
+        for (Vertex<V> v : unvisited) {
+            distances.put(v, Integer.MAX_VALUE);
+            parents.put(v, null);
+        }
+        distances.put(origin, 0);
+        while (!unvisited.isEmpty()) {
+            Vertex<V> lowestCostVertex = minimumCost(unvisited, distances);
+            unvisited.remove(lowestCostVertex);
+            for (Edge<E, V> edge : outboundEdges(lowestCostVertex)) {
+                Vertex<V> oppositeVertex = edge.vertices()[1];
+                if (unvisited.contains(oppositeVertex)) {
+                    int distanceBetweenVertex = 1 + distances.get(lowestCostVertex);
+                    if (distances.get(oppositeVertex) > distanceBetweenVertex) {
+                        distances.put(oppositeVertex, distanceBetweenVertex);
+                        parents.put(oppositeVertex, lowestCostVertex);
+                    }
+                }
+            }
+        }
+
+    }
+
+    /**
+     * Permite calcular o custo mais baixo
+     *
+     * @param unvisited representa os vertices ainda nao visitados
+     * @param distances representa a distancia a que cada vertice esta do
+     *                  vertice de origem
+     * @return o custo mais baixo nos vertices nao visitados
+     */
+    private Vertex<V> minimumCost(Set<Vertex<V>> unvisited, HashMap<Vertex<V>, Integer> distances) {
+        int min = Integer.MAX_VALUE;
+        Vertex<V> minCostVertex = null;
+        for (Vertex<V> v : unvisited) {
+            if (distances.get(v) <= min) {
+                minCostVertex = v;
+                min = distances.get(v);
+            }
+        }
+        return minCostVertex;
+    }
+
+    /**
+     * Permite obter a lista de vertices que se encontram no caminho mais curto
+     * entre o vertice de origem e o destino
+     *
+     * @param origin representa o vertice a partir do qual queremos calcular a
+     *               distancia ate um determinado vertice
+     * @param end    representa o vertice que queremos chegar a partir do vertice
+     *               de origem
+     * @param path   representa a lista que contem o caminho mais curto entre os
+     *               dois vertices
+     * @return o caminho mais curto entre dois vertices
+     */
+    public int minCostPath(Vertex<V> origin, Vertex<V> end, ArrayList<V> path) {
+        HashMap<Vertex<V>, Vertex<V>> parents = new HashMap<>();
+        HashMap<Vertex<V>, Integer> distances = new HashMap<>();
+        path.clear();
+        dijkstra(origin, parents, distances);
+        int cost = distances.get(end);
+        Vertex<V> v = end;
+        System.out.println("Parents: " + parents + "\nDistances: " + distances);
+        do {
+            path.add(0, v.element());
+            v = parents.get(v);
+        } while (!v.element().equals(origin.element()));
+        return cost;
+    }
 
     /**
      * Classe auxiliar com as informacoes relativas a uma aresta, nomeadamente o
      * vertice inbound, o vertice outbound e o elemento contido na aresta
      */
-    private class MyEdge implements Edge<E, V> {
+    private class MyEdge implements Edge<E, V>, Serializable {
 
-        private E elemento;
         private final Vertex<V> inbound;
         private final Vertex<V> outbound;
+        private E elemento;
 
         public MyEdge(E elemento, Vertex<V> vertice1, Vertex<V> vertice2) {
             this.elemento = elemento;
@@ -443,10 +549,10 @@ public class DirectGraph<V, E> implements Digraph<V, E> {
      * Classe auxiliar com as informacoes relativas a um vertice, nomeadamente,
      * o elemento que cada vertice guarda
      */
-    private class MyVertex implements Vertex<V> {
+    private class MyVertex implements Vertex<V>, Serializable {
 
-        private V elemento;
         private final HashMap<E, Edge<E, V>> edges;
+        private V elemento;
 
         public MyVertex(V elemento) {
             this.elemento = elemento;
