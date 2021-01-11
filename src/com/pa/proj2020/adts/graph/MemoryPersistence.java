@@ -3,7 +3,8 @@ package com.pa.proj2020.adts.graph;
 import java.io.*;
 import java.util.List;
 import java.util.Scanner;
-import org.json.*;
+
+import com.google.gson.Gson;
 
 public class MemoryPersistence {
 
@@ -26,6 +27,33 @@ public class MemoryPersistence {
     }
 
     protected DirectGraph<User, Relationship> importSerialization() {
+        DirectGraph<User, Relationship> temp = null;
+        try {
+            FileInputStream fileIn = new FileInputStream("outputFiles/exportSerialization");
+            ObjectInputStream in = new ObjectInputStream(fileIn);
+            temp = (DirectGraph<User, Relationship>) in.readObject();
+            in.close();
+            fileIn.close();
+        } catch (IOException | ClassNotFoundException e) {
+            System.err.println(e.getMessage());
+        }
+        return temp;
+    }
+
+    protected void exportJSON() {
+        try {
+            JSONObject obj = new JSONObject();
+            FileOutputStream fileOut = new FileOutputStream("outputFiles/exportSerialization");
+            ObjectOutputStream out = new ObjectOutputStream(fileOut);
+            out.writeObject(socialNetwork.getGraph());
+            out.close();
+            fileOut.close();
+        } catch (IOException e) {
+            System.err.println(e.getMessage());
+        }
+    }
+
+    protected DirectGraph<User, Relationship> importJSON() {
         DirectGraph<User, Relationship> temp = null;
         try {
             FileInputStream fileIn = new FileInputStream("outputFiles/exportSerialization");
