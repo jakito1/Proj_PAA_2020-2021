@@ -48,7 +48,7 @@ class SocialNetworkTest {
      */
     @Test
     void constructModel_numEdges() {
-        DirectGraph<User, Relationship>  graph = socialNetwork.constructModel();
+        DirectGraph<User, Relationship>  graph = socialNetwork.constructModelTotal();
         int expResult = 365;
         int result = graph.numEdges();
         assertEquals(expResult, result);
@@ -58,7 +58,7 @@ class SocialNetworkTest {
      */
     @Test
     void constructModel_numVerices() {
-        DirectGraph<User, Relationship>  graph = socialNetwork.constructModel();
+        DirectGraph<User, Relationship>  graph = socialNetwork.constructModelTotal();
         int expResult = 50;
         int result = graph.numVertices();
         assertEquals(expResult, result);
