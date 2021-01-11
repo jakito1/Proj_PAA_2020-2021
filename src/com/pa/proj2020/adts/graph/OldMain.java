@@ -1,5 +1,7 @@
 package com.pa.proj2020.adts.graph;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import javafx.application.Application;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
@@ -23,6 +25,7 @@ public class OldMain extends Application {
         SocialNetwork socialNetwork = new SocialNetwork();
         Caretaker caretaker = new Caretaker(socialNetwork);
         socialNetwork.initializeData();
+        Gson gson = new GsonBuilder().setPrettyPrinting().create();
 
         socialNetwork.constructModelIterative(1);
 
