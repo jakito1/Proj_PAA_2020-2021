@@ -2,10 +2,7 @@
 
 /build/
 /dist/
-**/javadoc/
 
-# Hanging html files
-*.html
 
 # Compiled class file
 *.class
