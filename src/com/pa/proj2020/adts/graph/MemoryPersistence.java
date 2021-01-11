@@ -1,20 +1,16 @@
 package com.pa.proj2020.adts.graph;
 
-import java.io.*;
-import java.util.*;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import com.google.gson.JsonElement;
-import com.google.gson.reflect.TypeToken;
+
+import java.io.*;
+import java.util.HashMap;
 
 public class MemoryPersistence {
 
     SocialNetwork socialNetwork;
 
-    public MemoryPersistence(SocialNetwork socialNetwork){
+    public MemoryPersistence(SocialNetwork socialNetwork) {
         this.socialNetwork = socialNetwork;
     }
 

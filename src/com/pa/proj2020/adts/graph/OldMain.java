@@ -1,7 +1,5 @@
 package com.pa.proj2020.adts.graph;
 
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 import javafx.application.Application;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
@@ -39,8 +37,6 @@ public class OldMain extends Application {
         socialNetwork.importSerialization();
         System.out.printf("Após restore: " + socialNetwork.getGraph().vertices().size() + "\n");
         System.out.printf("Após restore: " + socialNetwork.getGraph().edges().size() + "\n");
-
-
 
 
         System.out.println("---------------------------------------------------------------------------------");

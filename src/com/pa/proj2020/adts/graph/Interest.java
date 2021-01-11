@@ -14,7 +14,8 @@ public class Interest implements Serializable {
 
     /**
      * Cria um Interest com o id e o nome
-     * @param id representa o id de um interest
+     *
+     * @param id   representa o id de um interest
      * @param name representa o nome de um interest
      */
     public Interest(int id, String name) {
@@ -25,9 +26,10 @@ public class Interest implements Serializable {
 
     /**
      * Cria um Interest com o id, nome e lista de ids dos utilizadores com esse interest
-     * @param id representa o id de um interest
+     *
+     * @param id   representa o id de um interest
      * @param name representa o nome de um interest
-     * @param ids representa a lista dos ids dos utilizadores com esse interest
+     * @param ids  representa a lista dos ids dos utilizadores com esse interest
      */
     public Interest(int id, String name, List<String> ids) {
         this(id, name);
@@ -44,6 +46,7 @@ public class Interest implements Serializable {
 
     /**
      * Método que retorna o id de um interest
+     *
      * @return o id do interest
      */
     public int getId() {
@@ -52,6 +55,7 @@ public class Interest implements Serializable {
 
     /**
      * Método que retorna o nome do interest
+     *
      * @return o nome do interest
      */
     public String getName() {
@@ -60,6 +64,7 @@ public class Interest implements Serializable {
 
     /**
      * Método que retorna uma lista com os ids dos utilizadores
+     *
      * @return uma lista com os ids dos utilizadores
      */
     public ArrayList<String> getIdsOfUsers() {
@@ -68,6 +73,7 @@ public class Interest implements Serializable {
 
     /**
      * Método que retorna uma string com o nome de um interest
+     *
      * @return uma string com o nome de um interest
      */
     @Override

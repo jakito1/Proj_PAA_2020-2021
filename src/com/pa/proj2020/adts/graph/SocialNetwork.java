@@ -18,9 +18,9 @@ public class SocialNetwork implements Originator, Serializable {
     private final HashMap<Integer, Interest> interests;
     private final Logging log = Logging.getInstance();
     private final Statistics statistics;
+    MemoryPersistence memoryPersistence;
     private DirectGraph<User, Relationship> graph;
     private String userNamesFile, relationshipsFile, interestNamesFile, interestsFile;
-    MemoryPersistence memoryPersistence;
 
     /**
      * Cria um objeto SocialNetwork
@@ -32,19 +32,20 @@ public class SocialNetwork implements Originator, Serializable {
         relationships = new HashMap<>();
         interests = new HashMap<>();
         statistics = new Statistics();
-		memoryPersistence = new MemoryPersistence(this);
+        memoryPersistence = new MemoryPersistence(this);
         this.checkFilenames();
 
     }
 
     /**
      * Cria um objeto SocialNetwork atraves do usernamefiles, relationshipfiles, interestnamefile e interestfiles
-     * @param userNamesFile representa o ficheiro com os nomes dos utilizadores
+     *
+     * @param userNamesFile     representa o ficheiro com os nomes dos utilizadores
      * @param relationshipsFile representa o ficheiro com relationships
      * @param interestNamesFile representa o ficheiro com o nome dos interesses
-     * @param interestsFile representa o ficheiro com os interesses
+     * @param interestsFile     representa o ficheiro com os interesses
      */
-    public SocialNetwork(String userNamesFile, String relationshipsFile, String interestNamesFile, String interestsFile){
+    public SocialNetwork(String userNamesFile, String relationshipsFile, String interestNamesFile, String interestsFile) {
         this();
         this.userNamesFile = userNamesFile;
         this.relationshipsFile = relationshipsFile;
@@ -55,8 +56,8 @@ public class SocialNetwork implements Originator, Serializable {
     /**
      * Método que verifica se os nomes dos ficheiros foram inicializados
      */
-    public void checkFilenames(){
-        if(this.userNamesFile == null || this.relationshipsFile == null || this.interestNamesFile == null || this.interestsFile == null){
+    public void checkFilenames() {
+        if (this.userNamesFile == null || this.relationshipsFile == null || this.interestNamesFile == null || this.interestsFile == null) {
             this.userNamesFile = "user_names.csv";
             this.relationshipsFile = "relationships.csv";
             this.interestNamesFile = "interest_names.csv";
@@ -67,12 +68,13 @@ public class SocialNetwork implements Originator, Serializable {
 
     /**
      * Método que inicializa os nomes dos ficheiros
-     * @param userNamesFile representa o ficheiro com os nomes dos utilizadores
+     *
+     * @param userNamesFile     representa o ficheiro com os nomes dos utilizadores
      * @param relationshipsFile representa o ficheiro com relationships
      * @param interestNamesFile representa o ficheiro com o nome dos interesses
-     * @param interestsFile representa o ficheiro com os interesses
+     * @param interestsFile     representa o ficheiro com os interesses
      */
-    public void setFileNames(String userNamesFile, String relationshipsFile, String interestNamesFile, String interestsFile){
+    public void setFileNames(String userNamesFile, String relationshipsFile, String interestNamesFile, String interestsFile) {
         this.userNamesFile = userNamesFile;
         this.relationshipsFile = relationshipsFile;
         this.interestNamesFile = interestNamesFile;
@@ -106,6 +108,7 @@ public class SocialNetwork implements Originator, Serializable {
 
     /**
      * Método que constroi o algoritmo Total
+     *
      * @return grafo com algoritmo total
      */
     public DirectGraph<User, Relationship> constructModelTotal() {
@@ -125,6 +128,7 @@ public class SocialNetwork implements Originator, Serializable {
 
     /**
      * Método que retorna o grafo
+     *
      * @return o grafo construido
      */
     public DirectGraph<User, Relationship> getGraph() {
@@ -133,6 +137,7 @@ public class SocialNetwork implements Originator, Serializable {
 
     /**
      * Metodo que retorna uma colecao com users
+     *
      * @return um hashmap com users
      */
     public HashMap<Integer, User> getUsers() {
@@ -141,6 +146,7 @@ public class SocialNetwork implements Originator, Serializable {
 
     /**
      * Metodo que retorna uma colecao com relacoes
+     *
      * @return um hashmap com relacoes
      */
     public HashMap<Integer, ArrayList<String>> getRelationShips() {
@@ -149,6 +155,7 @@ public class SocialNetwork implements Originator, Serializable {
 
     /**
      * Metodo que retorna os interesses de um utilizador
+     *
      * @param idUser representa o id do utilizador
      * @return a lista de interesses do utilizador fornecido
      */
@@ -172,6 +179,7 @@ public class SocialNetwork implements Originator, Serializable {
 
     /**
      * Metodo que insere uma aresta entre dois users
+     *
      * @param user1 representa um utilizador
      * @param user2 representa outro utilizador
      */
@@ -181,8 +189,9 @@ public class SocialNetwork implements Originator, Serializable {
 
     /**
      * Metodo que insere uma aresta entre dois utilizadores
-     * @param user1 representa um utilizador
-     * @param user2 representa outro utilizador
+     *
+     * @param user1       representa um utilizador
+     * @param user2       representa outro utilizador
      * @param addIndirect true se quiser adicionar relacoes indiretas, false caso contrario
      */
     public void insertEdge(User user1, User user2, boolean addIndirect) {
@@ -227,6 +236,7 @@ public class SocialNetwork implements Originator, Serializable {
 
     /**
      * Metodo que adiciona relacoes indiretas
+     *
      * @param idUser representa o user
      */
     public void addIndirectRelationships(int idUser) {
@@ -241,6 +251,7 @@ public class SocialNetwork implements Originator, Serializable {
 
     /**
      * Método que constroi o algoritmo Iterativo
+     *
      * @param idUser representa o user
      */
     public void constructModelIterative(int idUser) {
@@ -286,9 +297,10 @@ public class SocialNetwork implements Originator, Serializable {
 
     /**
      * Metodo que retorna o caminho de menor custo entre dois vertices
+     *
      * @param origin representa um vertice
-     * @param end representa outro vertice
-     * @param path representa o caminho de menor custo
+     * @param end    representa outro vertice
+     * @param path   representa o caminho de menor custo
      * @return o custo do caminho
      */
     public int minPath(Vertex<User> origin, Vertex<User> end, ArrayList<User> path) {
@@ -297,6 +309,7 @@ public class SocialNetwork implements Originator, Serializable {
 
     /**
      * Metodo que retorna uma string com a social network
+     *
      * @return uma string com a social network
      */
     @Override
@@ -336,6 +349,7 @@ public class SocialNetwork implements Originator, Serializable {
 
     /**
      * Metodo que permite obter a lista de utilizadores nao inseridos
+     *
      * @return a lista de utilizadores nao inseridos
      */
     public List<String> getUsersNotInserted() {
@@ -358,6 +372,7 @@ public class SocialNetwork implements Originator, Serializable {
 
     /**
      * Metodo que retorna a estatistica de utilizadores adicionados
+     *
      * @return estatistica de utilizadores adicionados
      */
     public String addedUsersStats() {
@@ -366,6 +381,7 @@ public class SocialNetwork implements Originator, Serializable {
 
     /**
      * Metodo que retorna a estatistica de utilizadores incluidos
+     *
      * @return estatistica de utilizadores incluidos
      */
     public String includedUsersStats() {
@@ -374,6 +390,7 @@ public class SocialNetwork implements Originator, Serializable {
 
     /**
      * Metodo que retorna a estatistica de utilizadores com mais relacionamentos
+     *
      * @return estatistica de utilizadores com mais relacionamentos
      */
     public String userWithMoreDirectRelationshipsStats() {
@@ -382,6 +399,7 @@ public class SocialNetwork implements Originator, Serializable {
 
     /**
      * Metodo que retorna a estatistica de interesse mais partilhado
+     *
      * @return estatistica de interesse mais partilhado
      */
     public String interestMostSharedStats() {
@@ -390,6 +408,7 @@ public class SocialNetwork implements Originator, Serializable {
 
     /**
      * Metodo que retorna a estatistica de utilizadores com mais relacionamentos
+     *
      * @return estatistica de utilizadores com mais relacionamentos
      */
     public Map<User, Integer> topFiveUsersWithMostRelationshipsStats() {
@@ -398,6 +417,7 @@ public class SocialNetwork implements Originator, Serializable {
 
     /**
      * Metodo que permite obter um Logging
+     *
      * @return um Logging
      */
     public Logging getLog() {
@@ -406,6 +426,7 @@ public class SocialNetwork implements Originator, Serializable {
 
     /**
      * Metodo que permite obter uma colecao de relacoes
+     *
      * @return um hashmap de relacoes
      */
     public HashMap<Integer, ArrayList<String>> getRelationships() {
@@ -414,6 +435,7 @@ public class SocialNetwork implements Originator, Serializable {
 
     /**
      * Metodo que permite obter uma colecao de interesses
+     *
      * @return um hashmap de interesses
      */
     public HashMap<Integer, Interest> getInterests() {
@@ -422,14 +444,16 @@ public class SocialNetwork implements Originator, Serializable {
 
     /**
      * Metodo que permite obter a estatistica do top 5 de interesses
+     *
      * @return a estatistica do top 5 de interesses
      */
-    public Map<Interest, Integer> topFiveInterestsStats(){
+    public Map<Interest, Integer> topFiveInterestsStats() {
         return this.statistics.topFiveInterestsStats(this.graph);
     }
 
     /**
      * Metodo que permite criar o memento
+     *
      * @return o novo memento
      */
     @Override
@@ -439,6 +463,7 @@ public class SocialNetwork implements Originator, Serializable {
 
     /**
      * Metodo que permite usar o memento
+     *
      * @param savedState representa o novo memento
      */
     @Override
@@ -453,15 +478,15 @@ public class SocialNetwork implements Originator, Serializable {
         }
     }
 
-    public void exportSerialization(){
+    public void exportSerialization() {
         memoryPersistence.exportSerialization();
     }
 
-    public void importSerialization(){
+    public void importSerialization() {
         graph = memoryPersistence.importSerialization();
     }
 
-    public void exportJSON(){
+    public void exportJSON() {
         memoryPersistence.exportJSON();
     }
 

@@ -22,6 +22,7 @@ public final class Logging {
 
     /**
      * Método que retorna a instancia de um Logging
+     *
      * @return a instancia de um Logging
      */
     public static Logging getInstance() {
@@ -31,6 +32,7 @@ public final class Logging {
 
     /**
      * Método auxiliar responsável por formatar a data
+     *
      * @param localDateTime representa a data que pretendemos formatar
      * @return uma string com a data formatada
      */
@@ -42,9 +44,10 @@ public final class Logging {
 
     /**
      * Método que permite gerar o Logging para a adição de um utilizador
-     * @param idUserAdded representa o id de um utilizador adicionado
+     *
+     * @param idUserAdded         representa o id de um utilizador adicionado
      * @param directRelationships representa o numero de relacionamentos diretos
-     * @param interests representa o numero de interesses
+     * @param interests           representa o numero de interesses
      */
     public void addUser(int idUserAdded, int directRelationships, int interests) {
         String logCreated = "<" + this.formatLocalDateTime(LocalDateTime.now()) + "> | <" + idUserAdded +
@@ -54,9 +57,10 @@ public final class Logging {
 
     /**
      * Método que permite gerar o Logging para a adição de um relacionamento direto
-     * @param idUserAdded representa o id do utilizador adicionado
+     *
+     * @param idUserAdded    representa o id do utilizador adicionado
      * @param idUserExistent representa o id do utilizador existente
-     * @param interests representa o numero de interesses partilhados
+     * @param interests      representa o numero de interesses partilhados
      */
     public void addRelationshipDirect(int idUserAdded, int idUserExistent, int interests) {
         String logCreated = "<" + this.formatLocalDateTime(LocalDateTime.now()) + "> | <" + idUserAdded +
@@ -66,8 +70,9 @@ public final class Logging {
 
     /**
      * Método que permite gerar o Logging para a adição de um interesse
+     *
      * @param idUserAdded representa o id do utilizador adicionado
-     * @param idInterest representa o id do interesse
+     * @param idInterest  representa o id do interesse
      */
     public void addInterest(int idUserAdded, int idInterest) {
         String logCreated = "<" + this.formatLocalDateTime(LocalDateTime.now()) + "> | <" + idUserAdded +
@@ -77,9 +82,10 @@ public final class Logging {
 
     /**
      * Método que permite gerar o Logging para a adição de um relacionamento indireto
-     * @param idUserAdded representa o id do utilizador adicionado
+     *
+     * @param idUserAdded    representa o id do utilizador adicionado
      * @param idUserIncluded representa o id do utilizador incluido
-     * @param idInterest representa o id do interesse
+     * @param idInterest     representa o id do interesse
      */
     public void addRelationshipIndirect(int idUserAdded, int idUserIncluded, int idInterest) {
         String logCreated = "<" + this.formatLocalDateTime(LocalDateTime.now()) + "> | <" + idUserAdded +
@@ -93,6 +99,7 @@ public final class Logging {
 
     /**
      * Método que permite criar uma string para cada Logging
+     *
      * @return um string para o Logging
      */
     @Override

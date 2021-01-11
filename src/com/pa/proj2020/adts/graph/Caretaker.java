@@ -12,6 +12,7 @@ public class Caretaker {
 
     /**
      * Inicializa um objeto Caretaker para uma socialNetwork (objeto Memento)
+     *
      * @param socialNetwork representa o objeto Memento associado ao Originator
      */
     public Caretaker(SocialNetwork socialNetwork) {
@@ -28,6 +29,7 @@ public class Caretaker {
 
     /**
      * Método que permite fazer restore ao estado a SocialNetwork
+     *
      * @throws NoMementoException quando não é possivel fazer mais undo
      */
     public void restoreState() throws NoMementoException {
