@@ -23,12 +23,12 @@
  */
 package smartgraph.view.graphview;
 
-import com.pa.proj2020.adts.graph.Edge;
 import javafx.beans.value.ObservableValue;
 import javafx.geometry.Point2D;
 import javafx.scene.shape.CubicCurve;
 import javafx.scene.transform.Rotate;
 import javafx.scene.transform.Translate;
+import com.pa.proj2020.adts.graph.Edge;
 
 /**
  * Concrete implementation of a curved edge.
@@ -46,6 +46,7 @@ import javafx.scene.transform.Translate;
  *
  * @param <E> Type stored in the underlying edge
  * @param <V> Type of connecting vertex
+ *
  * @author brunomnsilva
  */
 public class SmartGraphEdgeCurve<E, V> extends CubicCurve implements SmartGraphEdgeBase<E, V> {
@@ -56,11 +57,14 @@ public class SmartGraphEdgeCurve<E, V> extends CubicCurve implements SmartGraphE
 
     private final SmartGraphVertexNode<V> inbound;
     private final SmartGraphVertexNode<V> outbound;
-    /* Styling proxy */
-    private final SmartStyleProxy styleProxy;
+
     private SmartLabel attachedLabel = null;
     private SmartArrow attachedArrow = null;
+
     private double randomAngleFactor = 0;
+    
+    /* Styling proxy */
+    private final SmartStyleProxy styleProxy;
 
     public SmartGraphEdgeCurve(Edge<E, V> edge, SmartGraphVertexNode inbound, SmartGraphVertexNode outbound) {
         this(edge, inbound, outbound, 0);
@@ -102,24 +106,24 @@ public class SmartGraphEdgeCurve<E, V> extends CubicCurve implements SmartGraphE
     public boolean removeStyleClass(String cssClass) {
         return styleProxy.removeStyleClass(cssClass);
     }
-
-    private void update() {
+    
+    private void update() {                
         if (inbound == outbound) {
             /* Make a loop using the control points proportional to the vertex radius */
-
+            
             //TODO: take into account several "self-loops" with randomAngleFactor
             double midpointX1 = outbound.getCenterX() - inbound.getRadius() * 5;
             double midpointY1 = outbound.getCenterY() - inbound.getRadius() * 2;
-
+            
             double midpointX2 = outbound.getCenterX() + inbound.getRadius() * 5;
             double midpointY2 = outbound.getCenterY() - inbound.getRadius() * 2;
-
+            
             setControlX1(midpointX1);
             setControlY1(midpointY1);
             setControlX2(midpointX2);
             setControlY2(midpointY2);
-
-        } else {
+            
+        } else {          
             /* Make a curved edge. The curve is proportional to the distance  */
             double midpointX = (outbound.getCenterX() + inbound.getCenterX()) / 2;
             double midpointY = (outbound.getCenterY() + inbound.getCenterY()) / 2;
