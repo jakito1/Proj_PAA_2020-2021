@@ -104,15 +104,15 @@ public final class Logging {
      */
     @Override
     public String toString() {
-        String s = "******************** Logging ********************";
+        StringBuilder s = new StringBuilder("******************** Logging ********************");
 
         for (String logLine : this.log) {
-            s = s + "\n" + logLine;
+            s.append("\n").append(logLine);
         }
 
-        s = s + "\n******************** End ********************";
+        s.append("\n******************** End ********************");
 
-        return s;
+        return s.toString();
     }
 
 

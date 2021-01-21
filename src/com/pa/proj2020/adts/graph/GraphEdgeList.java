@@ -63,18 +63,14 @@ public class GraphEdgeList<V, E> implements Graph<V, E> {
     @Override
     public Collection<Vertex<V>> vertices() {
         List<Vertex<V>> list = new ArrayList<>();
-        for (Vertex<V> v : vertices.values()) {
-            list.add(v);
-        }
+        list.addAll(vertices.values());
         return list;
     }
 
     @Override
     public Collection<Edge<E, V>> edges() {
         List<Edge<E, V>> list = new ArrayList<>();
-        for (Edge<E, V> e : edges.values()) {
-            list.add(e);
-        }
+        list.addAll(edges.values());
         return list;
     }
 
@@ -87,10 +83,8 @@ public class GraphEdgeList<V, E> implements Graph<V, E> {
         for (Edge<E, V> edge : edges.values()) {
 
             if (((MyEdge) edge).contains(v)) {
-                /* edge.vertices()[0] == v || edge.vertices()[1] == v */
                 incidentEdges.add(edge);
             }
-
         }
 
         return incidentEdges;

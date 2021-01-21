@@ -93,7 +93,6 @@ public class SocialNetworkView {
         MenuItem menuExportSerialize = new MenuItem("Export to Java Serialize");
         MenuItem menuImportSerialize = new MenuItem("Import from Java Serialize");
         MenuItem menuExportJSON = new MenuItem("Export to JSON");
-        //MenuItem menuUpdateLog = new MenuItem("UpdateLog");
 
         MenuItem menuStats1 = new MenuItem("Statistic Users Added");
         MenuItem menuStats2 = new MenuItem("Statistic Users Included by User Added");
@@ -108,62 +107,32 @@ public class SocialNetworkView {
 
         menuExit.setOnAction(e -> Platform.exit());
 
-        menuAddUser.setOnAction(e -> {
-            this.createNodeAddUser();
+        menuAddUser.setOnAction(e -> this.createNodeAddUser());
 
-        });
+        menuAddIndirectRelationship.setOnAction(e -> this.createNodeAddIndirectRelationships());
 
-        menuAddIndirectRelationship.setOnAction(e -> {
-            this.createNodeAddIndirectRelationships();
+        menuDijkstra.setOnAction(e -> this.addDijkstra());
 
-        });
-
-        menuDijkstra.setOnAction(e -> {
-            this.addDijkstra();
-
-        });
-
-        menuExportSerialize.setOnAction(e -> {
-            this.socialNetwork.exportSerialization();
-        });
+        menuExportSerialize.setOnAction(e -> this.socialNetwork.exportSerialization());
 
         menuImportSerialize.setOnAction(e -> {
             this.socialNetwork.importSerialization();
             this.graphView.update();
         });
 
-        menuExportJSON.setOnAction(e -> {
-            this.socialNetwork.exportJSON();
-        });
+        menuExportJSON.setOnAction(e -> this.socialNetwork.exportJSON());
 
-        menuStats1.setOnAction(e -> {
-            this.addStatUsersAdded();
+        menuStats1.setOnAction(e -> this.addStatUsersAdded());
 
-        });
+        menuStats2.setOnAction(e -> this.addStatUsersIncludedByUserAdded());
 
-        menuStats2.setOnAction(e -> {
-            this.addStatUsersIncludedByUserAdded();
+        menuStats3.setOnAction(e -> this.addStatUserWithMoreDirectRelationships());
 
-        });
+        menuStats4.setOnAction(e -> this.addStatInterestMostShared());
 
-        menuStats3.setOnAction(e -> {
-            this.addStatUserWithMoreDirectRelationships();
+        menuStats5.setOnAction(e -> this.addStatTopFiveUsersWithMostRelationships());
 
-        });
-
-        menuStats4.setOnAction(e -> {
-            this.addStatInterestMostShared();
-
-        });
-
-        menuStats5.setOnAction(e -> {
-            this.addStatTopFiveUsersWithMostRelationships();
-
-        });
-
-        menuStats6.setOnAction(e -> {
-            this.addStatTopFiveInterestsStats();
-        });
+        menuStats6.setOnAction(e -> this.addStatTopFiveInterestsStats());
 
 
         menuUndo.setOnAction(e -> {
@@ -359,7 +328,8 @@ public class SocialNetworkView {
      * @param interestNamesFile representa o ficheiro com o nome dos interesses
      * @param interestsFile     representa o ficheiro com os interesses
      */
-    public void setFilenames(String userNamesFile, String relationshipsFile, String interestNamesFile, String interestsFile) {
+    public void setFilenames(String userNamesFile, String relationshipsFile,
+                             String interestNamesFile, String interestsFile) {
         this.socialNetwork.setFileNames(userNamesFile, relationshipsFile, interestNamesFile, interestsFile);
     }
 
@@ -371,7 +341,7 @@ public class SocialNetworkView {
         Button updateButton = new Button("UPDATE COLORS");
         Button addUserButton = new Button("ADD USER");
 
-        ComboBox<String> texts = new ComboBox<String>();
+        ComboBox<String> texts = new ComboBox<>();
         texts.getItems().addAll(this.socialNetwork.getUsersNotInserted());
 
         texts.getItems().setAll(texts.getItems().sorted());
@@ -388,10 +358,7 @@ public class SocialNetworkView {
             graphView.update();
         });
 
-        updateButton.setOnAction(e -> {
-            this.updateGraphColors();
-
-        });
+        updateButton.setOnAction(e -> this.updateGraphColors());
 
         HBox hBox2 = new HBox();
         hBox2.setPadding(new Insets(10));
@@ -418,7 +385,7 @@ public class SocialNetworkView {
         Button updateButton = new Button("UPDATE COLORS");
         Button addUserButton = new Button("ADD INDIRECT RELATIONSHIPS");
 
-        ComboBox<String> texts = new ComboBox<String>();
+        ComboBox<String> texts = new ComboBox<>();
         for (Vertex<User> user : this.socialNetwork.getGraph().vertices()) {
             texts.getItems().add(user.element().toString());
         }
@@ -434,10 +401,7 @@ public class SocialNetworkView {
             graphView.update();
         });
 
-        updateButton.setOnAction(e -> {
-            this.updateGraphColors();
-
-        });
+        updateButton.setOnAction(e -> this.updateGraphColors());
 
         HBox hBox2 = new HBox();
         hBox2.setPadding(new Insets(10));
@@ -465,8 +429,8 @@ public class SocialNetworkView {
         Button dijkstraButton = new Button("Dijkstra");
         ArrayList<User> path = new ArrayList<>();
 
-        ComboBox<String> textsUser1 = new ComboBox<String>();
-        ComboBox<String> textsUser2 = new ComboBox<String>();
+        ComboBox<String> textsUser1 = new ComboBox<>();
+        ComboBox<String> textsUser2 = new ComboBox<>();
 
         for (Vertex<User> user : this.socialNetwork.getGraph().vertices()) {
             textsUser1.getItems().add(user.element().toString());
@@ -570,13 +534,10 @@ public class SocialNetworkView {
 
         graphView = new SmartGraphPanel(this.socialNetwork.getGraph(), strategy);
 
-        graphView.setVertexDoubleClickAction(graphVertex -> {
-            this.addInformationVertex(graphVertex.getUnderlyingVertex());
-        });
+        graphView.setVertexDoubleClickAction(graphVertex ->
+                this.addInformationVertex(graphVertex.getUnderlyingVertex()));
 
-        graphView.setEdgeDoubleClickAction(graphEdge -> {
-            this.addInformationEdge(graphEdge.getUnderlyingEdge());
-        });
+        graphView.setEdgeDoubleClickAction(graphEdge -> this.addInformationEdge(graphEdge.getUnderlyingEdge()));
 
         this.updateColorsVertexGraph();
         this.updateColorsEdgesGraph();

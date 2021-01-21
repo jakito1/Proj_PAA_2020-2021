@@ -214,9 +214,6 @@ public class SocialNetwork implements Originator, Serializable {
             relationshipDirect = true;
         }
 
-        //HashSet<Edge<Relationship, User>> tempEdges = new HashSet<>(this.graph.edges());
-        //tempEdges
-
         if (!tempInterests.isEmpty() && !relationshipDirect && addIndirect) {
             relationship = new RelationshipIndirect(tempInterests);
             this.graph.insertEdge(user1, user2, relationship);
@@ -385,7 +382,7 @@ public class SocialNetwork implements Originator, Serializable {
      * @return estatistica de utilizadores incluidos
      */
     public String includedUsersStats() {
-        return this.statistics.includedUsersStats(this.graph);
+        return this.statistics.includedUsersStats();
     }
 
     /**

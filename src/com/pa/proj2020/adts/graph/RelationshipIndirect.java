@@ -11,7 +11,6 @@ public class RelationshipIndirect implements Relationship {
 
     private final Set<Interest> listOfInterests;
     private final User[] users;
-    private int number;
 
     /**
      * Cria um relacionamento indireto
@@ -83,12 +82,12 @@ public class RelationshipIndirect implements Relationship {
 
 
     public String getListOfInterestsString() {
-        String s = "List Of Interest\n";
+        StringBuilder s = new StringBuilder("List Of Interest\n");
         for (Interest interest : listOfInterests) {
-            s = s + interest.toString() + "\n";
+            s.append(interest.toString()).append("\n");
         }
 
-        return s;
+        return s.toString();
     }
 
     /**

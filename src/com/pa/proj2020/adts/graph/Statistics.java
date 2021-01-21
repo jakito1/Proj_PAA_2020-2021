@@ -46,36 +46,36 @@ public class Statistics {
      * @return uma string com o numero e a listagem de utilizadores adicionados ao grafo
      */
     public String addedUsersStats(DirectGraph<User, Relationship> graph) {
-        String s = "STATISTIC USERS ADDED\n";
-        s = s + "Number of users: " + graph.getVertices().size() + "\n";
-        s = s + "List of ids and names of users: " + graph.getVertices().size() + "\n";
+        StringBuilder s = new StringBuilder("STATISTIC USERS ADDED\n");
+        s.append("Number of users: ").append(graph.getVertices().size()).append("\n");
+        s.append("List of ids and names of users: ").append(graph.getVertices().size()).append("\n");
 
         for (Vertex<User> userVertex : graph.vertices()) {
-            s = s + "ID: " + userVertex.element().getID() + "   Name:" + userVertex.element().getName() + "\n";
+            s.append("ID: ").append(userVertex.element().getID()).append("   Name:").
+                    append(userVertex.element().getName()).append("\n");
         }
 
-        return s;
+        return s.toString();
     }
 
     /**
      * Método que representa a estatistica relativa ao numero e listagem de utilizadores incluidos
      * por um utilizador adicionado
      *
-     * @param graph representa o grafo utilizador
      * @return uma string com o numero e a listagem de utilizadores incluidos atraves dos adicionados
      */
-    public String includedUsersStats(DirectGraph<User, Relationship> graph) {
-        String s = "STATISTIC USERS INCLUDED BY USER ADDED\n";
+    public String includedUsersStats() {
+        StringBuilder s = new StringBuilder("STATISTIC USERS INCLUDED BY USER ADDED\n");
 
         for (User user : this.usersIncluded.keySet()) {
-            s = s + "User: " + user.getName() + " has included: \n";
+            s.append("User: ").append(user.getName()).append(" has included: \n");
             for (User userIncluded : this.usersIncluded.get(user)) {
-                s = s + "   " + userIncluded.getName() + "\n";
+                s.append("   ").append(userIncluded.getName()).append("\n");
             }
-            s = s + "\n";
+            s.append("\n");
         }
 
-        return s;
+        return s.toString();
     }
 
     /**
@@ -89,7 +89,7 @@ public class Statistics {
 
         User user = null;
         int edges = 0;
-        int count = 0;
+        int count;
 
         for (Vertex<User> userVertex : graph.vertices()) {
             count = 0;
@@ -127,7 +127,7 @@ public class Statistics {
         Interest interest = null;
         ArrayList<Interest> interests = new ArrayList<>();
         int number = 0;
-        int count = 0;
+        int count;
 
         for (Vertex<User> userVertex : graph.vertices()) {
 
@@ -175,7 +175,7 @@ public class Statistics {
 
         Vertex<User>[] user = new Vertex[5];
         int edges = 0;
-        int count = 0;
+        int count;
 
 
         for (int i = 0; i < 5; i++) {
@@ -211,7 +211,7 @@ public class Statistics {
         List<Interest> interests = new ArrayList<>();
         Interest[] interest = new Interest[5];
         int number = 0;
-        int count = 0;
+        int count;
 
         for (Vertex<User> userVertex : graph.vertices()) {
 
