@@ -16,10 +16,10 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
-import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
+import observer.Observer;
 import smartgraph.view.containers.SmartGraphDemoContainer;
 import smartgraph.view.graphview.SmartCircularSortedPlacementStrategy;
 import smartgraph.view.graphview.SmartGraphPanel;
@@ -28,13 +28,14 @@ import java.util.HashMap;
 import java.util.Map;
 
 
-public class SocialNetworkView {
+public class SocialNetworkView implements Observer {
 
     private final Stage stage;
     private SocialNetwork socialNetwork;
     private SmartGraphPanel<User, Relationship> graphView;
     private BorderPane pane;
     private Caretaker caretaker;
+    private final ViewObjectCreator viewObjectCreator = ViewObjectCreator.getInstance();
 
 
     /**
@@ -43,7 +44,6 @@ public class SocialNetworkView {
     public SocialNetworkView() {
         stage = new Stage(StageStyle.DECORATED);
     }
-
 
     /**
      * Permite criar um novo SocialNetworkView
@@ -58,14 +58,12 @@ public class SocialNetworkView {
         this.createGraphView();
     }
 
-
     /**
      * Inicia o SocialNetworkView
      */
     public void startCentralConsole() {
         this.createCenter();
     }
-
 
     /**
      * Cria um Menu no SocialNetworkView com varias opcoes
@@ -142,142 +140,42 @@ public class SocialNetworkView {
         return menuBar;
     }
 
-
-    private ImageView createImageView(Image img){
-        ImageView imageView = new ImageView();
-        imageView.setPreserveRatio(true);
-        imageView.setFitWidth(850.0);
-        imageView.setImage(img);
-
-        return imageView;
-    }
-
-
-    private Text createText(String fontName, int size, String innerText, Color color){
-        if(fontName == null || size <= 0 || innerText == null || color == null){
-            return new Text("");
-        }
-
-        Font font = createFont(fontName, size);
-        Text text = new Text(innerText);
-
-        text.setFill(color);
-        text.setFont(font);
-
-        return(text);
-    }
-
-
-    private VBox createVBox(Insets insets, int spacing, Pos alignment){
-        if(insets == null || spacing <= 0){
-            return null;
-        }
-
-        VBox vbox = new VBox();
-        vbox.setPadding(insets);
-        vbox.setSpacing(spacing);
-
-        if(alignment != null){
-            vbox.setAlignment(alignment);
-        }
-
-        return vbox;
-    }
-
-
-    private HBox createHBox(Insets insets, int spacing, Pos alignment){
-        if(insets == null || spacing <= 0){
-            return null;
-        }
-
-        HBox hbox = new HBox();
-        hbox.setPadding(insets);
-        hbox.setSpacing(spacing);
-
-        if(alignment != null){
-            hbox.setAlignment(alignment);
-        }
-
-        return hbox;
-    }
-
-
-    private TextField createTextField(String innerText, int maxWidth, int minWidth){
-        TextField textField = new TextField();
-
-        if(innerText == null || maxWidth <=0 || minWidth <0){
-            return textField;
-        }
-
-        textField.setText(innerText);
-        textField.setMaxWidth(maxWidth);
-        textField.setMinWidth(minWidth);
-
-        return textField;
-    }
-
-
-    private Font createFont(String fontName, int size){
-        if(fontName == null || size <= 0){
-            return null;
-        }
-
-        return Font.font(fontName, size);
-    }
-
-
-    private Label createLabel(String innerText, Color color, String fontName, int size){
-        if(innerText == null || color == null || fontName == null){
-            return null;
-        }
-
-        Label label = new Label();
-        Font font = createFont(fontName, size);
-
-        label.setText(innerText);
-        label.setTextFill(color);
-        label.setFont(font);
-
-        return label;
-    }
-
-
     /**
      * Cria a janela inicial do SocialNetworkView
      */
     private void createCenter() {
         Image img = new Image("images/SocialNetworkImage.jpg");
-        ImageView imageView = createImageView(img);
+        ImageView imageView = viewObjectCreator.createImageView(img);
 
-        VBox center = createVBox(new Insets(-10, 12, 15, 12), 15, Pos.CENTER);
-        Text welcomeText = this.createText("SanSerif", 35,
+        VBox center = viewObjectCreator.createVBox(new Insets(-10, 12, 15, 12), 15, Pos.CENTER);
+        Text welcomeText = viewObjectCreator.createText("SanSerif", 35,
                 "Social Network", Color.BLUE);
-        Text welcomeText5 = this.createText("SanSerif", 10,
+        Text welcomeText5 = viewObjectCreator.createText("SanSerif", 10,
                 "Note: leaving in blank will set default values", Color.BLACK);
-        HBox hBox1 = createHBox(new Insets(10), 10, null);
-        HBox hBox2 = createHBox(new Insets(10), 10, null);
+        HBox hBox1 = viewObjectCreator.createHBox(new Insets(10), 10, null);
+        HBox hBox2 = viewObjectCreator.createHBox(new Insets(10), 10, null);
         center.getChildren().addAll(welcomeText, imageView);
-        TextField relationshipsField = createTextField("relationships.csv", 250, 250);
+        TextField relationshipsField = viewObjectCreator.createTextField("relationships.csv", 250, 250);
         center.getChildren().add(relationshipsField);
-        TextField interestsField = createTextField("interests.csv", 250, 250);
-        Label label1 = createLabel("Relationships: ", Color.BLUE, "SanSerif", 15);
+        TextField interestsField = viewObjectCreator.createTextField("interests.csv", 250, 250);
+        Label label1 = viewObjectCreator.createLabel("Relationships: ", Color.BLUE, "SanSerif", 15);
         label1.setLabelFor(relationshipsField);
-        Label label2 = createLabel("Interests: ", Color.BLUE, "SanSerif", 15);
+        Label label2 = viewObjectCreator.createLabel("Interests: ", Color.BLUE, "SanSerif", 15);
         label2.setLabelFor(relationshipsField);
         hBox1.getChildren().addAll(label1, relationshipsField, label2, interestsField);
         hBox1.setAlignment(Pos.CENTER);
         center.getChildren().addAll(hBox1);
-        TextField userNamesField = createTextField("user_names.csv", 250, 250);
-        TextField interestNamesField = createTextField("interest_names.csv", 250, 250);
-        Label label3 = createLabel("User Names: ", Color.BLUE, "SanSerif", 15);
+        TextField userNamesField = viewObjectCreator.createTextField("user_names.csv", 250, 250);
+        TextField interestNamesField = viewObjectCreator.createTextField("interest_names.csv", 250, 250);
+        Label label3 = viewObjectCreator.createLabel("User Names: ", Color.BLUE, "SanSerif", 15);
         label3.setLabelFor(userNamesField);
-        Label label4 = createLabel("Interest Names: ", Color.BLUE, "SanSerif", 15);
+        Label label4 = viewObjectCreator.createLabel("Interest Names: ", Color.BLUE, "SanSerif", 15);
         label4.setLabelFor(interestNamesField);
         hBox2.getChildren().addAll(label3, userNamesField, label4, interestNamesField);
         hBox2.setAlignment(Pos.CENTER);
         center.getChildren().addAll(hBox2);
-        TextField nameField = createTextField("Model Name", 250, 250);
-        HBox hBox = createHBox(new Insets(10), 10, Pos.CENTER);
+        TextField nameField = viewObjectCreator.createTextField("Model Name", 250, 250);
+        HBox hBox = viewObjectCreator.createHBox(new Insets(10), 10, Pos.CENTER);
         center.getChildren().add(nameField);
 
         Button okInteractiveButton = new Button("START ITERATIVE");
@@ -300,7 +198,7 @@ public class SocialNetworkView {
 
         });
 
-        Label label5 = createLabel("Model Name: ", Color.BLUE, "SanSerif", 15);
+        Label label5 = viewObjectCreator.createLabel("Model Name: ", Color.BLUE, "SanSerif", 15);
         label5.setLabelFor(nameField);
         hBox.getChildren().addAll(label5, nameField, okInteractiveButton, okTotalButton);
         center.getChildren().addAll(hBox, welcomeText5);
@@ -314,7 +212,6 @@ public class SocialNetworkView {
 
     }
 
-
     /**
      * Cria o menu de adicao de utilizador
      */
@@ -322,7 +219,7 @@ public class SocialNetworkView {
         Button updateButton = new Button("UPDATE COLORS");
         Button addUserButton = new Button("ADD USER");
 
-        ComboBox<String> texts = createComboBoxString("Select a user to add", 230, 20);
+        ComboBox<String> texts = viewObjectCreator.createComboBoxString("Select a user to add", 230, 20);
         texts.getItems().addAll(this.socialNetwork.getUsersNotInserted());
         texts.getItems().setAll(texts.getItems().sorted());
 
@@ -336,15 +233,14 @@ public class SocialNetworkView {
 
         updateButton.setOnAction(e -> this.updateGraphColors());
 
-        HBox hBox2 = createHBox(new Insets(10), 10, Pos.CENTER);
+        HBox hBox2 = viewObjectCreator.createHBox(new Insets(10), 10, Pos.CENTER);
         hBox2.getChildren().addAll(addUserButton, updateButton);
 
-        VBox center2 = createVBox(new Insets(-10, 12, 15, 12), 15, Pos.CENTER);
+        VBox center2 = viewObjectCreator.createVBox(new Insets(-10, 12, 15, 12), 15, Pos.CENTER);
         center2.getChildren().addAll(texts, hBox2);
 
         pane.setCenter(center2);
     }
-
 
     /**
      * Cria o menu de adicao de relacionamentos indiretos
@@ -353,7 +249,7 @@ public class SocialNetworkView {
         Button updateButton = new Button("UPDATE COLORS");
         Button addUserButton = new Button("ADD INDIRECT RELATIONSHIPS");
 
-        ComboBox<String> texts = createComboBoxString("Select a user to add indirect relationships",
+        ComboBox<String> texts = viewObjectCreator.createComboBoxString("Select a user to add indirect relationships",
                 230, 20);
 
         for (Vertex<User> user : this.socialNetwork.getGraph().vertices()) {
@@ -370,28 +266,14 @@ public class SocialNetworkView {
 
         updateButton.setOnAction(e -> this.updateGraphColors());
 
-        HBox hBox2 = createHBox(new Insets(10), 10, Pos.CENTER);
+        HBox hBox2 = viewObjectCreator.createHBox(new Insets(10), 10, Pos.CENTER);
         hBox2.getChildren().addAll(addUserButton, updateButton);
 
-        VBox center2 = createVBox(new Insets(-10, 12, 15, 12), 15, Pos.CENTER);
+        VBox center2 = viewObjectCreator.createVBox(new Insets(-10, 12, 15, 12), 15, Pos.CENTER);
         center2.getChildren().addAll(texts, hBox2);
 
         pane.setCenter(center2);
     }
-
-
-    public ComboBox<String> createComboBoxString(String innerText, double v, double v1){
-        ComboBox<String> comboBox = new ComboBox<>();
-        if(innerText == null || v<=0 || v1 <=0){
-            return comboBox;
-        }
-
-        comboBox.setPromptText(innerText);
-        comboBox.setPrefSize(v, v1);
-
-        return comboBox;
-    }
-
 
     /**
      * Cria o menu de Dijkstra
@@ -400,8 +282,8 @@ public class SocialNetworkView {
         Button dijkstraButton = new Button("Dijkstra");
         ArrayList<User> path = new ArrayList<>();
 
-        ComboBox<String> textsUser1 = createComboBoxString("Select the origin user", 230, 20);
-        ComboBox<String> textsUser2 = createComboBoxString("Select the destiny user", 230, 20);
+        ComboBox<String> textsUser1 = viewObjectCreator.createComboBoxString("Select the origin user", 230, 20);
+        ComboBox<String> textsUser2 = viewObjectCreator.createComboBoxString("Select the destiny user", 230, 20);
 
         for (Vertex<User> user : this.socialNetwork.getGraph().vertices()) {
             textsUser1.getItems().add(user.element().toString());
@@ -475,12 +357,11 @@ public class SocialNetworkView {
             graphView.update();
         });
 
-        VBox center2 = createVBox(new Insets(-10, 12, 15, 12), 15, Pos.CENTER);
+        VBox center2 = viewObjectCreator.createVBox(new Insets(-10, 12, 15, 12), 15, Pos.CENTER);
         center2.getChildren().addAll(textsUser1, textsUser2, dijkstraButton);
 
         pane.setCenter(center2);
     }
-
 
     /**
      * Cria uma janela com a informacao associada ao SocialNetworkView
@@ -516,7 +397,6 @@ public class SocialNetworkView {
         graphView.init();
     }
 
-
     /**
      * Atualiza as cores do grafo
      */
@@ -525,60 +405,38 @@ public class SocialNetworkView {
         this.updateColorsEdgesGraph();
     }
 
-
-    public ListView<String> createListViewString(double v, double v1, String value){
-        ListView<String> list = new ListView<>();
-
-        if(v <= 0 || v1 <= 0){
-            return list;
-        }
-
-        list.setMaxSize(v, v1);
-
-        if(value != null){
-            list.getItems().add(value);
-        }
-
-        return list;
-    }
-
-
     /**
      * Cria o menu das estatisticas de utilizadores adicionados
      */
     public void addStatUsersAdded() {
-        ListView<String> list = createListViewString(350, 500, this.socialNetwork.addedUsersStats());
+        ListView<String> list = viewObjectCreator.createListViewString(350, 500, this.socialNetwork.addedUsersStats());
         pane.setCenter(list);
     }
-
 
     /**
      * Cria o menu das estatisticas de utilizadores incluidos
      */
     public void addStatUsersIncludedByUserAdded() {
-        ListView<String> list = createListViewString(350, 500, this.socialNetwork.includedUsersStats());
+        ListView<String> list = viewObjectCreator.createListViewString(350, 500, this.socialNetwork.includedUsersStats());
         pane.setCenter(list);
     }
-
 
     /**
      * Cria o menu das estatisticas de utilizadores com mais relacionamentos diretos
      */
     public void addStatUserWithMoreDirectRelationships() {
-        ListView<String> list = createListViewString(350, 100,
+        ListView<String> list = viewObjectCreator.createListViewString(350, 100,
                 this.socialNetwork.userWithMoreDirectRelationshipsStats());
         pane.setCenter(list);
     }
-
 
     /**
      * Cria o menu das estatisticas de interesse mais partilhado
      */
     public void addStatInterestMostShared() {
-        ListView<String> list = createListViewString(350, 100, this.socialNetwork.interestMostSharedStats());
+        ListView<String> list = viewObjectCreator.createListViewString(350, 100, this.socialNetwork.interestMostSharedStats());
         pane.setCenter(list);
     }
-
 
     /**
      * Cria o menu das estatisticas de top 5 de utilizadores com mais relacionamentos
@@ -599,7 +457,6 @@ public class SocialNetworkView {
         pane.setCenter(bar);
     }
 
-
     public BarChart<String, Integer> createBarChart(String labelX, String labelY, String title){
         CategoryAxis xaxis = new CategoryAxis();
         NumberAxis yaxis = new NumberAxis();
@@ -611,7 +468,6 @@ public class SocialNetworkView {
 
         return bar;
     }
-
 
     /**
      * Cria o menu das estatisticas de top 5 interesses
@@ -631,7 +487,6 @@ public class SocialNetworkView {
         pane.setCenter(bar);
     }
 
-
     /**
      * Cria o menu com a informacao do vertice
      *
@@ -639,7 +494,7 @@ public class SocialNetworkView {
      */
     public void addInformationVertex(Vertex<User> user) {
 
-        ListView<String> list = createListViewString(350, 100, user.element().toString());
+        ListView<String> list = viewObjectCreator.createListViewString(350, 100, user.element().toString());
         list.getItems().add(" ");
         list.getItems().add("List Of Interests");
 
@@ -650,7 +505,6 @@ public class SocialNetworkView {
         pane.setCenter(list);
     }
 
-
     /**
      * Cria o menu com a informacao da aresta
      *
@@ -658,12 +512,11 @@ public class SocialNetworkView {
      */
     public void addInformationEdge(Edge<Relationship, User> edge) {
         if (edge.element() instanceof RelationshipIndirect) {
-            ListView<String> list = createListViewString(350, 100,
+            ListView<String> list = viewObjectCreator.createListViewString(350, 100,
                     ((RelationshipIndirect) edge.element()).getListOfInterestsString());
             pane.setCenter(list);
         }
     }
-
 
     /**
      * Cria o GraphView
@@ -678,7 +531,6 @@ public class SocialNetworkView {
         smartGraphView.setMinWidth(600);
 
     }
-
 
     /**
      * Atualiza as cores dos vertices
@@ -696,7 +548,6 @@ public class SocialNetworkView {
             }
         }
     }
-
 
     /**
      * Atualiza as cores das arestas
@@ -718,4 +569,8 @@ public class SocialNetworkView {
         }
     }
 
+    @Override
+    public void update(Object obj) {
+
+    }
 }
