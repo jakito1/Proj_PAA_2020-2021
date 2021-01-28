@@ -457,7 +457,6 @@ public class SocialNetworkView implements Observer {
 
         map.keySet().forEach(user -> {
             series.getData().add(new XYChart.Data<>(user.toString(), map.get(user)));
-            System.out.println("User: " + user.toString() + " Relationships: " + map.get(user));
         });
 
         bar.getData().add(series);
@@ -486,8 +485,9 @@ public class SocialNetworkView implements Observer {
         Map<Interest, Integer> map = new HashMap<>(this.socialNetwork.topFiveInterestsStats());
 
         map.keySet().forEach(interest -> {
-            series.getData().add(new XYChart.Data<>(interest.getName(), map.get(interest)));
-            System.out.println("User: " + interest.toString() + " Relationships: " + map.get(interest));
+            if(interest != null){
+                series.getData().add(new XYChart.Data<>(interest.getName(), map.get(interest)));
+            }
         });
 
         bar.getData().add(series);
