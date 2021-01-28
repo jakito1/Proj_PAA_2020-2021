@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 /**
  * Classe responsável pela gestão da Social Network
@@ -169,40 +170,28 @@ public class SocialNetwork implements Originator, Serializable {
      * @param addIndirect true se quiser adicionar relacoes indiretas, false caso contrario
      */
     public void insertEdge(User user1, User user2, boolean addIndirect) {
-        if (user1 == null || user2 == null) {
-            return;
-        }
+        if (user1 == null || user2 == null) return;
 
-        List<Interest> tempInterests = new ArrayList<>();
         boolean relationshipDirect = false;
-        Relationship relationship;
 
-        for (Interest interest : this.interests.values()) {
-            if (interest.getIdsOfUsers().contains(String.valueOf(user1.getID())) &&
-                    interest.getIdsOfUsers().contains(String.valueOf(user2.getID()))) {
-                tempInterests.add(interest);
-            }
-        }
+        List<Interest> tempInterests = this.interests.values().stream().filter(interest -> interest.getIdsOfUsers()
+                .contains(String.valueOf(user1.getID())) &&
+                interest.getIdsOfUsers().contains(String.valueOf(user2.getID()))).collect(Collectors.toList());
 
-        if (this.relationships.get(user1.getID()).contains(String.valueOf(user2.getID()))) {
-            relationshipDirect = true;
-        }
+        if (this.relationships.get(user1.getID()).contains(String.valueOf(user2.getID()))) relationshipDirect = true;
 
-        if (!tempInterests.isEmpty() && !relationshipDirect && addIndirect) {
-            relationship = new RelationshipIndirect(tempInterests);
-            this.graph.insertEdge(user1, user2, relationship);
-            log.addRelationshipIndirect(user1.getID(), user2.getID(), tempInterests.size());
-        } else if (tempInterests.isEmpty() && relationshipDirect && !addIndirect) {
-            relationship = new RelationshipSimple();
-            this.graph.insertEdge(user1, user2, relationship);
-            log.addRelationshipDirect(user1.getID(), user2.getID(), 0);
-        } else if (!tempInterests.isEmpty() && relationshipDirect && !addIndirect) {
-            relationship = new RelationshipShared(tempInterests);
-            this.graph.insertEdge(user1, user2, relationship);
-            log.addRelationshipDirect(user1.getID(), user2.getID(), tempInterests.size());
-        }
+        checkInterest(user1, user2, addIndirect, tempInterests, relationshipDirect);
         updateLog();
 
+    }
+
+    private void checkInterest(User user1, User user2, boolean addIndirect, List<Interest> tempInterests, boolean relationshipDirect) {
+        Relationship relationship = new RelationshipSimple();
+        if (!tempInterests.isEmpty() && ((!relationshipDirect && addIndirect) || (relationshipDirect && !addIndirect))) {
+            relationship = new RelationshipIndirect(tempInterests);
+        }
+        this.graph.insertEdge(user1, user2, relationship);
+        log.addRelationshipDirect(user1.getID(), user2.getID(), tempInterests.size());
     }
 
     /**
@@ -420,7 +409,7 @@ public class SocialNetwork implements Originator, Serializable {
     public void setMemento(Memento savedState) {
         ByteArrayInputStream temp = new ByteArrayInputStream(savedState.getState());
         try {
-            HashMap<User, Vertex<User>> hashMap = new HashMap<>();
+            HashMap<User, Vertex<User>> hashMap;
             hashMap = (HashMap<User, Vertex<User>>) new ObjectInputStream(temp).readObject();
             graph = new DirectGraph<>(hashMap);
         } catch (IOException | ClassNotFoundException e) {
@@ -449,7 +438,7 @@ public class SocialNetwork implements Originator, Serializable {
 
         private void load(DirectGraph<User, Relationship> stateToSave) {
             ByteArrayOutputStream bos = new ByteArrayOutputStream();
-            ObjectOutputStream oos = null;
+            ObjectOutputStream oos;
             try {
                 oos = new ObjectOutputStream(bos);
                 oos.writeObject(stateToSave.getVertices());

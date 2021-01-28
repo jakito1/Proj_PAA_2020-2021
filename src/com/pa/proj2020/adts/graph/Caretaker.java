@@ -30,7 +30,7 @@ public class Caretaker {
     /**
      * Método que permite fazer restore ao estado a SocialNetwork
      *
-     * @throws NoMementoException quando não é possivel fazer mais undo
+     * @throws NoMementoException quando não é possível fazer mais undo
      */
     public void restoreState() throws NoMementoException {
         if (undo.empty()) {

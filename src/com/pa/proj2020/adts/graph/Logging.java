@@ -21,9 +21,9 @@ public final class Logging {
     }
 
     /**
-     * Método que retorna a instancia de um Logging
+     * Método que retorna a instância de um Logging
      *
-     * @return a instancia de um Logging
+     * @return a instância de um Logging
      */
     public static Logging getInstance() {
         return instance;
@@ -72,7 +72,7 @@ public final class Logging {
      * Método que permite gerar o Logging para a adição de um relacionamento indireto
      *
      * @param idUserAdded    representa o id do utilizador adicionado
-     * @param idUserIncluded representa o id do utilizador incluido
+     * @param idUserIncluded representa o id do utilizador incluído
      * @param idInterest     representa o id do interesse
      */
     public void addRelationshipIndirect(int idUserAdded, int idUserIncluded, int idInterest) {

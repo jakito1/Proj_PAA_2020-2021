@@ -87,24 +87,7 @@ public class Statistics {
      */
     public String userWithMoreDirectRelationshipsStats(DirectGraph<User, Relationship> graph) {
         String s = "STATISTIC USER WITH MORE DIRECT RELATIONSHIPS\n";
-        User user = null;
-        int edges = 0;
-        int count;
-
-        for (Vertex<User> userVertex : graph.vertices()) {
-            count = 0;
-
-            for (Edge<Relationship, User> edge : graph.incidentEdges(userVertex)) {
-                if (!(edge.element() instanceof RelationshipIndirect)) {
-                    count++;
-                }
-            }
-
-            if (count > edges) {
-                edges = count;
-                user = userVertex.element();
-            }
-        }
+        User user = getUser(graph);
 
         if (user != null) {
             s = s + "ID: " + user.getID() + "   Name: " + user.getName() + "\n";
@@ -112,6 +95,24 @@ public class Statistics {
             s = "Not found\n";
         }
         return s;
+    }
+
+    private User getUser(DirectGraph<User, Relationship> graph) {
+        User user = null;
+        int edges = 0;
+
+        for (Vertex<User> userVertex : graph.vertices()) {
+            int count = 0;
+
+            count += graph.incidentEdges(userVertex).stream()
+                    .filter(edge -> !(edge.element() instanceof RelationshipIndirect)).count();
+
+            if (count > edges) {
+                edges = count;
+                user = userVertex.element();
+            }
+        }
+        return user;
     }
 
 
@@ -123,33 +124,7 @@ public class Statistics {
      */
     public String interestMostSharedStats(DirectGraph<User, Relationship> graph) {
         String s = "STATISTIC INTEREST MOST SHARED\n";
-        Interest interest = null;
-        ArrayList<Interest> interests = new ArrayList<>();
-        int number = 0;
-        int count;
-
-        for (Vertex<User> userVertex : graph.vertices()) {
-            for (Edge<Relationship, User> edge : graph.incidentEdges(userVertex)) {
-                if ((edge.element() instanceof RelationshipShared)) {
-                    interests.addAll(((RelationshipShared) edge.element()).getInterests());
-                } else if ((edge.element() instanceof RelationshipIndirect)) {
-                    interests.addAll(((RelationshipIndirect) edge.element()).getListOfInterests());
-                }
-            }
-        }
-
-        for (Interest interestOfList : interests) {
-            count = 0;
-            for (Interest interestOfList2 : interests) {
-                if (interestOfList.equals(interestOfList2)) {
-                    count++;
-                }
-            }
-            if (count > number) {
-                interest = interestOfList;
-                number = count;
-            }
-        }
+        Interest interest = getInterest(graph);
 
         if (interest != null) {
             s = s + "ID: " + interest.getId() + "   Name: " + interest.getName() + "\n";
@@ -157,6 +132,30 @@ public class Statistics {
             s = "Not found\n";
         }
         return s;
+    }
+
+    private Interest getInterest(DirectGraph<User, Relationship> graph) {
+        Interest interest = null;
+        ArrayList<Interest> interests = new ArrayList<>();
+        int number = 0;
+
+        graph.vertices().stream().flatMap(userVertex -> graph.incidentEdges(userVertex).stream()).forEach(edge -> {
+            if ((edge.element() instanceof RelationshipShared)) {
+                interests.addAll(((RelationshipShared) edge.element()).getInterests());
+            } else if ((edge.element() instanceof RelationshipIndirect)) {
+                interests.addAll(((RelationshipIndirect) edge.element()).getListOfInterests());
+            }
+        });
+
+        for (Interest interestOfList : interests) {
+            int count = 0;
+            count += interests.stream().filter(interestOfList::equals).count();
+            if (count > number) {
+                interest = interestOfList;
+                number = count;
+            }
+        }
+        return interest;
     }
 
 
