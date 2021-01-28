@@ -18,7 +18,7 @@ public class SocialNetwork implements Originator, Serializable {
     private final HashMap<Integer, Interest> interests;
     private final Logging log = Logging.getInstance();
     private final Statistics statistics;
-    MemoryPersistence memoryPersistence;
+    private final MemoryPersistence memoryPersistence;
     private DirectGraph<User, Relationship> graph;
     private String userNamesFile, relationshipsFile, interestNamesFile, interestsFile;
 

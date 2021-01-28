@@ -23,10 +23,7 @@ import javafx.stage.StageStyle;
 import smartgraph.view.containers.SmartGraphDemoContainer;
 import smartgraph.view.graphview.SmartCircularSortedPlacementStrategy;
 import smartgraph.view.graphview.SmartGraphPanel;
-import smartgraph.view.graphview.SmartPlacementStrategy;
-
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -34,10 +31,8 @@ import java.util.Map;
 public class SocialNetworkView {
 
     private final Stage stage;
-    SmartPlacementStrategy strategy;
     private SocialNetwork socialNetwork;
     private SmartGraphPanel<User, Relationship> graphView;
-    private Graph<User, Relationship> graph;
     private BorderPane pane;
     private Caretaker caretaker;
 
@@ -46,9 +41,7 @@ public class SocialNetworkView {
      * Permite criar um novo SocialNetworkView
      */
     public SocialNetworkView() {
-        strategy = new SmartCircularSortedPlacementStrategy();
         stage = new Stage(StageStyle.DECORATED);
-
     }
 
 
@@ -60,7 +53,6 @@ public class SocialNetworkView {
     public SocialNetworkView(SocialNetwork socialNetwork) {
         this();
         this.socialNetwork = socialNetwork;
-        this.graph = this.socialNetwork.getGraph();
         this.caretaker = new Caretaker(socialNetwork);
 
         this.createGraphView();
@@ -230,8 +222,7 @@ public class SocialNetworkView {
             return null;
         }
 
-        Font font = Font.font(fontName, size);
-        return font;
+        return Font.font(fontName, size);
     }
 
 
@@ -401,6 +392,7 @@ public class SocialNetworkView {
         return comboBox;
     }
 
+
     /**
      * Cria o menu de Dijkstra
      */
@@ -422,7 +414,6 @@ public class SocialNetworkView {
         dijkstraButton.setOnAction(e -> {
             Vertex<User> user1 = null;
             Vertex<User> user2 = null;
-
 
             for (Vertex<User> userVertex : this.socialNetwork.getGraph().vertices()) {
                 if (userVertex.element().getID() == Integer.parseInt(textsUser1.getValue().split(" ")[0])) {
@@ -490,8 +481,9 @@ public class SocialNetworkView {
         pane.setCenter(center2);
     }
 
+
     /**
-     * Cria uma janela com a informacao associadao ao SocialNetworkView
+     * Cria uma janela com a informacao associada ao SocialNetworkView
      */
     public void createCenterSocialNetworkView() {
         if (this.socialNetwork == null) {
@@ -499,7 +491,7 @@ public class SocialNetworkView {
             this.socialNetwork.initializeData();
         }
 
-        graphView = new SmartGraphPanel(this.socialNetwork.getGraph(), strategy);
+        graphView = new SmartGraphPanel(this.socialNetwork.getGraph(), new SmartCircularSortedPlacementStrategy());
 
         graphView.setVertexDoubleClickAction(graphVertex ->
                 this.addInformationVertex(graphVertex.getUnderlyingVertex()));
@@ -523,6 +515,7 @@ public class SocialNetworkView {
         stage.show();
         graphView.init();
     }
+
 
     /**
      * Atualiza as cores do grafo
@@ -676,7 +669,7 @@ public class SocialNetworkView {
      * Cria o GraphView
      */
     public void createGraphView() {
-        graphView = new SmartGraphPanel(graph, strategy);
+        graphView = new SmartGraphPanel(this.socialNetwork.getGraph(), new SmartCircularSortedPlacementStrategy());
 
         this.updateGraphColors();
 

@@ -9,7 +9,8 @@ import java.util.Map;
  * Classe responsável pela criação de estatisticas
  */
 public class Statistics {
-    private final HashMap<User, ArrayList<User>> usersIncluded;
+    private final Map<User, ArrayList<User>> usersIncluded;
+
 
     /**
      * Permite criar estatisticas com uma listagem de utilizadores incluidos
@@ -18,9 +19,6 @@ public class Statistics {
         usersIncluded = new HashMap<>();
     }
 
-    public HashMap<User, ArrayList<User>> getUsersIncluded() {
-        return usersIncluded;
-    }
 
     /**
      * Método que permite adicionar um utilizador como key e a sua lista de utilizadores que
@@ -33,11 +31,12 @@ public class Statistics {
         if (!this.usersIncluded.containsKey(user)) {
             this.usersIncluded.put(user, new ArrayList<>());
         }
+
         ArrayList<User> list = new ArrayList<>(this.usersIncluded.get(user));
         list.add(userIncluded);
         this.usersIncluded.put(user, list);
-
     }
+
 
     /**
      * Método que representa a estatistica relativa ao numero e listagem de utilizadores adicionados
@@ -57,6 +56,7 @@ public class Statistics {
 
         return s.toString();
     }
+
 
     /**
      * Método que representa a estatistica relativa ao numero e listagem de utilizadores incluidos
@@ -78,6 +78,7 @@ public class Statistics {
         return s.toString();
     }
 
+
     /**
      * Método que representa a estatistica relativa ao utilizador com mais relacionamentos diretos
      *
@@ -86,7 +87,6 @@ public class Statistics {
      */
     public String userWithMoreDirectRelationshipsStats(DirectGraph<User, Relationship> graph) {
         String s = "STATISTIC USER WITH MORE DIRECT RELATIONSHIPS\n";
-
         User user = null;
         int edges = 0;
         int count;
@@ -111,9 +111,9 @@ public class Statistics {
         } else {
             s = "Not found\n";
         }
-
         return s;
     }
+
 
     /**
      * Método que representa a estatistica relativa ao interesse mais partilhado
@@ -123,14 +123,12 @@ public class Statistics {
      */
     public String interestMostSharedStats(DirectGraph<User, Relationship> graph) {
         String s = "STATISTIC INTEREST MOST SHARED\n";
-
         Interest interest = null;
         ArrayList<Interest> interests = new ArrayList<>();
         int number = 0;
         int count;
 
         for (Vertex<User> userVertex : graph.vertices()) {
-
             for (Edge<Relationship, User> edge : graph.incidentEdges(userVertex)) {
                 if ((edge.element() instanceof RelationshipShared)) {
                     interests.addAll(((RelationshipShared) edge.element()).getInterests());
@@ -158,9 +156,9 @@ public class Statistics {
         } else {
             s = "Not found\n";
         }
-
         return s;
     }
+
 
     /**
      * Método que representa a estatistica relativa ao número de relacionamentos dos
@@ -172,11 +170,9 @@ public class Statistics {
     public Map<User, Integer> topFiveUsersWithMostRelationshipsStats(DirectGraph<User, Relationship> graph) {
         Map<User, Integer> map = new HashMap<>();
         List<Vertex<User>> usersList = new ArrayList<>(graph.vertices());
-
         Vertex<User>[] user = new Vertex[5];
         int edges = 0;
         int count;
-
 
         for (int i = 0; i < 5; i++) {
             for (Vertex<User> userVertex : usersList) {
@@ -186,7 +182,6 @@ public class Statistics {
                         count++;
                     }
                 }
-
                 if (count > edges) {
                     edges = count;
                     user[i] = userVertex;
@@ -196,9 +191,9 @@ public class Statistics {
             usersList.remove(user[i]);
             edges = 0;
         }
-
         return map;
     }
+
 
     /**
      * Método que representa a estatistica relativa aos 5 interesses mais partilhados
@@ -214,7 +209,6 @@ public class Statistics {
         int count;
 
         for (Vertex<User> userVertex : graph.vertices()) {
-
             for (Edge<Relationship, User> edge : graph.incidentEdges(userVertex)) {
                 if ((edge.element() instanceof RelationshipShared)) {
                     interests.addAll(((RelationshipShared) edge.element()).getInterests());
@@ -223,6 +217,7 @@ public class Statistics {
                 }
             }
         }
+
         for (int i = 0; i < 5; i++) {
             for (Interest interestOfList : interests) {
                 count = 0;
@@ -250,6 +245,4 @@ public class Statistics {
 
         return map;
     }
-
-
 }

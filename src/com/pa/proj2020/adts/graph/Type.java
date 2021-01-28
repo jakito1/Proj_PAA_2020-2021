@@ -10,7 +10,6 @@ public enum Type implements Serializable {
 
     ADICIONADO, INCLUIDO;
 
-
     @Override
     public String toString() {
         switch (this) {
