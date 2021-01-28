@@ -69,13 +69,16 @@ import java.util.logging.Logger;
  * @author brunomnsilva
  */
 public class SmartGraphPanel<V, E> extends Pane {
+    private final SmartGraphPanelForces smartGraphPanelForces;
     /*
     AUTOMATIC LAYOUT RELATED ATTRIBUTES
      */
     public final BooleanProperty automaticLayoutProperty;
+
+
     /*
-    CONFIGURATION PROPERTIES
-     */
+        CONFIGURATION PROPERTIES
+         */
     private final SmartGraphProperties graphProperties;
     /*
     INTERNAL DATA STRUCTURE
@@ -83,13 +86,10 @@ public class SmartGraphPanel<V, E> extends Pane {
     private final Graph<V, E> theGraph;
     private final SmartPlacementStrategy placementStrategy;
     private final Map<Vertex<V>, SmartGraphVertexNode<V>> vertexNodes;
-    private final Map<Tuple<SmartGraphVertexNode>, Integer> placedEdges = new HashMap<>();
+    private final Map<Tuple<SmartGraphVertexNode>, Integer> placedEdges;
     private final boolean edgesWithArrows;
-    private final double repulsionForce;
-    private final double attractionForce;
-    private final double attractionScale;
     private final SmartGraphPanelEdges smartGraphPanelEdges;
-    private final SmartGraphPanelClick smartGraphPanelClick = new SmartGraphPanelClick();
+    private final SmartGraphPanelClick smartGraphPanelClick;
     private boolean initialized = false;
     private final AnimationTimer timer;
 
@@ -141,7 +141,7 @@ public class SmartGraphPanel<V, E> extends Pane {
     public SmartGraphPanel(Graph<V, E> theGraph, SmartGraphProperties properties,
                            SmartPlacementStrategy placementStrategy) {
 
-        this(theGraph, properties, placementStrategy, null);
+        this(theGraph, new SmartGraphProperties(), placementStrategy, null);
     }
 
     /**
@@ -156,7 +156,10 @@ public class SmartGraphPanel<V, E> extends Pane {
      */
     public SmartGraphPanel(Graph<V, E> theGraph, SmartGraphProperties properties,
                            SmartPlacementStrategy placementStrategy, URI cssFile) {
+        this.smartGraphPanelForces = new SmartGraphPanelForces(properties);
         this.smartGraphPanelEdges = new SmartGraphPanelEdges();
+        this.smartGraphPanelClick = new SmartGraphPanelClick();
+        this.placedEdges = new HashMap<>();
 
         if (theGraph == null) {
             throw new IllegalArgumentException("The graph cannot be null.");
@@ -166,10 +169,6 @@ public class SmartGraphPanel<V, E> extends Pane {
         this.placementStrategy = placementStrategy != null ? placementStrategy : new SmartRandomPlacementStrategy();
 
         this.edgesWithArrows = this.graphProperties.getUseEdgeArrow();
-
-        this.repulsionForce = this.graphProperties.getRepulsionForce();
-        this.attractionForce = this.graphProperties.getAttractionForce();
-        this.attractionScale = this.graphProperties.getAttractionScale();
 
         vertexNodes = new HashMap<>();
 
@@ -203,7 +202,7 @@ public class SmartGraphPanel<V, E> extends Pane {
     private synchronized void runLayoutIteration() {
         for (int i = 0; i < 20; i++) {
             resetForces();
-            computeForces();
+            smartGraphPanelForces.computeForces(vertexNodes,this);
             updateForces();
         }
         applyForces();
@@ -716,43 +715,7 @@ public class SmartGraphPanel<V, E> extends Pane {
     }
 
 
-    /*
-     * AUTOMATIC LAYOUT
-     */
-    private void computeForces() {
-        for (SmartGraphVertexNode<V> v : vertexNodes.values()) {
-            for (SmartGraphVertexNode<V> other : vertexNodes.values()) {
-                if (v == other) {
-                    continue; //NOP
-                }
-
-                //double k = Math.sqrt(getWidth() * getHeight() / graphVertexMap.size());
-                Point2D repellingForce = UtilitiesPoint2D.repellingForce(v.getUpdatedPosition(), other.getUpdatedPosition(), this.repulsionForce);
-
-                double deltaForceX = 0, deltaForceY = 0;
-
-                //compute attractive and reppeling forces
-                //opt to use internal areAdjacent check, because a vertex can be removed from
-                //the underlying graph before we have the chance to remove it from our
-                //internal data structure
-                if (areAdjacent(v, other)) {
-
-                    Point2D attractiveForce = UtilitiesPoint2D.attractiveForce(v.getUpdatedPosition(), other.getUpdatedPosition(),
-                            vertexNodes.size(), this.attractionForce, this.attractionScale);
-
-                    deltaForceX = attractiveForce.getX() + repellingForce.getX();
-                    deltaForceY = attractiveForce.getY() + repellingForce.getY();
-                } else {
-                    deltaForceX = repellingForce.getX();
-                    deltaForceY = repellingForce.getY();
-                }
-
-                v.addForceVector(deltaForceX, deltaForceY);
-            }
-        }
-    }
-
-    private boolean areAdjacent(SmartGraphVertexNode<V> v, SmartGraphVertexNode<V> u) {
+    public boolean areAdjacent(SmartGraphVertexNode<V> v, SmartGraphVertexNode<V> u) {
         return v.isAdjacentTo(u);
     }
 
