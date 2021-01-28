@@ -11,16 +11,16 @@ import java.util.HashMap;
 import java.util.List;
 
 public class SocialNetworkLog implements Serializable {
-    private final Logging log = Logging.getInstance();
+    private static final Logging log = Logging.getInstance();
 
-    public Logging getLog() {
+    public static Logging getLog() {
         return log;
     }
 
     /**
      * Metodo que permite atualizar o Logging
      */
-    public void updateLog() {
+    public static void updateLog() {
         try {
             new File("outputFiles/").mkdirs();
             FileWriter fileWriter = new FileWriter("outputFiles/LogFile " +
@@ -32,27 +32,5 @@ public class SocialNetworkLog implements Serializable {
         }
     }
 
-    /**
-     * Metodo que retorna os interesses de um utilizador
-     *
-     * @param idUser representa o id do utilizador
-     * @return a lista de interesses do utilizador fornecido
-     */
-    public List<Interest> interestsOfUser(int idUser, HashMap<Integer, Interest> thisInterests) {
-        if (idUser < 0) {
-            return null;
-        }
-        ArrayList<Interest> list = new ArrayList<>();
 
-        for (Interest interest : thisInterests.values()) {
-            if (interest.getIdsOfUsers().contains(String.valueOf(idUser))) {
-                list.add(interest);
-                log.addInterest(idUser, interest.getId());
-            }
-        }
-        updateLog();
-
-        return list;
-
-    }
 }

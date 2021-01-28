@@ -11,8 +11,6 @@ import java.util.stream.Collectors;
  * Classe responsável pela gestão da Social Network
  */
 public class SocialNetwork implements Originator, Serializable {
-    private SocialNetworkLog socialNetworkLog = new SocialNetworkLog();
-
     private final HashMap<Integer, User> users;
     private final HashMap<Integer, ArrayList<String>> relationships;
     private final HashMap<Integer, Interest> interests;
@@ -133,7 +131,7 @@ public class SocialNetwork implements Originator, Serializable {
      * @return a lista de interesses do utilizador fornecido
      */
     public List<Interest> interestsOfUser(int idUser) {
-        return socialNetworkLog.interestsOfUser(idUser, this.interests);
+        return interestsOfUser(idUser, this.interests);
     }
 
     /**
@@ -165,7 +163,7 @@ public class SocialNetwork implements Originator, Serializable {
         if (this.relationships.get(user1.getID()).contains(String.valueOf(user2.getID()))) relationshipDirect = true;
 
         checkInterest(user1, user2, addIndirect, tempInterests, relationshipDirect);
-        socialNetworkLog.updateLog();
+        SocialNetworkLog.updateLog();
 
     }
 
@@ -175,7 +173,7 @@ public class SocialNetwork implements Originator, Serializable {
             relationship = new RelationshipIndirect(tempInterests);
         }
         this.graph.insertEdge(user1, user2, relationship);
-        socialNetworkLog.getLog().addRelationshipDirect(user1.getID(), user2.getID(), tempInterests.size());
+        SocialNetworkLog.getLog().addRelationshipDirect(user1.getID(), user2.getID(), tempInterests.size());
     }
 
     /**
@@ -217,7 +215,7 @@ public class SocialNetwork implements Originator, Serializable {
             }
 
         } else {
-            user.addListInterest(socialNetworkLog.interestsOfUser(user.getID(), this.interests));
+            user.addListInterest(interestsOfUser(user.getID(), this.interests));
             graph.insertVertex(user);
         }
 
@@ -227,7 +225,7 @@ public class SocialNetwork implements Originator, Serializable {
                 userRelationship.setType(Type.INCLUIDO);
                 this.graph.insertVertex(userRelationship);
                 this.statistics.addUsersIncluded(user, userRelationship);
-                userRelationship.addListInterest(socialNetworkLog.interestsOfUser(userRelationship.getID(), this.interests));
+                userRelationship.addListInterest(interestsOfUser(userRelationship.getID(), this.interests));
             }
         }
 
@@ -294,6 +292,29 @@ public class SocialNetwork implements Originator, Serializable {
             }
         }
         return list;
+    }
+
+    /**
+     * Metodo que retorna os interesses de um utilizador
+     *
+     * @param idUser representa o id do utilizador
+     * @return a lista de interesses do utilizador fornecido
+     */
+    public List<Interest> interestsOfUser(int idUser, HashMap<Integer, Interest> thisInterests) {
+        if (idUser < 0) {
+            return null;
+        }
+        ArrayList<Interest> list = new ArrayList<>();
+
+        for (Interest interest : thisInterests.values()) {
+            if (interest.getIdsOfUsers().contains(String.valueOf(idUser))) {
+                list.add(interest);
+                SocialNetworkLog.getLog().addInterest(idUser, interest.getId());
+            }
+        }
+        SocialNetworkLog.updateLog();
+        return list;
+
     }
 
     /**
