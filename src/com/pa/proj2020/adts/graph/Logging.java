@@ -4,6 +4,7 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * Classe responsável pela criação do Logging. Faz uso do padrão Singleton
@@ -37,9 +38,7 @@ public final class Logging {
      * @return uma string com a data formatada
      */
     private String formatLocalDateTime(LocalDateTime localDateTime) {
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm:ss");
-
-        return localDateTime.format(formatter);
+        return localDateTime.format(DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm:ss"));
     }
 
 
@@ -51,9 +50,8 @@ public final class Logging {
      * @param interests      representa o numero de interesses partilhados
      */
     public void addRelationshipDirect(int idUserAdded, int idUserExistent, int interests) {
-        String logCreated = "<" + this.formatLocalDateTime(LocalDateTime.now()) + "> | <" + idUserAdded +
-                "> | <" + idUserExistent + "> | <" + interests + ">";
-        this.log.add(logCreated);
+        addToLog("<" + this.formatLocalDateTime(LocalDateTime.now()) + "> | <" + idUserAdded +
+                "> | <" + idUserExistent + "> | <" + interests + ">");
     }
 
     /**
@@ -63,9 +61,12 @@ public final class Logging {
      * @param idInterest  representa o id do interesse
      */
     public void addInterest(int idUserAdded, int idInterest) {
-        String logCreated = "<" + this.formatLocalDateTime(LocalDateTime.now()) + "> | <" + idUserAdded +
-                "> | <" + idInterest + ">";
-        this.log.add(logCreated);
+        addToLog("<" + this.formatLocalDateTime(LocalDateTime.now()) + "> | <" + idUserAdded +
+                "> | <" + idInterest + ">");
+    }
+
+    private boolean addToLog(String logCreated) {
+        return log.add(logCreated);
     }
 
     /**
@@ -75,15 +76,9 @@ public final class Logging {
      */
     @Override
     public String toString() {
-        StringBuilder s = new StringBuilder("******************** Logging ********************");
-
-        for (String logLine : this.log) {
-            s.append("\n").append(logLine);
-        }
-
-        s.append("\n******************** End ********************");
-
-        return s.toString();
+        return log.stream().map(logLine -> "\n" + logLine).collect(Collectors
+                .joining("", "******************** Logging ********************",
+                        "\n******************** End ********************"));
     }
 
 

@@ -390,7 +390,7 @@ public class SocialNetwork extends Subject implements Originator, Serializable {
         memoryPersistence.exportJSON();
     }
 
-    static class MyMemento implements Memento {
+    private static class MyMemento implements Memento {
         private byte[] state;
 
         public MyMemento(DirectGraph<User, Relationship> stateToSave) {

@@ -1,6 +1,7 @@
 package com.pa.proj2020.adts.graph;
 
 import javafx.application.Platform;
+import javafx.collections.ObservableList;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
@@ -254,9 +255,7 @@ public class SocialNetworkView implements Observer {
         ComboBox<String> texts = viewObjectCreator.createComboBoxString("Select a user to add indirect relationships",
                 230, 20);
 
-        for (Vertex<User> user : this.socialNetwork.getGraph().vertices()) {
-            texts.getItems().add(user.element().toString());
-        }
+        this.socialNetwork.getGraph().vertices().forEach(user -> texts.getItems().add(user.element().toString()));
 
         texts.getItems().setAll(texts.getItems().sorted());
 
@@ -287,10 +286,10 @@ public class SocialNetworkView implements Observer {
         ComboBox<String> textsUser1 = viewObjectCreator.createComboBoxString("Select the origin user", 230, 20);
         ComboBox<String> textsUser2 = viewObjectCreator.createComboBoxString("Select the destiny user", 230, 20);
 
-        for (Vertex<User> user : this.socialNetwork.getGraph().vertices()) {
+        this.socialNetwork.getGraph().vertices().forEach(user -> {
             textsUser1.getItems().add(user.element().toString());
             textsUser2.getItems().add(user.element().toString());
-        }
+        });
 
         textsUser2.getItems().setAll(textsUser2.getItems().sorted());
         textsUser1.getItems().setAll(textsUser1.getItems().sorted());
@@ -309,8 +308,8 @@ public class SocialNetworkView implements Observer {
 
             this.updateGraphColors();
 
-            if (((VBox) this.pane.getCenter()).getChildren().get(((VBox) this.pane.getCenter()).getChildren().size() - 1) instanceof Text) {
-                ((VBox) this.pane.getCenter()).getChildren().remove(((VBox) this.pane.getCenter()).getChildren().size() - 1);
+            if (getChildren().get(getChildren().size() - 1) instanceof Text) {
+                getChildren().remove(getChildren().size() - 1);
             }
             if (user1 != null && user2 != null) {
                 try {
@@ -321,8 +320,8 @@ public class SocialNetworkView implements Observer {
                     }
 
                     for (User user : path) {
-                        for (Edge<Relationship, User> edge : this.socialNetwork.getGraph().outboundEdges(user1)) {
-                            if (edge.vertices()[1].element().equals(user)) {
+                        for (Edge<Relationship, User> edge : socialNetwork.getGraph().outboundEdges(user1)) {
+                            if (isSameUser(edge, user)) {
                                 getStylableEdge(edge).setStyleClass("myEdgeDijkstra");
                             }
                         }
@@ -339,12 +338,10 @@ public class SocialNetworkView implements Observer {
                                 userVertex2 = userVertex1;
                             }
                         }
-                        if (userVertex == null || userVertex2 == null) {
-                            break;
-                        }
+                        if (userVertex == null || userVertex2 == null) break;
 
                         for (Edge<Relationship, User> edge : this.socialNetwork.getGraph().outboundEdges(userVertex)) {
-                            if (edge.vertices()[1].element().equals(userVertex2.element())) {
+                            if (isSameUser(edge, userVertex2.element())) {
                                 getStylableEdge(edge).setStyleClass("myEdgeDijkstra");
                             }
                         }
@@ -352,7 +349,7 @@ public class SocialNetworkView implements Observer {
 
                 } catch (NullPointerException ex) {
                     Text text = new Text("There's no path, please try again");
-                    ((VBox) this.pane.getCenter()).getChildren().add(text);
+                    getChildren().add(text);
                 }
             }
 
@@ -363,6 +360,14 @@ public class SocialNetworkView implements Observer {
         center2.getChildren().addAll(textsUser1, textsUser2, dijkstraButton);
 
         pane.setCenter(center2);
+    }
+
+    private boolean isSameUser(Edge<Relationship, User> edge, User element) {
+        return edge.vertices()[1].element().equals(element);
+    }
+
+    private ObservableList<Node> getChildren() {
+        return ((VBox) pane.getCenter()).getChildren();
     }
 
     /**
@@ -426,7 +431,6 @@ public class SocialNetworkView implements Observer {
      */
     public void addStatUserWithMoreDirectRelationships() {
         addStat(socialNetwork.userWithMoreDirectRelationshipsStats());
-
     }
 
     /**

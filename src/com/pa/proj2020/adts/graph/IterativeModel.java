@@ -22,37 +22,33 @@ public class IterativeModel implements Model{
         }
         User user = socialNetwork.getUsers().get(idUser);
 
-        if (socialNetwork.getGraph().containVertice(user)) {
-
-            for (Vertex<User> userVertex : socialNetwork.getGraph().vertices()) {
-                if (userVertex.element().getID() == idUser && userVertex.element().getType().equals(Type.INCLUIDO)) {
-                    userVertex.element().setType(Type.ADICIONADO);
-                    break;
-                }
-            }
-
+        if (getGraph().containVertice(user)) {
+            getGraph().vertices().stream().filter(userVertex -> userVertex.element()
+                    .getID() == idUser && userVertex.element().getType().equals(Type.INCLUIDO))
+                    .findFirst().ifPresent(userVertex -> userVertex.element().setType(Type.ADICIONADO));
         } else {
             user.addListInterest(socialNetwork.interestsOfUser(user.getID(), socialNetwork.getInterests()));
-            socialNetwork.getGraph().insertVertex(user);
+            getGraph().insertVertex(user);
         }
 
         for (String idRelationship : socialNetwork.getRelationships().get(user.getID())) {
             User userRelationship = socialNetwork.getUsers().get(Integer.parseInt(idRelationship));
-            if (!socialNetwork.getGraph().containVertice(userRelationship)) {
+            if (!getGraph().containVertice(userRelationship)) {
                 userRelationship.setType(Type.INCLUIDO);
-                socialNetwork.getGraph().insertVertex(userRelationship);
+                getGraph().insertVertex(userRelationship);
                 socialNetwork.getStatistics().addUsersIncluded(user, userRelationship);
                 userRelationship.addListInterest(socialNetwork.interestsOfUser(userRelationship.getID(),
                         socialNetwork.getInterests()));
             }
         }
 
-        for (Vertex<User> userVertex : socialNetwork.getGraph().vertices()) {
-            if (userVertex.element().getID() != idUser) {
-                socialNetwork.insertEdge(user, userVertex.element());
-            }
-        }
+        getGraph().vertices().stream().filter(userVertex -> userVertex.element().getID() != idUser)
+                .forEach(userVertex -> socialNetwork.insertEdge(user, userVertex.element()));
 
+        return getGraph();
+    }
+
+    private DirectGraph<User, Relationship> getGraph() {
         return socialNetwork.getGraph();
     }
 
