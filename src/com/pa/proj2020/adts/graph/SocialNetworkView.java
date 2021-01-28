@@ -23,6 +23,7 @@ import observer.Observer;
 import smartgraph.view.containers.SmartGraphDemoContainer;
 import smartgraph.view.graphview.SmartCircularSortedPlacementStrategy;
 import smartgraph.view.graphview.SmartGraphPanel;
+import smartgraph.view.graphview.SmartStylableNode;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -314,7 +315,7 @@ public class SocialNetworkView implements Observer {
             if (user1 != null && user2 != null) {
                 try {
                     this.socialNetwork.getGraph().minCostPath(user1, user2, path);
-                    graphView.getStylableVertex(user1).setStyleClass("myVertexDijkstra");
+                    getStylableVertex(user1).setStyleClass("myVertexDijkstra");
                     for (User user : path) {
                         graphView.getStylableVertex(user).setStyleClass("myVertexDijkstra");
                     }
@@ -322,7 +323,7 @@ public class SocialNetworkView implements Observer {
                     for (User user : path) {
                         for (Edge<Relationship, User> edge : this.socialNetwork.getGraph().outboundEdges(user1)) {
                             if (edge.vertices()[1].element().equals(user)) {
-                                graphView.getStylableEdge(edge).setStyleClass("myEdgeDijkstra");
+                                getStylableEdge(edge).setStyleClass("myEdgeDijkstra");
                             }
                         }
                     }
@@ -344,7 +345,7 @@ public class SocialNetworkView implements Observer {
 
                         for (Edge<Relationship, User> edge : this.socialNetwork.getGraph().outboundEdges(userVertex)) {
                             if (edge.vertices()[1].element().equals(userVertex2.element())) {
-                                graphView.getStylableEdge(edge).setStyleClass("myEdgeDijkstra");
+                                getStylableEdge(edge).setStyleClass("myEdgeDijkstra");
                             }
                         }
                     }
@@ -449,22 +450,22 @@ public class SocialNetworkView implements Observer {
         XYChart.Series<String, Integer> series = new XYChart.Series<>();
         Map<User, Integer> map = new HashMap<>(this.socialNetwork.topFiveUsersWithMostRelationshipsStats());
 
-        for (User user : map.keySet()) {
+        map.keySet().forEach(user -> {
             series.getData().add(new XYChart.Data<>(user.toString(), map.get(user)));
             System.out.println("User: " + user.toString() + " Relationships: " + map.get(user));
-        }
+        });
 
         bar.getData().add(series);
         pane.setCenter(bar);
     }
 
     public BarChart<String, Integer> createBarChart(String labelX, String labelY, String title) {
-        CategoryAxis xaxis = new CategoryAxis();
-        NumberAxis yaxis = new NumberAxis();
-        xaxis.setLabel(labelX);
-        yaxis.setLabel(labelY);
+        CategoryAxis xAxis = new CategoryAxis();
+        NumberAxis yAxis = new NumberAxis();
+        xAxis.setLabel(labelX);
+        yAxis.setLabel(labelY);
 
-        BarChart<String, Integer> bar = new BarChart(xaxis, yaxis);
+        BarChart<String, Integer> bar = new BarChart(xAxis, yAxis);
         bar.setTitle(title);
 
         return bar;
@@ -479,10 +480,10 @@ public class SocialNetworkView implements Observer {
         XYChart.Series<String, Integer> series = new XYChart.Series<>();
         Map<Interest, Integer> map = new HashMap<>(this.socialNetwork.topFiveInterestsStats());
 
-        for (Interest interest : map.keySet()) {
+        map.keySet().forEach(interest -> {
             series.getData().add(new XYChart.Data<>(interest.getName(), map.get(interest)));
             System.out.println("User: " + interest.toString() + " Relationships: " + map.get(interest));
-        }
+        });
 
         bar.getData().add(series);
         pane.setCenter(bar);
@@ -496,12 +497,10 @@ public class SocialNetworkView implements Observer {
     public void addInformationVertex(Vertex<User> user) {
 
         ListView<String> list = viewObjectCreator.createListViewString(350, 100, user.element().toString());
-        list.getItems().add(" ");
-        list.getItems().add("List Of Interests");
+        list.getItems().add(" List Of Interests");
 
-        for (Interest interest : this.socialNetwork.interestsOfUser(user.element().getID())) {
-            list.getItems().add(interest.toString());
-        }
+        this.socialNetwork.interestsOfUser(user.element().getID())
+                .forEach(interest -> list.getItems().add(interest.toString()));
 
         pane.setCenter(list);
     }
@@ -537,37 +536,40 @@ public class SocialNetworkView implements Observer {
      * Atualiza as cores dos vertices
      */
     public void updateColorsVertexGraph() {
-        if (this.socialNetwork.getGraph().numVertices() == 0) {
-            return;
-        }
+        if (this.socialNetwork.getGraph().numVertices() == 0) return;
 
-        for (Vertex<User> userVertex : this.socialNetwork.getGraph().vertices()) {
+        this.socialNetwork.getGraph().vertices().forEach(userVertex -> {
             if (userVertex.element().getType().equals(Type.INCLUIDO)) {
-                this.graphView.getStylableVertex(userVertex).setStyleClass("myVertexIncluded");
+                getStylableVertex(userVertex).setStyleClass("myVertexIncluded");
             } else {
-                this.graphView.getStylableVertex(userVertex).setStyleClass("myVertexAdded");
+                getStylableVertex(userVertex).setStyleClass("myVertexAdded");
             }
-        }
+        });
+    }
+
+    private SmartStylableNode getStylableVertex(Vertex<User> userVertex) {
+        return graphView.getStylableVertex(userVertex);
     }
 
     /**
      * Atualiza as cores das arestas
      */
     public void updateColorsEdgesGraph() {
-        if (this.socialNetwork.getGraph().numEdges() == 0) {
-            return;
-        }
+        if (this.socialNetwork.getGraph().numEdges() == 0) return;
 
-        for (Edge<Relationship, User> relationshipEdge : this.socialNetwork.getGraph().edges()) {
-
+        this.socialNetwork.getGraph().edges().forEach(relationshipEdge -> {
             if (relationshipEdge.element() instanceof RelationshipIndirect) {
-                this.graphView.getStylableEdge(relationshipEdge).setStyleClass("myEdgeIndirect");
+                getStylableEdge(relationshipEdge).setStyleClass("myEdgeIndirect");
             } else if (relationshipEdge.element() instanceof RelationshipSimple) {
-                this.graphView.getStylableEdge(relationshipEdge).setStyleClass("myEdgeDirectSimple");
+                getStylableEdge(relationshipEdge).setStyleClass("myEdgeDirectSimple");
             } else {
-                this.graphView.getStylableEdge(relationshipEdge).setStyleClass("myEdgeDirectShared");
+                getStylableEdge(relationshipEdge).setStyleClass("myEdgeDirectShared");
             }
-        }
+        });
+    }
+
+    private SmartStylableNode getStylableEdge(Edge<Relationship, User> relationshipEdge) {
+        return graphView.getStylableEdge(relationshipEdge);
     }
 
     @Override
