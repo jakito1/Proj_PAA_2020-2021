@@ -112,7 +112,8 @@ public class DirectGraph<V, E> implements Digraph<V, E>, Serializable {
      *                                queremos inserir
      */
     @Override
-    public Edge<E, V> insertEdge(Vertex<V> outbound, Vertex<V> inbound, E edgeElement) throws InvalidVertexException, InvalidEdgeException {
+    public Edge<E, V> insertEdge(Vertex<V> outbound, Vertex<V> inbound, E edgeElement)
+            throws InvalidVertexException, InvalidEdgeException {
         MyVertex v1 = checkVertice(inbound);
         MyVertex v2 = checkVertice(outbound);
 
@@ -137,7 +138,8 @@ public class DirectGraph<V, E> implements Digraph<V, E>, Serializable {
      *                                queremos inserir
      */
     @Override
-    public Edge<E, V> insertEdge(V outboundElement, V inboundElement, E edgeElement) throws InvalidVertexException, InvalidEdgeException {
+    public Edge<E, V> insertEdge(V outboundElement, V inboundElement, E edgeElement)
+            throws InvalidVertexException, InvalidEdgeException {
         Vertex<V> a = vertices.get(outboundElement);
         Vertex<V> b = vertices.get(inboundElement);
 
@@ -184,10 +186,7 @@ public class DirectGraph<V, E> implements Digraph<V, E>, Serializable {
     public Collection<Edge<E, V>> edges() {
         ArrayList<Edge<E, V>> list = new ArrayList<>();
 
-        for (Vertex<V> v : this.vertices.values()) {
-            list.addAll(this.incidentEdges(v));
-
-        }
+        this.vertices.values().stream().map(this::incidentEdges).forEach(list::addAll);
 
         return list;
     }
@@ -210,9 +209,9 @@ public class DirectGraph<V, E> implements Digraph<V, E>, Serializable {
             return edge.outbound;
         } else if (edge.outbound == v) {
             return edge.inbound;
-        } else {
-            throw new InvalidVertexException("INVALID VERTEX");
         }
+
+        throw new InvalidVertexException("INVALID VERTEX");
 
     }
 
