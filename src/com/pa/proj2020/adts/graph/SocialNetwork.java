@@ -1,8 +1,6 @@
 package com.pa.proj2020.adts.graph;
 
 import java.io.*;
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -13,11 +11,11 @@ import java.util.stream.Collectors;
  * Classe responsável pela gestão da Social Network
  */
 public class SocialNetwork implements Originator, Serializable {
+    private SocialNetworkLog socialNetworkLog = new SocialNetworkLog();
 
     private final HashMap<Integer, User> users;
     private final HashMap<Integer, ArrayList<String>> relationships;
     private final HashMap<Integer, Interest> interests;
-    private final Logging log = Logging.getInstance();
     private final Statistics statistics;
     private final MemoryPersistence memoryPersistence;
     private DirectGraph<User, Relationship> graph;
@@ -59,9 +57,9 @@ public class SocialNetwork implements Originator, Serializable {
      */
     public void setFileNames(String userNamesFile, String relationshipsFile,
                              String interestNamesFile, String interestsFile) {
-        if(fileObject == null){
+        if (fileObject == null) {
             fileObject = new FileObject(userNamesFile, relationshipsFile, interestNamesFile, interestsFile);
-        } else{
+        } else {
             this.fileObject.setFileNames(userNamesFile, relationshipsFile, interestNamesFile, interestsFile);
         }
         this.fileObject.checkFilenames();
@@ -135,21 +133,7 @@ public class SocialNetwork implements Originator, Serializable {
      * @return a lista de interesses do utilizador fornecido
      */
     public List<Interest> interestsOfUser(int idUser) {
-        if (idUser < 0) {
-            return null;
-        }
-        ArrayList<Interest> list = new ArrayList<>();
-
-        for (Interest interest : this.interests.values()) {
-            if (interest.getIdsOfUsers().contains(String.valueOf(idUser))) {
-                list.add(interest);
-                log.addInterest(idUser, interest.getId());
-            }
-        }
-        updateLog();
-
-        return list;
-
+        return socialNetworkLog.interestsOfUser(idUser, this.interests);
     }
 
     /**
@@ -181,7 +165,7 @@ public class SocialNetwork implements Originator, Serializable {
         if (this.relationships.get(user1.getID()).contains(String.valueOf(user2.getID()))) relationshipDirect = true;
 
         checkInterest(user1, user2, addIndirect, tempInterests, relationshipDirect);
-        updateLog();
+        socialNetworkLog.updateLog();
 
     }
 
@@ -191,7 +175,7 @@ public class SocialNetwork implements Originator, Serializable {
             relationship = new RelationshipIndirect(tempInterests);
         }
         this.graph.insertEdge(user1, user2, relationship);
-        log.addRelationshipDirect(user1.getID(), user2.getID(), tempInterests.size());
+        socialNetworkLog.getLog().addRelationshipDirect(user1.getID(), user2.getID(), tempInterests.size());
     }
 
     /**
@@ -233,7 +217,7 @@ public class SocialNetwork implements Originator, Serializable {
             }
 
         } else {
-            user.addListInterest(this.interestsOfUser(user.getID()));
+            user.addListInterest(socialNetworkLog.interestsOfUser(user.getID(), this.interests));
             graph.insertVertex(user);
         }
 
@@ -243,7 +227,7 @@ public class SocialNetwork implements Originator, Serializable {
                 userRelationship.setType(Type.INCLUIDO);
                 this.graph.insertVertex(userRelationship);
                 this.statistics.addUsersIncluded(user, userRelationship);
-                userRelationship.addListInterest(this.interestsOfUser(userRelationship.getID()));
+                userRelationship.addListInterest(socialNetworkLog.interestsOfUser(userRelationship.getID(), this.interests));
             }
         }
 
@@ -288,21 +272,6 @@ public class SocialNetwork implements Originator, Serializable {
         return "SocialNetwork{" +
                 "minPath=" + path.toString() +
                 '}';
-    }
-
-    /**
-     * Metodo que permite atualizar o Logging
-     */
-    private void updateLog() {
-        try {
-            new File("outputFiles/").mkdirs();
-            FileWriter fileWriter = new FileWriter("outputFiles/LogFile " +
-                    LocalDateTime.now().format(DateTimeFormatter.ofPattern("dd-MM-yyyy HH-mm-ss")) + ".log");
-            fileWriter.write(log.toString());
-            fileWriter.close();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
     }
 
     /**
