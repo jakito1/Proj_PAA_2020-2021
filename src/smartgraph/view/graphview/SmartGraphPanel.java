@@ -69,6 +69,7 @@ import java.util.logging.Logger;
  * @author brunomnsilva
  */
 public class SmartGraphPanel<V, E> extends Pane {
+    private SmartGraphPanelEdges smartGraphPanelEdges;
     private SmartGraphPanelClick smartGraphPanelClick = new SmartGraphPanelClick();
 
     /* 
@@ -82,7 +83,6 @@ public class SmartGraphPanel<V, E> extends Pane {
     private final Graph<V, E> theGraph;
     private final SmartPlacementStrategy placementStrategy;
     private final Map<Vertex<V>, SmartGraphVertexNode<V>> vertexNodes;
-    private final Map<Edge<E, V>, SmartGraphEdgeBase> edgeNodes;
     private final Map<Tuple<SmartGraphVertexNode>, Integer> placedEdges = new HashMap<>();
     private boolean initialized = false;
     private final boolean edgesWithArrows;
@@ -159,6 +159,7 @@ public class SmartGraphPanel<V, E> extends Pane {
      */
     public SmartGraphPanel(Graph<V, E> theGraph, SmartGraphProperties properties,
                            SmartPlacementStrategy placementStrategy, URI cssFile) {
+        this.smartGraphPanelEdges = new SmartGraphPanelEdges();
 
         if (theGraph == null) {
             throw new IllegalArgumentException("The graph cannot be null.");
@@ -174,7 +175,6 @@ public class SmartGraphPanel<V, E> extends Pane {
         this.attractionScale = this.graphProperties.getAttractionScale();
 
         vertexNodes = new HashMap<>();
-        edgeNodes = new HashMap<>();
 
         //set stylesheet and class
         loadStylesheet(cssFile);
@@ -478,7 +478,7 @@ public class SmartGraphPanel<V, E> extends Pane {
     private void addEdge(SmartGraphEdgeBase e, Edge<E, V> edge) {
         //edges to the back
         this.getChildren().add(0, (Node) e);
-        edgeNodes.put(edge, e);
+        smartGraphPanelEdges.getEdgeNodes().put(edge, e);
 
         String labelText = (edge.element() != null) ?
                 edge.element().toString() :
@@ -602,7 +602,7 @@ public class SmartGraphPanel<V, E> extends Pane {
 
     private void removeNodes() {
         Collection<Vertex<V>> removedVertices = removedVertices();
-        Collection<SmartGraphEdgeBase> values = new LinkedList<>(edgeNodes.values());
+        Collection<SmartGraphEdgeBase> values = new LinkedList<>(smartGraphPanelEdges.getEdgeNodes().values());
 
         Set<SmartGraphVertexNode<V>> verticesToRemove = new HashSet<>();
         Set<SmartGraphEdgeBase> edgesToRemove = new HashSet<>();
@@ -624,7 +624,7 @@ public class SmartGraphPanel<V, E> extends Pane {
 
         //permanently remove edges
         for (SmartGraphEdgeBase e : edgesToRemove) {
-            edgeNodes.remove(e.getUnderlyingEdge());
+            smartGraphPanelEdges.getEdgeNodes().remove(e.getUnderlyingEdge());
             removeEdge(e);
         }
 
@@ -637,8 +637,8 @@ public class SmartGraphPanel<V, E> extends Pane {
         //permanently remove remaining edges that were removed from the underlying graph
         Collection<Edge<E, V>> removedEdges = removedEdges();
         for (Edge<E, V> e : removedEdges) {
-            SmartGraphEdgeBase edgeToRemove = edgeNodes.get(e);
-            edgeNodes.remove(e);
+            SmartGraphEdgeBase edgeToRemove = (SmartGraphEdgeBase) smartGraphPanelEdges.getEdgeNodes().get(e);
+            smartGraphPanelEdges.getEdgeNodes().remove(e);
             removeEdge(edgeToRemove);
         }
 
@@ -687,7 +687,7 @@ public class SmartGraphPanel<V, E> extends Pane {
         });
 
         theGraph.edges().forEach((e) -> {
-            SmartGraphEdgeBase edgeNode = edgeNodes.get(e);
+            SmartGraphEdgeBase edgeNode = (SmartGraphEdgeBase) smartGraphPanelEdges.getEdgeNodes().get(e);
             if (edgeNode != null) {
                 SmartLabel label = edgeNode.getAttachedLabel();
                 if (label != null) {
@@ -855,7 +855,7 @@ public class SmartGraphPanel<V, E> extends Pane {
         List<Edge<E, V>> removed = new LinkedList<>();
 
         Collection<Edge<E, V>> graphEdges = theGraph.edges();
-        Collection<SmartGraphEdgeBase> plotted = edgeNodes.values();
+        Collection<SmartGraphEdgeBase> plotted = smartGraphPanelEdges.getEdgeNodes().values();
 
         for (SmartGraphEdgeBase e : plotted) {
             if (!graphEdges.contains(e.getUnderlyingEdge())) {
@@ -876,7 +876,7 @@ public class SmartGraphPanel<V, E> extends Pane {
         List<Edge<E, V>> unplotted = new LinkedList<>();
 
         for (Edge<E, V> e : theGraph.edges()) {
-            if (!edgeNodes.containsKey(e)) {
+            if (!smartGraphPanelEdges.getEdgeNodes().containsKey(e)) {
                 unplotted.add(e);
             }
         }
@@ -916,7 +916,7 @@ public class SmartGraphPanel<V, E> extends Pane {
      * @return stylable element
      */
     public SmartStylableNode getStylableEdge(Edge<E, V> edge) {
-        return edgeNodes.get(edge);
+        return smartGraphPanelEdges.getStylableEdge(edge);
     }
 
     /**
@@ -926,12 +926,7 @@ public class SmartGraphPanel<V, E> extends Pane {
      * @return stylable element
      */
     public SmartStylableNode getStylableEdge(E edgeElement) {
-        for (Edge<E, V> e : edgeNodes.keySet()) {
-            if (e.element().equals(edgeElement)) {
-                return edgeNodes.get(e);
-            }
-        }
-        return null;
+        return smartGraphPanelEdges.getStylableEdge(edgeElement);
     }
 
     /**
