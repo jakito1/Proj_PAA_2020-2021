@@ -1,5 +1,7 @@
 package com.pa.proj2020.adts.graph;
 
+import observer.Subject;
+
 import java.io.*;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -10,7 +12,7 @@ import java.util.stream.Collectors;
 /**
  * Classe responsável pela gestão da Social Network
  */
-public class SocialNetwork implements Originator, Serializable {
+public class SocialNetwork extends Subject implements Originator, Serializable {
     private SocialNetworkLog socialNetworkLog = new SocialNetworkLog();
 
     private final HashMap<Integer, User> users;
