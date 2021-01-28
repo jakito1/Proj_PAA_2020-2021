@@ -41,19 +41,6 @@ public class RelationshipIndirect implements Relationship {
     }
 
     /**
-     * Método responsável por atribuir o utilizar inbound e outbound do relacionamento
-     *
-     * @param inboundUser  representa o utilizador inbound
-     * @param outboundUser representa o utilizador outbound
-     */
-    public void setUsers(User inboundUser, User outboundUser) {
-        if (inboundUser == null || outboundUser == null) return;
-        users[0] = inboundUser;
-        users[1] = outboundUser;
-
-    }
-
-    /**
      * Método que permite adicinar um interesse a lista de interesses associados
      *
      * @param interest representa o interesse que pretendemos adicionar a lista
@@ -62,14 +49,6 @@ public class RelationshipIndirect implements Relationship {
         listOfInterests.add(interest);
     }
 
-    /**
-     * Método que permite remover um interesse da lista de interesses associados
-     *
-     * @param interest representa o interesse que pretendemos remover da lista
-     */
-    public void removeInterest(Interest interest) {
-        listOfInterests.remove(interest);
-    }
 
     /**
      * Método que permite obter uma lista de interesses
@@ -97,24 +76,6 @@ public class RelationshipIndirect implements Relationship {
      */
     public int getNumber() {
         return listOfInterests.size();
-    }
-
-    /**
-     * Método que retorna o utilizador inbound
-     *
-     * @return o utilizador inbound
-     */
-    public User getInboundUser() {
-        return users[0];
-    }
-
-    /**
-     * Método que retorna o utilizador outbound
-     *
-     * @return o utilizador outbound
-     */
-    public User getOutboundUser() {
-        return users[1];
     }
 
     /**

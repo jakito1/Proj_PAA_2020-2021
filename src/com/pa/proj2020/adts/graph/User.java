@@ -79,15 +79,6 @@ public class User implements Serializable {
     }
 
     /**
-     * Método que permite remover um interesse de um Utilizador
-     *
-     * @param interest representa o interesse que pretendemos remover a um utilizador
-     */
-    public void removeInterest(Interest interest) {
-        this.interests.remove(interest);
-    }
-
-    /**
      * Método que permite retornar o nome do utilizador
      *
      * @return nome do utilizador

@@ -145,15 +145,6 @@ public class SocialNetwork implements Originator, Serializable {
     }
 
     /**
-     * Metodo que retorna uma colecao com relacoes
-     *
-     * @return um hashmap com relacoes
-     */
-    public HashMap<Integer, ArrayList<String>> getRelationShips() {
-        return this.relationships;
-    }
-
-    /**
      * Metodo que retorna os interesses de um utilizador
      *
      * @param idUser representa o id do utilizador
@@ -410,24 +401,6 @@ public class SocialNetwork implements Originator, Serializable {
      */
     public Map<User, Integer> topFiveUsersWithMostRelationshipsStats() {
         return this.statistics.topFiveUsersWithMostRelationshipsStats(this.graph);
-    }
-
-    /**
-     * Metodo que permite obter um Logging
-     *
-     * @return um Logging
-     */
-    public Logging getLog() {
-        return log;
-    }
-
-    /**
-     * Metodo que permite obter uma colecao de relacoes
-     *
-     * @return um hashmap de relacoes
-     */
-    public HashMap<Integer, ArrayList<String>> getRelationships() {
-        return relationships;
     }
 
     /**

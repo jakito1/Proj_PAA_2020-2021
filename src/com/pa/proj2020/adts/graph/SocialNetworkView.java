@@ -153,129 +153,164 @@ public class SocialNetworkView {
         return menuBar;
     }
 
+    private ImageView createImageView(Image img){
+        ImageView imageView = new ImageView();
+        imageView.setPreserveRatio(true);
+        imageView.setFitWidth(850.0);
+        imageView.setImage(img);
+
+        return imageView;
+    }
+
+    private Text createText(String fontName, int size, String innerText, Color color){
+
+        if(fontName == null || size <= 0 || innerText == null || color == null){
+            return new Text("");
+        }
+
+        Font font = createFont(fontName, size);
+        Text text = new Text(innerText);
+
+        text.setFill(color);
+        text.setFont(font);
+
+        return(text);
+    }
+
+    private VBox createVBox(Insets insets, int spacing, Pos alignment){
+        if(insets == null || spacing <= 0){
+            return null;
+        }
+
+        VBox vbox = new VBox();
+        vbox.setPadding(insets);
+        vbox.setSpacing(spacing);
+
+        if(alignment != null){
+            vbox.setAlignment(alignment);
+        }
+
+        return vbox;
+    }
+
+    private HBox createHBox(Insets insets, int spacing, Pos alignment){
+        if(insets == null || spacing <= 0){
+            return null;
+        }
+
+        HBox hbox = new HBox();
+        hbox.setPadding(insets);
+        hbox.setSpacing(spacing);
+
+        if(alignment != null){
+            hbox.setAlignment(alignment);
+        }
+
+        return hbox;
+    }
+
+    private TextField createTextField(String innerText, int maxWidth, int minWidth){
+        TextField textField = new TextField();
+
+        if(innerText == null || maxWidth <=0 || minWidth <0){
+            return textField;
+        }
+
+        textField.setText(innerText);
+        textField.setMaxWidth(maxWidth);
+        textField.setMinWidth(minWidth);
+
+        return textField;
+    }
+
+    private Font createFont(String fontName, int size){
+        if(fontName == null || size <= 0){
+            return null;
+        }
+
+        Font font = Font.font(fontName, size);
+        return font;
+    }
+
+    private Label createLabel(String innerText, Color color, String fontName, int size){
+        if(innerText == null || color == null || fontName == null){
+            return null;
+        }
+
+        Label label = new Label();
+        Font font = createFont(fontName, size);
+
+        label.setText(innerText);
+        label.setTextFill(color);
+        label.setFont(font);
+
+        return label;
+    }
+
 
     /**
      * Cria a janela inicial do SocialNetworkView
      */
     private void createCenter() {
         Image img = new Image("images/SocialNetworkImage.jpg");
+        ImageView imageView = createImageView(img);
 
-        ImageView imageView = new ImageView();
-        imageView.setPreserveRatio(true);
-        imageView.setFitWidth(850.0);
-        imageView.setImage(img);
+        VBox center = createVBox(new Insets(-10, 12, 15, 12), 15, Pos.CENTER);
 
+        Text welcomeText = this.createText("SanSerif", 35,
+                "Social Network", Color.BLUE);
+        Text welcomeText1 = this.createText("SanSerif", 15,
+                "Insert name of file with relationships", Color.BLUE);
+        Text welcomeText2 = this.createText("SanSerif", 15,
+                "Insert name of file with interests", Color.BLUE);
+        Text welcomeText3 = this.createText("SanSerif", 15,
+                "Insert name of file with user_names", Color.BLUE);
+        Text welcomeText4 = this.createText("SanSerif", 15,
+                "Insert name of file with interest_names", Color.BLUE);
+        Text welcomeText5 = this.createText("SanSerif", 10,
+                "Note: leaving in blank will set default values", Color.BLACK);
 
-        VBox center = new VBox();
-        center.setPadding(new Insets(-10, 12, 15, 12));
-        center.setSpacing(15);
-        center.setAlignment(Pos.CENTER);
-
-        Font sanSerif = Font.font("SanSerif", 35);
-        Font sanSerif1 = Font.font("SanSerif", 15);
-        Font sanSerif2 = Font.font("SanSerif", 10);
-
-        Text welcomeText = new Text("Social Network");
-        Text welcomeText1 = new Text("Insert name of file with relationships");
-        Text welcomeText2 = new Text("Insert name of file with interests");
-        Text welcomeText3 = new Text("Insert name of file with user_names");
-        Text welcomeText4 = new Text("Insert name of file with interest_names");
-        Text welcomeText5 = new Text("Note: leaving in blank will set default values");
-
-        welcomeText.setFill(Color.BLUE);
-        welcomeText.setFont(sanSerif);
-
-        welcomeText1.setFill(Color.BLUE);
-        welcomeText1.setFont(sanSerif1);
-
-        welcomeText2.setFill(Color.BLUE);
-        welcomeText2.setFont(sanSerif1);
-
-        welcomeText3.setFill(Color.BLUE);
-        welcomeText3.setFont(sanSerif1);
-
-        welcomeText4.setFill(Color.BLUE);
-        welcomeText4.setFont(sanSerif1);
-
-        welcomeText5.setFill(Color.BLACK);
-        welcomeText5.setFont(sanSerif2);
-
-        HBox hBox1 = new HBox();
-        hBox1.setPadding(new Insets(10));
-        hBox1.setSpacing(10);
-
-        HBox hBox2 = new HBox();
-        hBox2.setPadding(new Insets(10));
-        hBox2.setSpacing(10);
-
+        HBox hBox1 = createHBox(new Insets(10), 10, null);
+        HBox hBox2 = createHBox(new Insets(10), 10, null);
 
         center.getChildren().addAll(welcomeText, imageView);
 
-        TextField relationshipsField = new TextField();
-        relationshipsField.setText("relationships.csv");
-        relationshipsField.setMaxWidth(250);
-        relationshipsField.setMinWidth(250);
+        TextField relationshipsField = createTextField("relationships.csv", 250, 250);
 
         center.getChildren().add(relationshipsField);
 
-        TextField interestsField = new TextField();
-        interestsField.setText("interests.csv");
-        interestsField.setMaxWidth(250);
-        interestsField.setMinWidth(250);
+        TextField interestsField = createTextField("interests.csv", 250, 250);
 
-        Label label1 = new Label();
-        label1.setText("Relationships: ");
+        Label label1 = createLabel("Relationships: ", Color.BLUE, "SanSerif", 15);
         label1.setLabelFor(relationshipsField);
-        label1.setTextFill(Color.BLUE);
-        label1.setFont(sanSerif1);
 
-        Label label2 = new Label();
-        label2.setText("Interests: ");
+        Label label2 = createLabel("Interests: ", Color.BLUE, "SanSerif", 15);
         label2.setLabelFor(relationshipsField);
-        label2.setTextFill(Color.BLUE);
-        label2.setFont(sanSerif1);
 
         hBox1.getChildren().addAll(label1, relationshipsField, label2, interestsField);
         hBox1.setAlignment(Pos.CENTER);
 
         center.getChildren().addAll(hBox1);
 
-        TextField userNamesField = new TextField();
-        userNamesField.setText("user_names.csv");
-        userNamesField.setMaxWidth(250);
-        userNamesField.setMinWidth(250);
+        TextField userNamesField = createTextField("user_names.csv", 250, 250);
+        TextField interestNamesField = createTextField("interest_names.csv", 250, 250);
 
-        TextField interestNamesField = new TextField();
-        interestNamesField.setText("interest_names.csv");
-        interestNamesField.setMaxWidth(250);
-        interestNamesField.setMinWidth(250);
 
-        Label label3 = new Label();
-        label3.setText("User Names: ");
+        Label label3 = createLabel("User Names: ", Color.BLUE, "SanSerif", 15);
         label3.setLabelFor(userNamesField);
-        label3.setTextFill(Color.BLUE);
-        label3.setFont(sanSerif1);
 
-        Label label4 = new Label();
-        label4.setText("Interest Names: ");
+        Label label4 = createLabel("Interest Names: ", Color.BLUE, "SanSerif", 15);
         label4.setLabelFor(interestNamesField);
-        label4.setTextFill(Color.BLUE);
-        label4.setFont(sanSerif1);
 
         hBox2.getChildren().addAll(label3, userNamesField, label4, interestNamesField);
         hBox2.setAlignment(Pos.CENTER);
 
         center.getChildren().addAll(hBox2);
 
-        TextField nameField = new TextField();
+        TextField nameField = createTextField("Model Name", 250, 250);
 
-        HBox hBox = new HBox();
-        hBox.setPadding(new Insets(10));
-        hBox.setSpacing(10);
+        HBox hBox = createHBox(new Insets(10), 10, Pos.CENTER);
 
-        nameField.setText("Model Name");
-        nameField.setMaxWidth(250);
-        nameField.setMinWidth(250);
         center.getChildren().add(nameField);
 
         Button okInteractiveButton = new Button("START ITERATIVE");
@@ -300,14 +335,10 @@ public class SocialNetworkView {
 
         });
 
-        Label label5 = new Label();
-        label5.setText("Model Name: ");
+        Label label5 = createLabel("Model Name: ", Color.BLUE, "SanSerif", 15);
         label5.setLabelFor(nameField);
-        label5.setTextFill(Color.BLUE);
-        label5.setFont(sanSerif1);
 
         hBox.getChildren().addAll(label5, nameField, okInteractiveButton, okTotalButton);
-        hBox.setAlignment(Pos.CENTER);
         center.getChildren().addAll(hBox, welcomeText5);
         BorderPane pane = new BorderPane();
         pane.setCenter(center);

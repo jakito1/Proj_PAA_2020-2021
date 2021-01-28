@@ -36,14 +36,6 @@ public class Interest implements Serializable {
         idsOfUsers.addAll(ids);
     }
 
-    public void addIdUser(String id) {
-        this.idsOfUsers.add(id);
-    }
-
-    public void removeIdUser(String id) {
-        this.idsOfUsers.remove(id);
-    }
-
     /**
      * Método que retorna o id de um interest
      *

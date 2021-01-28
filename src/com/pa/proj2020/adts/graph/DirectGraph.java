@@ -251,7 +251,6 @@ public class DirectGraph<V, E> implements Digraph<V, E>, Serializable {
     @Override
     public Vertex<V> insertVertex(V vElement) throws InvalidVertexException {
         if (vertices.containsKey(vElement)) {
-            //return vertices.get(vElement);
             throw new InvalidVertexException("EXISTING VERTEX");
         }
         MyVertex vertice = new MyVertex(vElement);
@@ -269,7 +268,6 @@ public class DirectGraph<V, E> implements Digraph<V, E>, Serializable {
     @Override
     public V removeVertex(Vertex<V> v) throws InvalidVertexException {
         MyVertex vertice = checkVertice(v);
-        //HashSet<Edge<E, V>> list = new HashSet<>();
         HashSet<Vertex<V>> listVerticesOpostos = new HashSet<>();
 
         for (Edge<E, V> edge : vertice.getEdges().values()) {
@@ -397,8 +395,6 @@ public class DirectGraph<V, E> implements Digraph<V, E>, Serializable {
             if (((User) user).getID() == ((User) vElement).getID()) return true;
         }
         return false;
-
-        //return this.vertices.containsKey(vElement);
     }
 
     /**

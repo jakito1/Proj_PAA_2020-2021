@@ -42,18 +42,6 @@ public final class Logging {
         return localDateTime.format(formatter);
     }
 
-    /**
-     * Método que permite gerar o Logging para a adição de um utilizador
-     *
-     * @param idUserAdded         representa o id de um utilizador adicionado
-     * @param directRelationships representa o numero de relacionamentos diretos
-     * @param interests           representa o numero de interesses
-     */
-    public void addUser(int idUserAdded, int directRelationships, int interests) {
-        String logCreated = "<" + this.formatLocalDateTime(LocalDateTime.now()) + "> | <" + idUserAdded +
-                "> | <" + directRelationships + "> | <" + interests + ">";
-        this.log.add(logCreated);
-    }
 
     /**
      * Método que permite gerar o Logging para a adição de um relacionamento direto
@@ -91,10 +79,6 @@ public final class Logging {
         String logCreated = "<" + this.formatLocalDateTime(LocalDateTime.now()) + "> | <" + idUserAdded +
                 "> | <" + idUserIncluded + "> | <" + idInterest + ">";
         this.log.add(logCreated);
-    }
-
-    public void clearLogs() {
-        this.log.clear();
     }
 
     /**

@@ -28,30 +28,12 @@ public class RelationshipShared implements Relationship {
     }
 
     /**
-     * Método que permie remover um interesse da lista
-     *
-     * @param interest representa o interesse que pretendemos remover
-     */
-    public void removeInterest(Interest interest) {
-        this.interests.remove(interest);
-    }
-
-    /**
      * Método que permite obter a lista de interesses
      *
      * @return a lista de interesses
      */
     public List<Interest> getInterests() {
         return interests;
-    }
-
-    /**
-     * Mètodo que permite obter o numero de interesses da lista
-     *
-     * @return o numero de interesses na lista
-     */
-    public int getNumberInterests() {
-        return interests.size();
     }
 
     /**
