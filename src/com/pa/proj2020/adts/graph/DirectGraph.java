@@ -2,6 +2,7 @@ package com.pa.proj2020.adts.graph;
 
 import java.io.Serializable;
 import java.util.*;
+import java.util.stream.Collectors;
 
 public class DirectGraph<V, E> implements Digraph<V, E>, Serializable {
     private final HashMap<V, Vertex<V>> vertices;
@@ -60,14 +61,8 @@ public class DirectGraph<V, E> implements Digraph<V, E>, Serializable {
     @Override
     public Collection<Edge<E, V>> incidentEdges(Vertex<V> inbound) throws InvalidVertexException {
         MyVertex v = checkVertice(inbound);
-        HashSet<Edge<E, V>> list = new HashSet<>();
-
-        for (Edge<E, V> edge : v.getEdges().values()) {
-            if (edge.vertices()[1] == inbound) {
-                list.add(edge);
-            }
-        }
-        return list;
+        return v.getEdges().values().stream()
+                .filter(edge -> edge.vertices()[1] == inbound).collect(Collectors.toCollection(HashSet::new));
     }
 
     /**
@@ -80,46 +75,28 @@ public class DirectGraph<V, E> implements Digraph<V, E>, Serializable {
     @Override
     public Collection<Edge<E, V>> outboundEdges(Vertex<V> outbound) throws InvalidVertexException {
         MyVertex v = checkVertice(outbound);
-        HashSet<Edge<E, V>> list = new HashSet<>();
-        for (Edge<E, V> edge : v.getEdges().values()) {
-            if (edge.vertices()[0] == outbound) {
-                list.add(edge);
-            }
-        }
-        return list;
+        return v.getEdges().values().stream()
+                .filter(edge -> edge.vertices()[0] == outbound).collect(Collectors.toCollection(HashSet::new));
 
     }
 
     /**
-     * Verifica se dois vertices sao adjacentes (se estao ligados por uma
+     * Verifica se dois vertices sao adjacentes (se estão ligados por uma
      * aresta)
      *
-     * @param outbound vertice outbound
-     * @param inbound  vertice inbound
+     * @param outbound vértice outbound
+     * @param inbound  vértice inbound
      * @return true se forem adjacentes ou false se nao forem
-     * @throws InvalidVertexException se um ou ambos os vertices forem invalidos
+     * @throws InvalidVertexException se um ou ambos os vertices forem inválidos
      */
     @Override
     public boolean areAdjacent(Vertex<V> outbound, Vertex<V> inbound) throws InvalidVertexException {
-        MyVertex v1 = checkVertice(outbound);
-        MyVertex v2 = checkVertice(inbound);
+        checkVertice(outbound);
+        checkVertice(inbound);
 
-        for (Edge<E, V> aresta : v1.getEdges().values()) {
-            if (aresta.vertices()[0] == outbound && aresta.vertices()[1] == inbound
-                    || aresta.vertices()[0] == inbound && aresta.vertices()[1] == outbound) {
-                return true;
-            }
-        }
-
-        for (Edge<E, V> aresta : v2.getEdges().values()) {
-            if (aresta.vertices()[0] == outbound && aresta.vertices()[1] == inbound
-                    || aresta.vertices()[0] == inbound && aresta.vertices()[1] == outbound) {
-                return true;
-            }
-        }
-
-        return false;
-
+        return edges().stream().map(Edge::vertices)
+                .anyMatch(vertices -> ((vertices[0]) == outbound && vertices[1] == inbound)
+                        || ((vertices[0]) == inbound && vertices[1] == outbound));
     }
 
 
@@ -144,8 +121,6 @@ public class DirectGraph<V, E> implements Digraph<V, E>, Serializable {
         v1.addEdge(edgeElement, aresta);
         v2.addEdge(edgeElement, aresta);
 
-        // this.vertices.replace(v1.element(), v1);
-        // this.vertices.replace(v2.element(), v2);
         return aresta;
     }
 
@@ -552,7 +527,7 @@ public class DirectGraph<V, E> implements Digraph<V, E>, Serializable {
 
         public MyVertex(V elemento) {
             this.elemento = elemento;
-            this.edges = new HashMap<E, Edge<E, V>>();
+            this.edges = new HashMap<>();
         }
 
         public HashMap<E, Edge<E, V>> getEdges() {
