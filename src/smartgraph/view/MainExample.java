@@ -1,4 +1,4 @@
-/*
+/* 
  * The MIT License
  *
  * Copyright 2019 brunomnsilva@gmail.com.
@@ -23,52 +23,29 @@
  */
 package smartgraph.view;
 
+import java.util.Random;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import smartgraph.view.graphview.SmartGraphPanel;
+import com.pa.proj2020.adts.graph.Vertex;
 import com.pa.proj2020.adts.graph.Graph;
 import com.pa.proj2020.adts.graph.GraphEdgeList;
-import com.pa.proj2020.adts.graph.Vertex;
+import smartgraph.view.containers.SmartGraphDemoContainer;
+import smartgraph.view.graphview.SmartCircularSortedPlacementStrategy;
+import smartgraph.view.graphview.SmartPlacementStrategy;
+import smartgraph.view.graphview.SmartStylableNode;
 import javafx.application.Application;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
-import smartgraph.view.containers.SmartGraphDemoContainer;
-import smartgraph.view.graphview.SmartCircularSortedPlacementStrategy;
-import smartgraph.view.graphview.SmartGraphPanel;
-import smartgraph.view.graphview.SmartPlacementStrategy;
-import smartgraph.view.graphview.SmartStylableNode;
-
-import java.util.Random;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 /**
+ *
  * @author brunomnsilva
  */
 public class MainExample extends Application {
 
-    private static final Random random = new Random(/* seed to reproduce*/);
     private volatile boolean running;
-
-    /**
-     * @param args the command line arguments
-     */
-    public static void main(String[] args) {
-        launch(args);
-    }
-
-    private static Vertex<String> get_random_vertex(Graph<String, String> g) {
-
-        int size = g.numVertices();
-        int rand = random.nextInt(size);
-        Vertex<String> existing = null;
-        int i = 0;
-        for (Vertex<String> v : g.vertices()) {
-            existing = v;
-            if (i++ == rand) {
-                break;
-            }
-        }
-        return existing;
-    }
 
     @Override
     public void start(Stage ignored) {
@@ -76,7 +53,7 @@ public class MainExample extends Application {
         Graph<String, String> g = build_sample_digraph();
         //Graph<String, String> g = build_flower_graph();
         System.out.println(g);
-
+        
         SmartPlacementStrategy strategy = new SmartCircularSortedPlacementStrategy();
         //SmartPlacementStrategy strategy = new SmartRandomPlacementStrategy();
         SmartGraphPanel<String, String> graphView = new SmartGraphPanel<>(g, strategy);
@@ -90,7 +67,7 @@ public class MainExample extends Application {
         }
 
         /*
-        Basic usage:
+        Basic usage:            
         Use SmartGraphDemoContainer if you want zoom capabilities and automatic layout toggling
         */
         //Scene scene = new Scene(graphView, 1024, 768);
@@ -116,14 +93,14 @@ public class MainExample extends Application {
             System.out.println("Vertex contains element: " + graphVertex.getUnderlyingVertex().element());
 
             //toggle different styling
-            if (!graphVertex.removeStyleClass("myVertex")) {
+            if( !graphVertex.removeStyleClass("myVertex") ) {
                 /* for the golden vertex, this is necessary to clear the inline
                    css class. Otherwise, it has priority. Test and uncomment. */
-                //graphVertex.setStyle(null);
-
+                //graphVertex.setStyle(null); 
+                
                 graphVertex.addStyleClass("myVertex");
-            }
-
+            }            
+            
             //want fun? uncomment below with automatic layout
             //g.removeVertex(graphVertex.getUnderlyingVertex());
             //graphView.update();
@@ -133,8 +110,8 @@ public class MainExample extends Application {
             System.out.println("Edge contains element: " + graphEdge.getUnderlyingEdge().element());
             //dynamically change the style when clicked
             graphEdge.setStyle("-fx-stroke: black; -fx-stroke-width: 2;");
-
-
+            
+            
             //uncomment to see edges being removed after click
             //Edge<String, String> underlyingEdge = graphEdge.getUnderlyingEdge();
             //g.removeEdge(underlyingEdge);
@@ -143,17 +120,24 @@ public class MainExample extends Application {
 
         /*
         Should proceed with automatic layout or keep original placement?
-        If using SmartGraphDemoContainer you can toggle this in the UI
+        If using SmartGraphDemoContainer you can toggle this in the UI 
          */
         //graphView.setAutomaticLayout(true);
 
-        /*
+        /* 
         Uncomment lines to test adding of new elements
          */
         //continuously_test_adding_elements(g, graphView);
         //stage.setOnCloseRequest(event -> {
         //    running = false;
         //});
+    }
+
+    /**
+     * @param args the command line arguments
+     */
+    public static void main(String[] args) {
+        launch(args);
     }
 
     private Graph<String, String> build_sample_digraph() {
@@ -220,9 +204,11 @@ public class MainExample extends Application {
         g.insertEdge("A", "H", "0");
 
         //g.insertVertex("ISOLATED");
-
+        
         return g;
     }
+
+    private static final Random random = new Random(/* seed to reproduce*/);
 
     private void continuously_test_adding_elements(Graph<String, String> g, SmartGraphPanel<String, String> graphView) {
         //update graph
@@ -232,20 +218,20 @@ public class MainExample extends Application {
         Runnable r;
         r = () -> {
             int count = 0;
-
+            
             try {
                 Thread.sleep(5000);
             } catch (InterruptedException ex) {
                 Logger.getLogger(MainExample.class.getName()).log(Level.SEVERE, null, ex);
             }
-
+            
             while (running) {
                 try {
                     Thread.sleep(ITERATION_WAIT);
                 } catch (InterruptedException ex) {
                     Logger.getLogger(MainExample.class.getName()).log(Level.SEVERE, null, ex);
                 }
-
+                
                 //generate new vertex with 2/3 probability, else connect two
                 //existing
                 String id = String.format("%02d", ++count);
@@ -254,28 +240,43 @@ public class MainExample extends Application {
                     Vertex<String> existing = get_random_vertex(g);
                     Vertex<String> vertexId = g.insertVertex(("V" + id));
                     g.insertEdge(existing, vertexId, ("E" + id));
-
+                    
                     //this variant must be called to ensure the view has reflected the
                     //underlying graph before styling a node immediately after.
                     graphView.updateAndWait();
-
+                    
                     //color new vertices
                     SmartStylableNode stylableVertex = graphView.getStylableVertex(vertexId);
-                    if (stylableVertex != null) {
+                    if(stylableVertex != null) {
                         stylableVertex.setStyle("-fx-fill: orange;");
                     }
                 } else {
                     Vertex<String> existing1 = get_random_vertex(g);
                     Vertex<String> existing2 = get_random_vertex(g);
                     g.insertEdge(existing1, existing2, ("E" + id));
-
+                    
                     graphView.update();
                 }
 
-
+                
             }
         };
 
         new Thread(r).start();
+    }
+
+    private static Vertex<String> get_random_vertex(Graph<String, String> g) {
+
+        int size = g.numVertices();
+        int rand = random.nextInt(size);
+        Vertex<String> existing = null;
+        int i = 0;
+        for (Vertex<String> v : g.vertices()) {
+            existing = v;
+            if (i++ == rand) {
+                break;
+            }
+        }
+        return existing;
     }
 }

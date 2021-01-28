@@ -31,20 +31,23 @@ import com.pa.proj2020.adts.graph.Vertex;
  * <br>
  * Concrete edge implementations used by {@link SmartGraphPanel} should
  * implement this interface as this type is the only one exposed to the user.
- *
+ * 
  * @param <E> Type stored in the underlying edge
  * @param <V> Type of connecting vertex
- * @author brunomnsilva
+ *
  * @see Vertex
  * @see SmartGraphPanel
+ * 
+ * @author brunomnsilva
  */
 public interface SmartGraphEdge<E, V> extends SmartStylableNode {
-
-    /**
+    
+     /**
      * Returns the underlying (stored reference) graph edge.
-     *
-     * @return edge reference
+     * 
+     * @return edge reference 
+     * 
      * @see SmartGraphPanel
      */
-    Edge<E, V> getUnderlyingEdge();
+    public Edge<E, V> getUnderlyingEdge();
 }

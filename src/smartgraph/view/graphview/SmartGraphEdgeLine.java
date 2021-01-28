@@ -23,50 +23,53 @@
  */
 package smartgraph.view.graphview;
 
-import com.pa.proj2020.adts.graph.Edge;
 import javafx.scene.shape.Line;
 import javafx.scene.transform.Rotate;
 import javafx.scene.transform.Translate;
+import com.pa.proj2020.adts.graph.Edge;
 
 
 /**
  * Implementation of a straight line edge.
- *
+ * 
  * @param <E> Type stored in the underlying edge
  * @param <V> Type of connecting vertex
+ * 
  * @author brunomnsilva
  */
 public class SmartGraphEdgeLine<E, V> extends Line implements SmartGraphEdgeBase<E, V> {
-
+    
     private final Edge<E, V> underlyingEdge;
-
+    
     private final SmartGraphVertexNode inbound;
     private final SmartGraphVertexNode outbound;
-    /* Styling proxy */
-    private final SmartStyleProxy styleProxy;
+    
     private SmartLabel attachedLabel = null;
     private SmartArrow attachedArrow = null;
-
+    
+    /* Styling proxy */
+    private final SmartStyleProxy styleProxy;
+    
     public SmartGraphEdgeLine(Edge<E, V> edge, SmartGraphVertexNode inbound, SmartGraphVertexNode outbound) {
-        if (inbound == null || outbound == null) {
+        if( inbound == null || outbound == null) {
             throw new IllegalArgumentException("Cannot connect null vertices.");
         }
-
+        
         this.inbound = inbound;
         this.outbound = outbound;
-
+        
         this.underlyingEdge = edge;
-
+        
         styleProxy = new SmartStyleProxy(this);
         styleProxy.addStyleClass("edge");
-
+        
         //bind start and end positions to vertices centers through properties
         this.startXProperty().bind(outbound.centerXProperty());
         this.startYProperty().bind(outbound.centerYProperty());
         this.endXProperty().bind(inbound.centerXProperty());
         this.endYProperty().bind(inbound.centerYProperty());
     }
-
+    
     @Override
     public void setStyleClass(String cssClass) {
         styleProxy.setStyleClass(cssClass);
@@ -81,13 +84,13 @@ public class SmartGraphEdgeLine<E, V> extends Line implements SmartGraphEdgeBase
     public boolean removeStyleClass(String cssClass) {
         return styleProxy.removeStyleClass(cssClass);
     }
-
+    
 
     @Override
     public void attachLabel(SmartLabel label) {
         this.attachedLabel = label;
         label.xProperty().bind(startXProperty().add(endXProperty()).divide(2).subtract(label.getLayoutBounds().getWidth() / 2));
-        label.yProperty().bind(startYProperty().add(endYProperty()).divide(2).add(label.getLayoutBounds().getHeight() / 1.5));
+        label.yProperty().bind(startYProperty().add(endYProperty()).divide(2).add(label.getLayoutBounds().getHeight() / 1.5));  
     }
 
     @Override
@@ -103,31 +106,31 @@ public class SmartGraphEdgeLine<E, V> extends Line implements SmartGraphEdgeBase
     @Override
     public void attachArrow(SmartArrow arrow) {
         this.attachedArrow = arrow;
-
+        
         /* attach arrow to line's endpoint */
         arrow.translateXProperty().bind(endXProperty());
         arrow.translateYProperty().bind(endYProperty());
-
+        
         /* rotate arrow around itself based on this line's angle */
         Rotate rotation = new Rotate();
         rotation.pivotXProperty().bind(translateXProperty());
         rotation.pivotYProperty().bind(translateYProperty());
-        rotation.angleProperty().bind(UtilitiesBindings.toDegrees(
-                UtilitiesBindings.atan2(endYProperty().subtract(startYProperty()),
-                        endXProperty().subtract(startXProperty()))
+        rotation.angleProperty().bind( UtilitiesBindings.toDegrees( 
+                UtilitiesBindings.atan2( endYProperty().subtract(startYProperty()), 
+                endXProperty().subtract(startXProperty()))
         ));
-
+        
         arrow.getTransforms().add(rotation);
-
+        
         /* add translation transform to put the arrow touching the circle's bounds */
-        Translate t = new Translate(-outbound.getRadius(), 0);
+        Translate t = new Translate(- outbound.getRadius(), 0);
         arrow.getTransforms().add(t);
-
+        
     }
 
     @Override
     public SmartArrow getAttachedArrow() {
         return this.attachedArrow;
     }
-
+    
 }

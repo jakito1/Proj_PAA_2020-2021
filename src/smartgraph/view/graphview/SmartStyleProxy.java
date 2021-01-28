@@ -9,22 +9,22 @@ import javafx.scene.shape.Shape;
 
 /**
  * This class acts as a proxy for styling of nodes.
- * <p>
+ * 
  * It essentially groups all the logic, avoiding code duplicate.
- * <p>
+ * 
  * Classes that have this behavior can delegate the method calls to an instance
  * of this class.
- *
+ * 
  * @author brunomnsilva
  */
 public class SmartStyleProxy implements SmartStylableNode {
 
     private final Shape client;
-
+    
     public SmartStyleProxy(Shape client) {
         this.client = client;
     }
-
+    
     @Override
     public void setStyle(String css) {
         client.setStyle(css);
@@ -46,5 +46,5 @@ public class SmartStyleProxy implements SmartStylableNode {
     public boolean removeStyleClass(String cssClass) {
         return client.getStyleClass().remove(cssClass);
     }
-
+    
 }

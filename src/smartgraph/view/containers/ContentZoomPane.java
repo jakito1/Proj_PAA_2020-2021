@@ -39,10 +39,10 @@ import javafx.scene.text.Text;
 
 /**
  * This class provides zooming and panning for a JavaFX node.
- * <p>
+ *
  * It shows the zoom level with a slider control and reacts to mouse scrolls and
  * mouse dragging.
- * <p>
+ *
  * The content node is out forward in the z-index so it can react to mouse
  * events first. The node should consume any event not meant to propagate to
  * this pane.
@@ -51,14 +51,15 @@ import javafx.scene.text.Text;
  */
 public class ContentZoomPane extends BorderPane {
 
-    private static final double MIN_SCALE = 1;
-    private static final double MAX_SCALE = 5;
-    private static final double SCROLL_DELTA = 0.25;
     /*
     PAN AND ZOOM
      */
     private final DoubleProperty scaleFactorProperty = new ReadOnlyDoubleWrapper(1);
     private final Node content;
+
+    private static final double MIN_SCALE = 1;
+    private static final double MAX_SCALE = 5;
+    private static final double SCROLL_DELTA = 0.25;
 
     public ContentZoomPane(Node content) {
         if (content == null) {
@@ -74,19 +75,6 @@ public class ContentZoomPane extends BorderPane {
         setRight(createSlider());
 
         enablePanAndZoom();
-    }
-
-    public static double boundValue(double value, double min, double max) {
-
-        if (Double.compare(value, min) < 0) {
-            return min;
-        }
-
-        if (Double.compare(value, max) > 0) {
-            return max;
-        }
-
-        return value;
     }
 
     private Node createSlider() {
@@ -115,6 +103,19 @@ public class ContentZoomPane extends BorderPane {
     public void setContentPivot(double x, double y) {
         content.setTranslateX(content.getTranslateX() - x);
         content.setTranslateY(content.getTranslateY() - y);
+    }
+
+    public static double boundValue(double value, double min, double max) {
+
+        if (Double.compare(value, min) < 0) {
+            return min;
+        }
+
+        if (Double.compare(value, max) > 0) {
+            return max;
+        }
+
+        return value;
     }
 
     private void enablePanAndZoom() {
@@ -175,7 +176,7 @@ public class ContentZoomPane extends BorderPane {
 
         setOnMouseDragged((MouseEvent event) -> {
             if (event.isSecondaryButtonDown()) {
-
+                
                 content.setTranslateX(sceneDragContext.translateAnchorX + event.getX() - sceneDragContext.mouseAnchorX);
                 content.setTranslateY(sceneDragContext.translateAnchorY + event.getY() - sceneDragContext.mouseAnchorY);
             }
