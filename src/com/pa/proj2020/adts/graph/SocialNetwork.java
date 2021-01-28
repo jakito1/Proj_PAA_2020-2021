@@ -20,6 +20,16 @@ public class SocialNetwork extends Subject implements Originator, Serializable {
     private final MemoryPersistence memoryPersistence;
     private DirectGraph<User, Relationship> graph;
     private FileObject fileObject;
+    private Model model;
+
+
+    public HashMap<Integer, ArrayList<String>> getRelationships() {
+        return relationships;
+    }
+
+    public Statistics getStatistics() {
+        return statistics;
+    }
 
     /**
      * Cria um objeto SocialNetwork
@@ -94,17 +104,8 @@ public class SocialNetwork extends Subject implements Originator, Serializable {
      * @return grafo com algoritmo total
      */
     public DirectGraph<User, Relationship> constructModelTotal() {
-        for (User user : users.values()) {
-            graph.insertVertex(user);
-        }
-
-        for (Integer id : relationships.keySet()) {
-            for (String id2 : relationships.get(id)) {
-                this.insertEdge(users.get(id), users.get(Integer.parseInt(id2)));
-            }
-        }
-
-        return this.graph;
+        model = new TotalModel(this);
+        return model.modelConstructor();
     }
 
     /**
@@ -198,43 +199,8 @@ public class SocialNetwork extends Subject implements Originator, Serializable {
      * @param idUser representa o user
      */
     public void constructModelIterative(int idUser) {
-
-        if (relationships.isEmpty() || users.isEmpty()) {
-            this.initializeData();
-        } else if (idUser < 0) {
-            return;
-        }
-        User user = this.users.get(idUser);
-
-        if (graph.containVertice(user)) {
-
-            for (Vertex<User> userVertex : this.graph.vertices()) {
-                if (userVertex.element().getID() == idUser && userVertex.element().getType().equals(Type.INCLUIDO)) {
-                    userVertex.element().setType(Type.ADICIONADO);
-                    break;
-                }
-            }
-
-        } else {
-            user.addListInterest(interestsOfUser(user.getID(), this.interests));
-            graph.insertVertex(user);
-        }
-
-        for (String idRelationship : this.relationships.get(user.getID())) {
-            User userRelationship = this.users.get(Integer.parseInt(idRelationship));
-            if (!graph.containVertice(userRelationship)) {
-                userRelationship.setType(Type.INCLUIDO);
-                this.graph.insertVertex(userRelationship);
-                this.statistics.addUsersIncluded(user, userRelationship);
-                userRelationship.addListInterest(interestsOfUser(userRelationship.getID(), this.interests));
-            }
-        }
-
-        for (Vertex<User> userVertex : this.graph.vertices()) {
-            if (userVertex.element().getID() != idUser) {
-                this.insertEdge(user, userVertex.element());
-            }
-        }
+        model = new IterativeModel(this, idUser);
+        model.modelConstructor();
     }
 
     /**
