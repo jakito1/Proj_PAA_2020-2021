@@ -20,7 +20,7 @@ public class SocialNetwork implements Originator, Serializable {
     private final Statistics statistics;
     private final MemoryPersistence memoryPersistence;
     private DirectGraph<User, Relationship> graph;
-    private String userNamesFile, relationshipsFile, interestNamesFile, interestsFile;
+    private FileObject fileObject;
 
     /**
      * Cria um objeto SocialNetwork
@@ -33,8 +33,6 @@ public class SocialNetwork implements Originator, Serializable {
         interests = new HashMap<>();
         statistics = new Statistics();
         memoryPersistence = new MemoryPersistence(this);
-        this.checkFilenames();
-
     }
 
     /**
@@ -47,23 +45,7 @@ public class SocialNetwork implements Originator, Serializable {
      */
     public SocialNetwork(String userNamesFile, String relationshipsFile, String interestNamesFile, String interestsFile) {
         this();
-        this.userNamesFile = userNamesFile;
-        this.relationshipsFile = relationshipsFile;
-        this.interestNamesFile = interestNamesFile;
-        this.interestsFile = interestsFile;
-    }
-
-    /**
-     * Método que verifica se os nomes dos ficheiros foram inicializados
-     */
-    public void checkFilenames() {
-        if (this.userNamesFile == null || this.relationshipsFile == null || this.interestNamesFile == null || this.interestsFile == null) {
-            this.userNamesFile = "user_names.csv";
-            this.relationshipsFile = "relationships.csv";
-            this.interestNamesFile = "interest_names.csv";
-            this.interestsFile = "interests.csv";
-        }
-
+        this.fileObject = new FileObject(userNamesFile, relationshipsFile, interestNamesFile, interestsFile);
     }
 
     /**
@@ -74,12 +56,14 @@ public class SocialNetwork implements Originator, Serializable {
      * @param interestNamesFile representa o ficheiro com o nome dos interesses
      * @param interestsFile     representa o ficheiro com os interesses
      */
-    public void setFileNames(String userNamesFile, String relationshipsFile, String interestNamesFile, String interestsFile) {
-        this.userNamesFile = userNamesFile;
-        this.relationshipsFile = relationshipsFile;
-        this.interestNamesFile = interestNamesFile;
-        this.interestsFile = interestsFile;
-        this.checkFilenames();
+    public void setFileNames(String userNamesFile, String relationshipsFile,
+                             String interestNamesFile, String interestsFile) {
+        if(fileObject == null){
+            fileObject = new FileObject(userNamesFile, relationshipsFile, interestNamesFile, interestsFile);
+        } else{
+            this.fileObject.setFileNames(userNamesFile, relationshipsFile, interestNamesFile, interestsFile);
+        }
+        this.fileObject.checkFilenames();
     }
 
     /**
@@ -119,7 +103,6 @@ public class SocialNetwork implements Originator, Serializable {
         for (Integer id : relationships.keySet()) {
             for (String id2 : relationships.get(id)) {
                 this.insertEdge(users.get(id), users.get(Integer.parseInt(id2)));
-//                graph.insertEdge(users.get(id), users.get(Integer.parseInt(id2)), new RelationshipSimple());
             }
         }
 
@@ -282,7 +265,6 @@ public class SocialNetwork implements Originator, Serializable {
         }
     }
 
-
     /**
      * Metodo que retorna o caminho de menor custo entre dois vertices
      *
@@ -334,7 +316,6 @@ public class SocialNetwork implements Originator, Serializable {
         }
     }
 
-
     /**
      * Metodo que permite obter a lista de utilizadores nao inseridos
      *
@@ -356,7 +337,6 @@ public class SocialNetwork implements Originator, Serializable {
         }
         return list;
     }
-
 
     /**
      * Metodo que retorna a estatistica de utilizadores adicionados
@@ -460,12 +440,6 @@ public class SocialNetwork implements Originator, Serializable {
         memoryPersistence.exportJSON();
     }
 
-    /*
-    public void importJSON(){
-        graph = memoryPersistence.importJSON();
-    }
-     */
-
     static class MyMemento implements Memento {
         private byte[] state;
 
@@ -493,6 +467,4 @@ public class SocialNetwork implements Originator, Serializable {
             return state;
         }
     }
-
-
 }
