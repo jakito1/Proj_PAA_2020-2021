@@ -411,32 +411,33 @@ public class SocialNetworkView implements Observer {
      * Cria o menu das estatisticas de utilizadores adicionados
      */
     public void addStatUsersAdded() {
-        ListView<String> list = viewObjectCreator.createListViewString(350, 500, this.socialNetwork.addedUsersStats());
-        pane.setCenter(list);
+        addStat(socialNetwork.addedUsersStats());
     }
 
     /**
      * Cria o menu das estatisticas de utilizadores incluidos
      */
     public void addStatUsersIncludedByUserAdded() {
-        ListView<String> list = viewObjectCreator.createListViewString(350, 500, this.socialNetwork.includedUsersStats());
-        pane.setCenter(list);
+        addStat(socialNetwork.includedUsersStats());
     }
 
     /**
      * Cria o menu das estatisticas de utilizadores com mais relacionamentos diretos
      */
     public void addStatUserWithMoreDirectRelationships() {
-        ListView<String> list = viewObjectCreator.createListViewString(350, 100,
-                this.socialNetwork.userWithMoreDirectRelationshipsStats());
-        pane.setCenter(list);
+        addStat(socialNetwork.userWithMoreDirectRelationshipsStats());
+
     }
 
     /**
      * Cria o menu das estatisticas de interesse mais partilhado
      */
     public void addStatInterestMostShared() {
-        ListView<String> list = viewObjectCreator.createListViewString(350, 100, this.socialNetwork.interestMostSharedStats());
+        addStat(socialNetwork.interestMostSharedStats());
+    }
+
+    private void addStat(String stat) {
+        ListView<String> list = viewObjectCreator.createListViewString(350, 100, stat);
         pane.setCenter(list);
     }
 
