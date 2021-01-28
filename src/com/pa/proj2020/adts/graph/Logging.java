@@ -69,19 +69,6 @@ public final class Logging {
     }
 
     /**
-     * Método que permite gerar o Logging para a adição de um relacionamento indireto
-     *
-     * @param idUserAdded    representa o id do utilizador adicionado
-     * @param idUserIncluded representa o id do utilizador incluído
-     * @param idInterest     representa o id do interesse
-     */
-    public void addRelationshipIndirect(int idUserAdded, int idUserIncluded, int idInterest) {
-        String logCreated = "<" + this.formatLocalDateTime(LocalDateTime.now()) + "> | <" + idUserAdded +
-                "> | <" + idUserIncluded + "> | <" + idInterest + ">";
-        this.log.add(logCreated);
-    }
-
-    /**
      * Método que permite criar uma string para cada Logging
      *
      * @return um string para o Logging

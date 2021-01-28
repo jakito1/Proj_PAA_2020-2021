@@ -242,20 +242,12 @@ public class DirectGraph<V, E> implements Digraph<V, E>, Serializable {
     @Override
     public V removeVertex(Vertex<V> v) throws InvalidVertexException {
         MyVertex vertice = checkVertice(v);
-        HashSet<Vertex<V>> listVerticesOpostos = new HashSet<>();
+        HashSet<Vertex<V>> listVerticesOpostos = vertice.getEdges().values()
+                .stream().map(edge -> this.opposite(v, edge)).collect(Collectors.toCollection(HashSet::new));
 
-        for (Edge<E, V> edge : vertice.getEdges().values()) {
-            listVerticesOpostos.add(this.opposite(v, edge));
-        }
-
-        for (Vertex<V> vertex : listVerticesOpostos) {
-            MyVertex v1 = checkVertice(vertex);
-
-            for (Edge<E, V> e : vertice.getEdges().values()) {
-                v1.removeEdge(e);
-
-            }
-        }
+        listVerticesOpostos.stream().map(this::checkVertice).forEach(v1 -> {
+            vertice.getEdges().values().forEach(v1::removeEdge);
+        });
 
         vertices.remove(v.element());
         return v.element();
@@ -272,10 +264,7 @@ public class DirectGraph<V, E> implements Digraph<V, E>, Serializable {
     public E removeEdge(Edge<E, V> e) throws InvalidEdgeException {
         checkEdge(e);
 
-        for (Vertex<V> vertex : vertices.values()) {
-            MyVertex v = (MyVertex) vertex;
-            v.removeEdge(e);
-        }
+        vertices.values().stream().map(vertex -> (MyVertex) vertex).forEach(v -> v.removeEdge(e));
 
         return e.element();
     }
@@ -365,10 +354,7 @@ public class DirectGraph<V, E> implements Digraph<V, E>, Serializable {
      * @return true se o vertice estiver na lista ou false se nao estiver
      */
     public boolean containVertice(V vElement) {
-        for (V user : this.vertices.keySet()) {
-            if (((User) user).getID() == ((User) vElement).getID()) return true;
-        }
-        return false;
+        return this.vertices.keySet().stream().anyMatch(user -> ((User) user).getID() == ((User) vElement).getID());
     }
 
     /**
@@ -386,12 +372,10 @@ public class DirectGraph<V, E> implements Digraph<V, E>, Serializable {
         while (!queue.isEmpty()) {
             Vertex<V> vLook = queue.remove();
             path.add(vLook);
-            for (Edge<E, V> edge : outboundEdges(vLook)) {
-                if (!visited.contains(edge.vertices()[1])) {
-                    visited.add(edge.vertices()[1]);
-                    queue.add(edge.vertices()[1]);
-                }
-            }
+            outboundEdges(vLook).stream().filter(edge -> !visited.contains(edge.vertices()[1])).forEach(edge -> {
+                visited.add(edge.vertices()[1]);
+                queue.add(edge.vertices()[1]);
+            });
         }
         return path;
     }
@@ -407,24 +391,22 @@ public class DirectGraph<V, E> implements Digraph<V, E>, Serializable {
      */
     private void dijkstra(Vertex<V> origin, HashMap<Vertex<V>, Vertex<V>> parents, HashMap<Vertex<V>, Integer> distances) {
         HashSet<Vertex<V>> unvisited = new HashSet<>(BFS(origin));
-        for (Vertex<V> v : unvisited) {
+        unvisited.forEach(v -> {
             distances.put(v, Integer.MAX_VALUE);
             parents.put(v, null);
-        }
+        });
         distances.put(origin, 0);
         while (!unvisited.isEmpty()) {
             Vertex<V> lowestCostVertex = minimumCost(unvisited, distances);
             unvisited.remove(lowestCostVertex);
-            for (Edge<E, V> edge : outboundEdges(lowestCostVertex)) {
-                Vertex<V> oppositeVertex = edge.vertices()[1];
-                if (unvisited.contains(oppositeVertex)) {
-                    int distanceBetweenVertex = 1 + distances.get(lowestCostVertex);
-                    if (distances.get(oppositeVertex) > distanceBetweenVertex) {
-                        distances.put(oppositeVertex, distanceBetweenVertex);
-                        parents.put(oppositeVertex, lowestCostVertex);
-                    }
+            outboundEdges(lowestCostVertex).stream()
+                    .map(edge -> edge.vertices()[1]).filter(unvisited::contains).forEach(oppositeVertex -> {
+                int distanceBetweenVertex = 1 + distances.get(lowestCostVertex);
+                if (distances.get(oppositeVertex) > distanceBetweenVertex) {
+                    distances.put(oppositeVertex, distanceBetweenVertex);
+                    parents.put(oppositeVertex, lowestCostVertex);
                 }
-            }
+            });
         }
 
     }

@@ -7,6 +7,7 @@ import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.stream.IntStream;
 
 
 public class ReadData {
@@ -17,10 +18,8 @@ public class ReadData {
      *
      * @return coleção HashMap
      */
-    public HashMap<String, ArrayList<String>> readData(String filename) {
-        if (filename == null || filename.equals("")) {
-            return null;
-        }
+    public static HashMap<String, ArrayList<String>> readData(String filename) {
+        if (filename == null || filename.equals("")) return null;
 
         filename = "inputFiles\\" + filename;
 
@@ -29,8 +28,7 @@ public class ReadData {
 
         List<String> lines;
         try {
-            lines = Files.readAllLines(file.toPath(),
-                    StandardCharsets.UTF_8);
+            lines = Files.readAllLines(file.toPath(), StandardCharsets.UTF_8);
         } catch (IOException e) {
             e.printStackTrace();
             return null;
@@ -39,9 +37,8 @@ public class ReadData {
         for (String line : lines) {
             String[] array = line.split(";", -1);
             data.put(array[0], new ArrayList<>());
-            for (int i = 1; i < array.length; i++) {
-                data.get(array[0]).add(array[i].replace("'", ""));
-            }
+            IntStream.range(1, array.length).forEach(i -> data.get(array[0])
+                    .add(array[i].replace("'", "")));
         }
         return data;
     }

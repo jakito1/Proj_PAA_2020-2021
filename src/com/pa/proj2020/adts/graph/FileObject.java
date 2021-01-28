@@ -11,45 +11,6 @@ public class FileObject {
         this.interestsFile = interestsFile;
     }
 
-    public FileObject() {
-        this.userNamesFile = "user_names.csv";
-        this.relationshipsFile = "relationships.csv";
-        this.interestNamesFile = "interest_names.csv";
-        this.interestsFile = "interests.csv";
-    }
-
-    public String getUserNamesFile() {
-        return userNamesFile;
-    }
-
-    public void setUserNamesFile(String userNamesFile) {
-        this.userNamesFile = userNamesFile;
-    }
-
-    public String getRelationshipsFile() {
-        return relationshipsFile;
-    }
-
-    public void setRelationshipsFile(String relationshipsFile) {
-        this.relationshipsFile = relationshipsFile;
-    }
-
-    public String getInterestNamesFile() {
-        return interestNamesFile;
-    }
-
-    public void setInterestNamesFile(String interestNamesFile) {
-        this.interestNamesFile = interestNamesFile;
-    }
-
-    public String getInterestsFile() {
-        return interestsFile;
-    }
-
-    public void setInterestsFile(String interestsFile) {
-        this.interestsFile = interestsFile;
-    }
-
 
     /**
      * Método que verifica se os nomes dos ficheiros foram inicializados

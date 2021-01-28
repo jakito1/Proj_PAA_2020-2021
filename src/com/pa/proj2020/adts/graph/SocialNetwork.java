@@ -69,11 +69,10 @@ public class SocialNetwork extends Subject implements Originator, Serializable {
      * Adiciona nas coleções a informação correspondente encontrada nos ficheiros user_names.csv e relationships.csv
      */
     public void initializeData() {
-        ReadData read = new ReadData();
-        HashMap<String, ArrayList<String>> temp = read.readData("user_names.csv");
-        HashMap<String, ArrayList<String>> tempRelationships = read.readData("relationships.csv");
-        HashMap<String, ArrayList<String>> tempInterests = read.readData("interest_names.csv");
-        HashMap<String, ArrayList<String>> tempIdsOfUsersInterests = read.readData("interests.csv");
+        HashMap<String, ArrayList<String>> temp = ReadData.readData("user_names.csv");
+        HashMap<String, ArrayList<String>> tempRelationships = ReadData.readData("relationships.csv");
+        HashMap<String, ArrayList<String>> tempInterests = ReadData.readData("interest_names.csv");
+        HashMap<String, ArrayList<String>> tempIdsOfUsersInterests = ReadData.readData("interests.csv");
 
         for (String id : temp.keySet()) {
             users.put(Integer.parseInt(id), new User(temp.get(id).get(0), Integer.parseInt(id), Type.ADICIONADO));
@@ -371,6 +370,10 @@ public class SocialNetwork extends Subject implements Originator, Serializable {
      */
     public HashMap<Integer, Interest> getInterests() {
         return interests;
+    }
+
+    public HashMap<User, Vertex<User>> getVertices(){
+        return graph.getVertices();
     }
 
     /**
