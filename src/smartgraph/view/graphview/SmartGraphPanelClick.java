@@ -7,7 +7,7 @@ import javafx.scene.layout.Pane;
 
 import java.util.function.Consumer;
 
-public class SmartGraphPanelClick <V, E> extends Pane { /*
+public class SmartGraphPanelClick<V, E> extends Pane { /*
     INTERACTION WITH VERTICES AND EDGES
      */
     private Consumer<SmartGraphVertex<V>> vertexClickConsumer = null;

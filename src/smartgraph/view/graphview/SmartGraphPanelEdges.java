@@ -1,7 +1,6 @@
 package smartgraph.view.graphview;
 
 import com.pa.proj2020.adts.graph.Edge;
-import javafx.scene.layout.Pane;
 
 import java.util.HashMap;
 import java.util.Map;

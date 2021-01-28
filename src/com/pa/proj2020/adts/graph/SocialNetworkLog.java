@@ -6,9 +6,6 @@ import java.io.IOException;
 import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
 
 public class SocialNetworkLog implements Serializable {
     private static final Logging log = Logging.getInstance();

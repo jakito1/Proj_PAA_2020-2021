@@ -1,4 +1,4 @@
-/* 
+/*
  * The MIT License
  *
  * Copyright 2018 brunomnsilva@gmail.com.
@@ -23,14 +23,15 @@
  */
 package smartgraph.view.graphview;
 
-import java.util.Collection;
-import java.util.HashSet;
-import java.util.Set;
+import com.pa.proj2020.adts.graph.Vertex;
 import javafx.geometry.Point2D;
 import javafx.scene.Cursor;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.shape.Circle;
-import com.pa.proj2020.adts.graph.Vertex;
+
+import java.util.Collection;
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * Internal implementation of a graph vertex for the {@link SmartGraphPanel}
@@ -40,40 +41,33 @@ import com.pa.proj2020.adts.graph.Vertex;
  * <br>
  * The vertex internally deals with mouse drag events that visually move
  * it in the {@link SmartGraphPanel} when displayed, if parameterized to do so.
- * 
- * 
  *
  * @param <T> the type of the underlying vertex
- *
- * @see SmartGraphPanel
- *
  * @author brunomnsilva
+ * @see SmartGraphPanel
  */
 public class SmartGraphVertexNode<T> extends Circle implements SmartGraphVertex<T>, SmartLabelledNode {
 
     private final Vertex<T> underlyingVertex;
     /* Critical for performance, so we don't rely on the efficiency of the Graph.areAdjacent method */
     private final Set<SmartGraphVertexNode<T>> adjacentVertices;
-
-    private SmartLabel attachedLabel = null;
-    private boolean isDragging = false;
-
     /*
     Automatic layout functionality members
      */
     private final PointVector forceVector = new PointVector(0, 0);
     private final PointVector updatedPosition = new PointVector(0, 0);
-
     /* Styling proxy */
     private final SmartStyleProxy styleProxy;
-    
+    private SmartLabel attachedLabel = null;
+    private boolean isDragging = false;
+
     /**
      * Constructor which sets the instance attributes.
      *
-     * @param v the underlying vertex
-     * @param x initial x position on the parent pane
-     * @param y initial y position on the parent pane
-     * @param radius radius of this vertex representation, i.e., a circle
+     * @param v         the underlying vertex
+     * @param x         initial x position on the parent pane
+     * @param y         initial y position on the parent pane
+     * @param radius    radius of this vertex representation, i.e., a circle
      * @param allowMove should the vertex be draggable with the mouse
      */
     public SmartGraphVertexNode(Vertex<T> v, double x, double y, double radius, boolean allowMove) {
@@ -92,7 +86,7 @@ public class SmartGraphVertexNode<T> extends Circle implements SmartGraphVertex<
             enableDrag();
         }
     }
-    
+
     /**
      * Adds a vertex to the internal list of adjacent vertices.
      *
@@ -145,6 +139,15 @@ public class SmartGraphVertexNode<T> extends Circle implements SmartGraphVertex<
     /**
      * Sets the position of the instance in pixels.
      *
+     * @param p coordinates
+     */
+    public void setPosition(Point2D p) {
+        setPosition(p.getX(), p.getY());
+    }
+
+    /**
+     * Sets the position of the instance in pixels.
+     *
      * @param x x coordinate
      * @param y y coordinate
      */
@@ -157,8 +160,8 @@ public class SmartGraphVertexNode<T> extends Circle implements SmartGraphVertex<
         setCenterX(x);
         setCenterY(y);
     }
-    
-     @Override
+
+    @Override
     public double getPositionCenterX() {
         return getCenterX();
     }
@@ -168,19 +171,8 @@ public class SmartGraphVertexNode<T> extends Circle implements SmartGraphVertex<
         return getCenterY();
     }
 
-
-    /**
-     * Sets the position of the instance in pixels.
-     *
-     * @param p coordinates
-     */
-    public void setPosition(Point2D p) {
-        setPosition(p.getX(), p.getY());
-    }
-
     /**
      * Resets the current computed external force vector.
-     *
      */
     public void resetForces() {
         forceVector.x = forceVector.y = 0;
@@ -194,7 +186,6 @@ public class SmartGraphVertexNode<T> extends Circle implements SmartGraphVertex<
      *
      * @param x x-component of the force vector
      * @param y y-component of the force vector
-     *
      */
     public void addForceVector(double x, double y) {
         forceVector.x += x;
@@ -333,7 +324,7 @@ public class SmartGraphVertexNode<T> extends Circle implements SmartGraphVertex<
         return underlyingVertex;
     }
 
-     
+
     @Override
     public void setStyleClass(String cssClass) {
         styleProxy.setStyleClass(cssClass);

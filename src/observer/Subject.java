@@ -5,11 +5,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- *
  * @author patriciamacedo
  */
 public abstract class Subject implements Observable {
-    private List<Observer> observerList;
+    private final List<Observer> observerList;
 
     public Subject() {
         this.observerList = new ArrayList<>();

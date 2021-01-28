@@ -23,6 +23,7 @@ import observer.Observer;
 import smartgraph.view.containers.SmartGraphDemoContainer;
 import smartgraph.view.graphview.SmartCircularSortedPlacementStrategy;
 import smartgraph.view.graphview.SmartGraphPanel;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
@@ -31,11 +32,11 @@ import java.util.Map;
 public class SocialNetworkView implements Observer {
 
     private final Stage stage;
+    private final ViewObjectCreator viewObjectCreator = ViewObjectCreator.getInstance();
     private SocialNetwork socialNetwork;
     private SmartGraphPanel<User, Relationship> graphView;
     private BorderPane pane;
     private Caretaker caretaker;
-    private final ViewObjectCreator viewObjectCreator = ViewObjectCreator.getInstance();
 
 
     /**
@@ -457,7 +458,7 @@ public class SocialNetworkView implements Observer {
         pane.setCenter(bar);
     }
 
-    public BarChart<String, Integer> createBarChart(String labelX, String labelY, String title){
+    public BarChart<String, Integer> createBarChart(String labelX, String labelY, String title) {
         CategoryAxis xaxis = new CategoryAxis();
         NumberAxis yaxis = new NumberAxis();
         xaxis.setLabel(labelX);

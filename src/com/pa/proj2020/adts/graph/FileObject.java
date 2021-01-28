@@ -4,7 +4,7 @@ public class FileObject {
 
     private String userNamesFile, relationshipsFile, interestNamesFile, interestsFile;
 
-    public FileObject(String userNamesFile, String relationshipsFile, String interestNamesFile, String interestsFile){
+    public FileObject(String userNamesFile, String relationshipsFile, String interestNamesFile, String interestsFile) {
         this.userNamesFile = userNamesFile;
         this.relationshipsFile = relationshipsFile;
         this.interestNamesFile = interestNamesFile;

@@ -69,14 +69,14 @@ import java.util.logging.Logger;
  * @author brunomnsilva
  */
 public class SmartGraphPanel<V, E> extends Pane {
-    private SmartGraphPanelEdges smartGraphPanelEdges;
-    private SmartGraphPanelClick smartGraphPanelClick = new SmartGraphPanelClick();
-
-    /* 
+    /*
+    AUTOMATIC LAYOUT RELATED ATTRIBUTES
+     */
+    public final BooleanProperty automaticLayoutProperty;
+    /*
     CONFIGURATION PROPERTIES
      */
     private final SmartGraphProperties graphProperties;
-
     /*
     INTERNAL DATA STRUCTURE
      */
@@ -84,17 +84,14 @@ public class SmartGraphPanel<V, E> extends Pane {
     private final SmartPlacementStrategy placementStrategy;
     private final Map<Vertex<V>, SmartGraphVertexNode<V>> vertexNodes;
     private final Map<Tuple<SmartGraphVertexNode>, Integer> placedEdges = new HashMap<>();
-    private boolean initialized = false;
     private final boolean edgesWithArrows;
-
-    /*
-    AUTOMATIC LAYOUT RELATED ATTRIBUTES
-     */
-    public final BooleanProperty automaticLayoutProperty;
-    private AnimationTimer timer;
     private final double repulsionForce;
     private final double attractionForce;
     private final double attractionScale;
+    private final SmartGraphPanelEdges smartGraphPanelEdges;
+    private final SmartGraphPanelClick smartGraphPanelClick = new SmartGraphPanelClick();
+    private boolean initialized = false;
+    private final AnimationTimer timer;
 
     /**
      * Constructs a visualization of the graph referenced by
@@ -649,7 +646,7 @@ public class SmartGraphPanel<V, E> extends Pane {
     }
 
     private void removeEdge(SmartGraphEdgeBase e) {
-        getChildren().remove((Node) e);
+        getChildren().remove(e);
 
         SmartArrow attachedArrow = e.getAttachedArrow();
         if (attachedArrow != null) {
@@ -987,10 +984,7 @@ public class SmartGraphPanel<V, E> extends Pane {
             if (!Objects.equals(this.first, other.first)) {
                 return false;
             }
-            if (!Objects.equals(this.second, other.second)) {
-                return false;
-            }
-            return true;
+            return Objects.equals(this.second, other.second);
         }
     }
 

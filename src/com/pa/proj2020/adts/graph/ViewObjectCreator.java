@@ -2,7 +2,10 @@ package com.pa.proj2020.adts.graph;
 
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
-import javafx.scene.control.*;
+import javafx.scene.control.ComboBox;
+import javafx.scene.control.Label;
+import javafx.scene.control.ListView;
+import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
@@ -25,7 +28,7 @@ public final class ViewObjectCreator {
     }
 
 
-    public ImageView createImageView(Image img){
+    public ImageView createImageView(Image img) {
         ImageView imageView = new ImageView();
         imageView.setPreserveRatio(true);
         imageView.setFitWidth(850.0);
@@ -35,8 +38,8 @@ public final class ViewObjectCreator {
     }
 
 
-    public Text createText(String fontName, int size, String innerText, Color color){
-        if(fontName == null || size <= 0 || innerText == null || color == null){
+    public Text createText(String fontName, int size, String innerText, Color color) {
+        if (fontName == null || size <= 0 || innerText == null || color == null) {
             return new Text("");
         }
 
@@ -46,12 +49,12 @@ public final class ViewObjectCreator {
         text.setFill(color);
         text.setFont(font);
 
-        return(text);
+        return (text);
     }
 
 
-    public VBox createVBox(Insets insets, int spacing, Pos alignment){
-        if(insets == null || spacing <= 0){
+    public VBox createVBox(Insets insets, int spacing, Pos alignment) {
+        if (insets == null || spacing <= 0) {
             return null;
         }
 
@@ -59,7 +62,7 @@ public final class ViewObjectCreator {
         vbox.setPadding(insets);
         vbox.setSpacing(spacing);
 
-        if(alignment != null){
+        if (alignment != null) {
             vbox.setAlignment(alignment);
         }
 
@@ -67,8 +70,8 @@ public final class ViewObjectCreator {
     }
 
 
-    public HBox createHBox(Insets insets, int spacing, Pos alignment){
-        if(insets == null || spacing <= 0){
+    public HBox createHBox(Insets insets, int spacing, Pos alignment) {
+        if (insets == null || spacing <= 0) {
             return null;
         }
 
@@ -76,7 +79,7 @@ public final class ViewObjectCreator {
         hbox.setPadding(insets);
         hbox.setSpacing(spacing);
 
-        if(alignment != null){
+        if (alignment != null) {
             hbox.setAlignment(alignment);
         }
 
@@ -84,10 +87,10 @@ public final class ViewObjectCreator {
     }
 
 
-    public TextField createTextField(String innerText, int maxWidth, int minWidth){
+    public TextField createTextField(String innerText, int maxWidth, int minWidth) {
         TextField textField = new TextField();
 
-        if(innerText == null || maxWidth <=0 || minWidth <0){
+        if (innerText == null || maxWidth <= 0 || minWidth < 0) {
             return textField;
         }
 
@@ -99,8 +102,8 @@ public final class ViewObjectCreator {
     }
 
 
-    public Font createFont(String fontName, int size){
-        if(fontName == null || size <= 0){
+    public Font createFont(String fontName, int size) {
+        if (fontName == null || size <= 0) {
             return null;
         }
 
@@ -108,8 +111,8 @@ public final class ViewObjectCreator {
     }
 
 
-    public Label createLabel(String innerText, Color color, String fontName, int size){
-        if(innerText == null || color == null || fontName == null){
+    public Label createLabel(String innerText, Color color, String fontName, int size) {
+        if (innerText == null || color == null || fontName == null) {
             return null;
         }
 
@@ -124,9 +127,9 @@ public final class ViewObjectCreator {
     }
 
 
-    public ComboBox<String> createComboBoxString(String innerText, double v, double v1){
+    public ComboBox<String> createComboBoxString(String innerText, double v, double v1) {
         ComboBox<String> comboBox = new ComboBox<>();
-        if(innerText == null || v<=0 || v1 <=0){
+        if (innerText == null || v <= 0 || v1 <= 0) {
             return comboBox;
         }
 
@@ -137,16 +140,16 @@ public final class ViewObjectCreator {
     }
 
 
-    public ListView<String> createListViewString(double v, double v1, String value){
+    public ListView<String> createListViewString(double v, double v1, String value) {
         ListView<String> list = new ListView<>();
 
-        if(v <= 0 || v1 <= 0){
+        if (v <= 0 || v1 <= 0) {
             return list;
         }
 
         list.setMaxSize(v, v1);
 
-        if(value != null){
+        if (value != null) {
             list.getItems().add(value);
         }
 
