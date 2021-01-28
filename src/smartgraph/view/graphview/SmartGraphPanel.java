@@ -69,11 +69,13 @@ import java.util.logging.Logger;
  * @author brunomnsilva
  */
 public class SmartGraphPanel<V, E> extends Pane {
+    private final SmartGraphPanelForces smartGraphPanelForces;
     /*
     AUTOMATIC LAYOUT RELATED ATTRIBUTES
      */
     public final BooleanProperty automaticLayoutProperty;
-    private final SmartGraphPanelForces smartGraphPanelForces;
+
+
     /*
         CONFIGURATION PROPERTIES
          */
@@ -88,8 +90,8 @@ public class SmartGraphPanel<V, E> extends Pane {
     private final boolean edgesWithArrows;
     private final SmartGraphPanelEdges smartGraphPanelEdges;
     private final SmartGraphPanelClick smartGraphPanelClick;
-    private final AnimationTimer timer;
     private boolean initialized = false;
+    private final AnimationTimer timer;
 
     /**
      * Constructs a visualization of the graph referenced by
@@ -200,7 +202,7 @@ public class SmartGraphPanel<V, E> extends Pane {
     private synchronized void runLayoutIteration() {
         for (int i = 0; i < 20; i++) {
             resetForces();
-            smartGraphPanelForces.computeForces(vertexNodes, this);
+            smartGraphPanelForces.computeForces(vertexNodes,this);
             updateForces();
         }
         applyForces();
