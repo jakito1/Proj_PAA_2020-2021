@@ -60,6 +60,5 @@
         <SOURCES />
       </library>
     </orderEntry>
-    <orderEntry type="library" name="releases" level="project" />
   </component>
 </module>
