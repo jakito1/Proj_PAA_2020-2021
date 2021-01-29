@@ -39,33 +39,21 @@ public class SocialNetworkView implements Observer {
     private SmartGraphPanel<User, Relationship> graphView;
     private BorderPane pane;
     private Caretaker caretaker;
+    private MenuItem menuExportSerialize;
+    private MenuItem menuImportSerialize;
+    private MenuItem menuExportJSON;
+    private final MenuBar menuBar;
 
-
-    /**
-     * Permite criar um novo SocialNetworkView
-     */
-    public SocialNetworkView() {
-        stage = new Stage(StageStyle.DECORATED);
-    }
 
     /**
      * Permite criar um novo SocialNetworkView
      *
-     * @param socialNetwork objeto SocialNetwork
+     * @param obj objeto SocialNetwork
      */
-    public SocialNetworkView(SocialNetwork socialNetwork) {
-        this();
-        this.socialNetwork = socialNetwork;
-        this.caretaker = new Caretaker(socialNetwork);
-
-        this.createGraphView();
-    }
-
-    /**
-     * Inicia o SocialNetworkView
-     */
-    public void startCentralConsole() {
-        this.createCenter();
+    public SocialNetworkView(Object obj) {
+        stage = new Stage(StageStyle.DECORATED);
+        menuBar = new MenuBar();
+        update(obj);
     }
 
     /**
@@ -73,8 +61,7 @@ public class SocialNetworkView implements Observer {
      *
      * @return o menu criado no SocialNetworkView
      */
-    private Node createMenu() {
-        MenuBar menuBar = new MenuBar();
+    private void createMenu() {
         Menu menuOptions = new Menu("Options");
         Menu menuOptions1 = new Menu("Save/Update");
         Menu menuOptions2 = new Menu("Stats");
@@ -85,9 +72,9 @@ public class SocialNetworkView implements Observer {
         MenuItem menuAddIndirectRelationship = new MenuItem("Add indirect relationships");
         MenuItem menuDijkstra = new MenuItem("Dijkstra");
 
-        MenuItem menuExportSerialize = new MenuItem("Export to Java Serialize");
-        MenuItem menuImportSerialize = new MenuItem("Import from Java Serialize");
-        MenuItem menuExportJSON = new MenuItem("Export to JSON");
+        menuExportSerialize = new MenuItem("Export to Java Serialize");
+        menuImportSerialize = new MenuItem("Import from Java Serialize");
+        menuExportJSON = new MenuItem("Export to JSON");
 
         MenuItem menuStats1 = new MenuItem("Statistic Users Added");
         MenuItem menuStats2 = new MenuItem("Statistic Users Included by User Added");
@@ -107,16 +94,16 @@ public class SocialNetworkView implements Observer {
 
         menuAddIndirectRelationship.setOnAction(e -> this.createNodeAddIndirectRelationships());
 
-        menuDijkstra.setOnAction(e -> this.addDijkstra());
+        menuUndo.setOnAction(e -> {
+            System.out.println("Size: antes " + this.socialNetwork.getGraph().numVertices());
+            this.caretaker.restoreState();
+            System.out.println("Size: depois " + this.socialNetwork.getGraph().numVertices());
 
-        menuExportSerialize.setOnAction(e -> this.socialNetwork.exportSerialization());
-
-        menuImportSerialize.setOnAction(e -> {
-            this.socialNetwork.importSerialization();
+            pane.setLeft(this.graphView);
             this.graphView.update();
         });
 
-        menuExportJSON.setOnAction(e -> this.socialNetwork.exportJSON());
+        menuDijkstra.setOnAction(e -> this.addDijkstra());
 
         menuStats1.setOnAction(e -> this.addStatUsersAdded());
 
@@ -130,17 +117,7 @@ public class SocialNetworkView implements Observer {
 
         menuStats6.setOnAction(e -> this.addStatTopFiveInterestsStats());
 
-        menuUndo.setOnAction(e -> {
-            System.out.println("Size: antes " + this.socialNetwork.getGraph().numVertices());
-            this.caretaker.restoreState();
-            System.out.println("Size: depois " + this.socialNetwork.getGraph().numVertices());
-
-            pane.setLeft(this.graphView);
-            this.graphView.update();
-        });
-
         menuBar.getMenus().addAll(menuOptions, menuOptions1, menuOptions2);
-        return menuBar;
     }
 
     /**
@@ -218,7 +195,7 @@ public class SocialNetworkView implements Observer {
     /**
      * Cria o menu de adicao de utilizador
      */
-    public void createNodeAddUser() {
+    private void createNodeAddUser() {
         Button updateButton = new Button("UPDATE COLORS");
         Button addUserButton = new Button("ADD USER");
 
@@ -248,7 +225,7 @@ public class SocialNetworkView implements Observer {
     /**
      * Cria o menu de adicao de relacionamentos indiretos
      */
-    public void createNodeAddIndirectRelationships() {
+    private void createNodeAddIndirectRelationships() {
         Button updateButton = new Button("UPDATE COLORS");
         Button addUserButton = new Button("ADD INDIRECT RELATIONSHIPS");
 
@@ -279,7 +256,7 @@ public class SocialNetworkView implements Observer {
     /**
      * Cria o menu de Dijkstra
      */
-    public void addDijkstra() {
+    private void addDijkstra() {
         Button dijkstraButton = new Button("Dijkstra");
         ArrayList<User> path = new ArrayList<>();
 
@@ -373,7 +350,7 @@ public class SocialNetworkView implements Observer {
     /**
      * Cria uma janela com a informacao associada ao SocialNetworkView
      */
-    public void createCenterSocialNetworkView() {
+    private void createCenterSocialNetworkView() {
         if (this.socialNetwork == null) {
             this.socialNetwork = new SocialNetwork();
             this.socialNetwork.initializeData();
@@ -394,7 +371,7 @@ public class SocialNetworkView implements Observer {
         smartGraphView.setMaxWidth(650);
 
         pane = new BorderPane();
-        pane.setTop(this.createMenu());
+        pane.setTop(menuBar);
         pane.setLeft(smartGraphView);
 
         Scene scene = new Scene(pane, 1024, 600);
@@ -407,7 +384,7 @@ public class SocialNetworkView implements Observer {
     /**
      * Atualiza as cores do grafo
      */
-    public void updateGraphColors() {
+    private void updateGraphColors() {
         this.updateColorsVertexGraph();
         this.updateColorsEdgesGraph();
     }
@@ -415,28 +392,28 @@ public class SocialNetworkView implements Observer {
     /**
      * Cria o menu das estatisticas de utilizadores adicionados
      */
-    public void addStatUsersAdded() {
+    private void addStatUsersAdded() {
         addStat(socialNetwork.addedUsersStats());
     }
 
     /**
      * Cria o menu das estatisticas de utilizadores incluidos
      */
-    public void addStatUsersIncludedByUserAdded() {
+    private void addStatUsersIncludedByUserAdded() {
         addStat(socialNetwork.includedUsersStats());
     }
 
     /**
      * Cria o menu das estatisticas de utilizadores com mais relacionamentos diretos
      */
-    public void addStatUserWithMoreDirectRelationships() {
+    private void addStatUserWithMoreDirectRelationships() {
         addStat(socialNetwork.userWithMoreDirectRelationshipsStats());
     }
 
     /**
      * Cria o menu das estatisticas de interesse mais partilhado
      */
-    public void addStatInterestMostShared() {
+    private void addStatInterestMostShared() {
         addStat(socialNetwork.interestMostSharedStats());
     }
 
@@ -448,7 +425,7 @@ public class SocialNetworkView implements Observer {
     /**
      * Cria o menu das estatisticas de top 5 de utilizadores com mais relacionamentos
      */
-    public void addStatTopFiveUsersWithMostRelationships() {
+    private void addStatTopFiveUsersWithMostRelationships() {
         BarChart<String, Integer> bar = createBarChart("Users", "Relationships",
                 "Top Five Users With Most Relationships");
 
@@ -463,7 +440,7 @@ public class SocialNetworkView implements Observer {
         pane.setCenter(bar);
     }
 
-    public BarChart<String, Integer> createBarChart(String labelX, String labelY, String title) {
+    private BarChart<String, Integer> createBarChart(String labelX, String labelY, String title) {
         CategoryAxis xAxis = new CategoryAxis();
         NumberAxis yAxis = new NumberAxis();
         xAxis.setLabel(labelX);
@@ -478,7 +455,7 @@ public class SocialNetworkView implements Observer {
     /**
      * Cria o menu das estatisticas de top 5 interesses
      */
-    public void addStatTopFiveInterestsStats() {
+    private void addStatTopFiveInterestsStats() {
         BarChart<String, Integer> bar = createBarChart("Interests", "Users", "Top Five Interests");
 
         XYChart.Series<String, Integer> series = new XYChart.Series<>();
@@ -499,7 +476,7 @@ public class SocialNetworkView implements Observer {
      *
      * @param user vertice
      */
-    public void addInformationVertex(Vertex<User> user) {
+    private void addInformationVertex(Vertex<User> user) {
 
         ListView<String> list = viewObjectCreator.createListViewString(350, 100, user.element().toString());
         list.getItems().add(" List Of Interests");
@@ -515,7 +492,7 @@ public class SocialNetworkView implements Observer {
      *
      * @param edge aresta
      */
-    public void addInformationEdge(Edge<Relationship, User> edge) {
+    private void addInformationEdge(Edge<Relationship, User> edge) {
         if (edge.element() instanceof RelationshipIndirect) {
             ListView<String> list = viewObjectCreator.createListViewString(350, 100,
                     ((RelationshipIndirect) edge.element()).getListOfInterestsString());
@@ -526,7 +503,7 @@ public class SocialNetworkView implements Observer {
     /**
      * Cria o GraphView
      */
-    public void createGraphView() {
+    private void createGraphView() {
         graphView = new SmartGraphPanel(this.socialNetwork.getGraph(), new SmartCircularSortedPlacementStrategy());
 
         this.updateGraphColors();
@@ -540,7 +517,7 @@ public class SocialNetworkView implements Observer {
     /**
      * Atualiza as cores dos vertices
      */
-    public void updateColorsVertexGraph() {
+    private void updateColorsVertexGraph() {
         if (this.socialNetwork.getGraph().numVertices() == 0) return;
 
         this.socialNetwork.getGraph().vertices().forEach(userVertex -> {
@@ -559,7 +536,7 @@ public class SocialNetworkView implements Observer {
     /**
      * Atualiza as cores das arestas
      */
-    public void updateColorsEdgesGraph() {
+    private void updateColorsEdgesGraph() {
         if (this.socialNetwork.getGraph().numEdges() == 0) return;
 
         this.socialNetwork.getGraph().edges().forEach(relationshipEdge -> {
@@ -577,8 +554,31 @@ public class SocialNetworkView implements Observer {
         return graphView.getStylableEdge(relationshipEdge);
     }
 
+    /**
+     * Inicia o SocialNetworkView
+     */
+    public void startCentralConsole() {
+        this.createCenter();
+    }
+
     @Override
     public void update(Object obj) {
+        if (obj instanceof SocialNetwork) {
+            SocialNetwork socialNetwork = (SocialNetwork) obj;
+            createMenu();
+            this.socialNetwork = socialNetwork;
+            this.caretaker = new Caretaker(socialNetwork);
+            this.createGraphView();
+        }
+    }
+
+    public void setTriggers(SocialNetworkController socialNetworkController) {
+
+        menuExportSerialize.setOnAction(e -> socialNetworkController.exportSerialization());
+
+        menuImportSerialize.setOnAction(e -> socialNetworkController.importSerialization());
+
+        menuExportJSON.setOnAction(e -> socialNetworkController.exportJSON());
 
     }
 }

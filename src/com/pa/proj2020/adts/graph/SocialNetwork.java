@@ -113,6 +113,10 @@ public class SocialNetwork extends Subject implements Originator, Serializable {
         return this.graph;
     }
 
+    protected void setGraph(DirectGraph<User, Relationship> graph) {
+        this.graph = graph;
+    }
+
     /**
      * Metodo que retorna uma colecao com users
      *
@@ -360,16 +364,8 @@ public class SocialNetwork extends Subject implements Originator, Serializable {
         }
     }
 
-    public void exportSerialization() {
-        memoryPersistence.exportSerialization();
-    }
-
-    public void importSerialization() {
-        graph = memoryPersistence.importSerialization();
-    }
-
-    public void exportJSON() {
-        memoryPersistence.exportJSON();
+    public MemoryPersistence getMemoryPersistence() {
+        return memoryPersistence;
     }
 
     private static class MyMemento implements Memento {
