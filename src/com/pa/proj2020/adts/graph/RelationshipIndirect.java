@@ -3,6 +3,7 @@ package com.pa.proj2020.adts.graph;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 /**
  * Classe que permite criar um Relacionamento Indireto
@@ -61,12 +62,8 @@ public class RelationshipIndirect implements Relationship {
 
 
     public String getListOfInterestsString() {
-        StringBuilder s = new StringBuilder("List Of Interest\n");
-        for (Interest interest : listOfInterests) {
-            s.append(interest.toString()).append("\n");
-        }
-
-        return s.toString();
+        return listOfInterests.stream().map(interest -> interest.toString() + "\n")
+                .collect(Collectors.joining("", "List Of Interest\n", ""));
     }
 
     /**

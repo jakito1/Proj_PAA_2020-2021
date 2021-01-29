@@ -20,16 +20,7 @@ public class SocialNetwork extends Subject implements Originator, Serializable {
     private final MemoryPersistence memoryPersistence;
     private DirectGraph<User, Relationship> graph;
     private FileObject fileObject;
-    private Model model;
 
-
-    public HashMap<Integer, ArrayList<String>> getRelationships() {
-        return relationships;
-    }
-
-    public Statistics getStatistics() {
-        return statistics;
-    }
 
     /**
      * Cria um objeto SocialNetwork
@@ -55,6 +46,14 @@ public class SocialNetwork extends Subject implements Originator, Serializable {
     public SocialNetwork(String userNamesFile, String relationshipsFile, String interestNamesFile, String interestsFile) {
         this();
         this.fileObject = new FileObject(userNamesFile, relationshipsFile, interestNamesFile, interestsFile);
+    }
+
+    public HashMap<Integer, ArrayList<String>> getRelationships() {
+        return relationships;
+    }
+
+    public Statistics getStatistics() {
+        return statistics;
     }
 
     /**
@@ -84,17 +83,15 @@ public class SocialNetwork extends Subject implements Originator, Serializable {
         HashMap<String, ArrayList<String>> tempInterests = ReadData.readData("interest_names.csv");
         HashMap<String, ArrayList<String>> tempIdsOfUsersInterests = ReadData.readData("interests.csv");
 
-        for (String id : temp.keySet()) {
-            users.put(Integer.parseInt(id), new User(temp.get(id).get(0), Integer.parseInt(id), Type.ADICIONADO));
-        }
+        temp.keySet().forEach(id -> users
+                .put(Integer.parseInt(id), new User(temp.get(id).get(0), Integer.parseInt(id), Type.ADICIONADO)));
 
-        for (String id : tempRelationships.keySet()) {
-            relationships.put(Integer.parseInt(id), tempRelationships.get(id));
-        }
+        tempRelationships.keySet().forEach(id -> relationships
+                .put(Integer.parseInt(id), tempRelationships.get(id)));
 
-        for (String id : tempInterests.keySet()) {
-            interests.put(Integer.parseInt(id), new Interest(Integer.parseInt(id), tempInterests.get(id).get(0), tempIdsOfUsersInterests.get(id)));
-        }
+        tempInterests.keySet().forEach(id -> interests
+                .put(Integer.parseInt(id), new Interest(Integer.parseInt(id),
+                        tempInterests.get(id).get(0), tempIdsOfUsersInterests.get(id))));
 
     }
 
@@ -104,8 +101,7 @@ public class SocialNetwork extends Subject implements Originator, Serializable {
      * @return grafo com algoritmo total
      */
     public DirectGraph<User, Relationship> constructModelTotal() {
-        model = new TotalModel(this);
-        return model.modelConstructor();
+        return (new TotalModel(this).modelConstructor());
     }
 
     /**
@@ -199,8 +195,7 @@ public class SocialNetwork extends Subject implements Originator, Serializable {
      * @param idUser representa o user
      */
     public void constructModelIterative(int idUser) {
-        model = new IterativeModel(this, idUser);
-        model.modelConstructor();
+        new IterativeModel(this, idUser).modelConstructor();
     }
 
     /**
@@ -245,20 +240,11 @@ public class SocialNetwork extends Subject implements Originator, Serializable {
      * @return a lista de utilizadores nao inseridos
      */
     public List<String> getUsersNotInserted() {
-        ArrayList<String> list = new ArrayList<>();
+        ArrayList<Integer> tempList = this.graph.vertices().stream()
+                .map(user -> user.element().getID()).collect(Collectors.toCollection(ArrayList::new));
 
-        ArrayList<Integer> tempList = new ArrayList<>();
-
-        for (Vertex<User> user : this.graph.vertices()) {
-            tempList.add(user.element().getID());
-        }
-
-        for (Integer id : this.users.keySet()) {
-            if (!tempList.contains(id)) {
-                list.add(this.users.get(id).toString());
-            }
-        }
-        return list;
+        return users.keySet().stream().filter(id -> !tempList.contains(id))
+                .map(id -> this.users.get(id).toString()).collect(Collectors.toCollection(ArrayList::new));
     }
 
     /**
@@ -268,20 +254,16 @@ public class SocialNetwork extends Subject implements Originator, Serializable {
      * @return a lista de interesses do utilizador fornecido
      */
     public List<Interest> interestsOfUser(int idUser, HashMap<Integer, Interest> thisInterests) {
-        if (idUser < 0) {
-            return null;
-        }
+        if (idUser < 0) return null;
         ArrayList<Interest> list = new ArrayList<>();
 
-        for (Interest interest : thisInterests.values()) {
-            if (interest.getIdsOfUsers().contains(String.valueOf(idUser))) {
-                list.add(interest);
-                SocialNetworkLog.getLog().addInterest(idUser, interest.getId());
-            }
-        }
+        thisInterests.values().stream().filter(interest -> interest.getIdsOfUsers()
+                .contains(String.valueOf(idUser))).forEach(interest -> {
+            list.add(interest);
+            SocialNetworkLog.getLog().addInterest(idUser, interest.getId());
+        });
         SocialNetworkLog.updateLog();
         return list;
-
     }
 
     /**
@@ -338,7 +320,7 @@ public class SocialNetwork extends Subject implements Originator, Serializable {
         return interests;
     }
 
-    public HashMap<User, Vertex<User>> getVertices(){
+    public HashMap<User, Vertex<User>> getVertices() {
         return graph.getVertices();
     }
 

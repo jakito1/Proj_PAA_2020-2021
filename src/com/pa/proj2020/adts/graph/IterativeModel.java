@@ -1,6 +1,6 @@
 package com.pa.proj2020.adts.graph;
 
-public class IterativeModel implements Model{
+public class IterativeModel implements Model {
     private final SocialNetwork socialNetwork;
     private final int idUser;
 
@@ -11,7 +11,6 @@ public class IterativeModel implements Model{
 
     /**
      * Método que constroi o algoritmo Iterativo
-     *
      */
     @Override
     public DirectGraph<User, Relationship> modelConstructor() {

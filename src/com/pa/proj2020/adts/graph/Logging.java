@@ -65,8 +65,8 @@ public final class Logging {
                 "> | <" + idInterest + ">");
     }
 
-    private boolean addToLog(String logCreated) {
-        return log.add(logCreated);
+    private void addToLog(String logCreated) {
+        log.add(logCreated);
     }
 
     /**

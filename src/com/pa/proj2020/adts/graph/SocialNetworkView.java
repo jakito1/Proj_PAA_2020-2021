@@ -485,7 +485,7 @@ public class SocialNetworkView implements Observer {
         Map<Interest, Integer> map = new HashMap<>(this.socialNetwork.topFiveInterestsStats());
 
         map.keySet().forEach(interest -> {
-            if(interest != null){
+            if (interest != null) {
                 series.getData().add(new XYChart.Data<>(interest.getName(), map.get(interest)));
             }
         });

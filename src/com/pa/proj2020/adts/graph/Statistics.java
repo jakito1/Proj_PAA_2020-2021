@@ -49,10 +49,9 @@ public class Statistics {
         s.append("Number of users: ").append(graph.getVertices().size()).append("\n");
         s.append("List of ids and names of users: ").append(graph.getVertices().size()).append("\n");
 
-        for (Vertex<User> userVertex : graph.vertices()) {
-            s.append("ID: ").append(userVertex.element().getID()).append("   Name:").
-                    append(userVertex.element().getName()).append("\n");
-        }
+        graph.vertices().forEach(userVertex -> s.append("ID: ")
+                .append(userVertex.element().getID()).append("   Name:")
+                .append(userVertex.element().getName()).append("\n"));
 
         return s.toString();
     }
@@ -67,13 +66,11 @@ public class Statistics {
     public String includedUsersStats() {
         StringBuilder s = new StringBuilder("STATISTIC USERS INCLUDED BY USER ADDED\n");
 
-        for (User user : this.usersIncluded.keySet()) {
+        this.usersIncluded.keySet().forEach(user -> {
             s.append("User: ").append(user.getName()).append(" has included: \n");
-            for (User userIncluded : this.usersIncluded.get(user)) {
-                s.append("   ").append(userIncluded.getName()).append("\n");
-            }
-            s.append("\n");
-        }
+            this.usersIncluded.get(user).forEach(userIncluded -> s.append("   ")
+                    .append(userIncluded.getName()).append("\n\n"));
+        });
 
         return s.toString();
     }
@@ -89,12 +86,7 @@ public class Statistics {
         String s = "STATISTIC USER WITH MORE DIRECT RELATIONSHIPS\n";
         User user = getUser(graph);
 
-        if (user != null) {
-            s = s + "ID: " + user.getID() + "   Name: " + user.getName() + "\n";
-        } else {
-            s = "Not found\n";
-        }
-        return s;
+        return user != null ? s + "ID: " + user.getID() + "   Name: " + user.getName() + "\n" : "Not found\n";
     }
 
     private User getUser(DirectGraph<User, Relationship> graph) {
@@ -171,16 +163,12 @@ public class Statistics {
         List<Vertex<User>> usersList = new ArrayList<>(graph.vertices());
         Vertex<User>[] user = new Vertex[5];
         int edges = 0;
-        int count;
 
         for (int i = 0; i < 5; i++) {
             for (Vertex<User> userVertex : usersList) {
-                count = 0;
-                for (Edge<Relationship, User> edge : graph.incidentEdges(userVertex)) {
-                    if (!(edge.element() instanceof RelationshipIndirect)) {
-                        count++;
-                    }
-                }
+                int count = 0;
+                count += graph.incidentEdges(userVertex).stream()
+                        .filter(edge -> !(edge.element() instanceof RelationshipIndirect)).count();
                 if (count > edges) {
                     edges = count;
                     user[i] = userVertex;
@@ -205,26 +193,19 @@ public class Statistics {
         List<Interest> interests = new ArrayList<>();
         Interest[] interest = new Interest[5];
         int number = 0;
-        int count;
 
-        for (Vertex<User> userVertex : graph.vertices()) {
-            for (Edge<Relationship, User> edge : graph.incidentEdges(userVertex)) {
-                if ((edge.element() instanceof RelationshipShared)) {
-                    interests.addAll(((RelationshipShared) edge.element()).getInterests());
-                } else if ((edge.element() instanceof RelationshipIndirect)) {
-                    interests.addAll(((RelationshipIndirect) edge.element()).getListOfInterests());
-                }
+        graph.vertices().stream().flatMap(userVertex -> graph.incidentEdges(userVertex).stream()).forEach(edge -> {
+            if ((edge.element() instanceof RelationshipShared)) {
+                interests.addAll(((RelationshipShared) edge.element()).getInterests());
+            } else if ((edge.element() instanceof RelationshipIndirect)) {
+                interests.addAll(((RelationshipIndirect) edge.element()).getListOfInterests());
             }
-        }
+        });
 
         for (int i = 0; i < 5; i++) {
             for (Interest interestOfList : interests) {
-                count = 0;
-                for (Interest interestOfList2 : interests) {
-                    if (interestOfList.equals(interestOfList2)) {
-                        count++;
-                    }
-                }
+                int count = 0;
+                count += interests.stream().filter(interestOfList::equals).count();
                 if (count > number) {
                     interest[i] = interestOfList;
                     number = count;

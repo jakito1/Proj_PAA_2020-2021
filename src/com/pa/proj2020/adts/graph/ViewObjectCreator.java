@@ -39,9 +39,7 @@ public final class ViewObjectCreator {
 
 
     public Text createText(String fontName, int size, String innerText, Color color) {
-        if (fontName == null || size <= 0 || innerText == null || color == null) {
-            return new Text("");
-        }
+        if (fontName == null || size <= 0 || innerText == null || color == null) return new Text("");
 
         Font font = createFont(fontName, size);
         Text text = new Text(innerText);
@@ -54,34 +52,26 @@ public final class ViewObjectCreator {
 
 
     public VBox createVBox(Insets insets, int spacing, Pos alignment) {
-        if (insets == null || spacing <= 0) {
-            return null;
-        }
+        if (insets == null || spacing <= 0) return null;
 
         VBox vbox = new VBox();
         vbox.setPadding(insets);
         vbox.setSpacing(spacing);
 
-        if (alignment != null) {
-            vbox.setAlignment(alignment);
-        }
+        if (alignment != null) vbox.setAlignment(alignment);
 
         return vbox;
     }
 
 
     public HBox createHBox(Insets insets, int spacing, Pos alignment) {
-        if (insets == null || spacing <= 0) {
-            return null;
-        }
+        if (insets == null || spacing <= 0) return null;
 
         HBox hbox = new HBox();
         hbox.setPadding(insets);
         hbox.setSpacing(spacing);
 
-        if (alignment != null) {
-            hbox.setAlignment(alignment);
-        }
+        if (alignment != null) hbox.setAlignment(alignment);
 
         return hbox;
     }
@@ -90,9 +80,7 @@ public final class ViewObjectCreator {
     public TextField createTextField(String innerText, int maxWidth, int minWidth) {
         TextField textField = new TextField();
 
-        if (innerText == null || maxWidth <= 0 || minWidth < 0) {
-            return textField;
-        }
+        if (innerText == null || maxWidth <= 0 || minWidth < 0) return textField;
 
         textField.setText(innerText);
         textField.setMaxWidth(maxWidth);
@@ -103,18 +91,12 @@ public final class ViewObjectCreator {
 
 
     public Font createFont(String fontName, int size) {
-        if (fontName == null || size <= 0) {
-            return null;
-        }
-
-        return Font.font(fontName, size);
+        return fontName == null || size <= 0 ? null : Font.font(fontName, size);
     }
 
 
     public Label createLabel(String innerText, Color color, String fontName, int size) {
-        if (innerText == null || color == null || fontName == null) {
-            return null;
-        }
+        if (innerText == null || color == null || fontName == null) return null;
 
         Label label = new Label();
         Font font = createFont(fontName, size);
@@ -129,9 +111,7 @@ public final class ViewObjectCreator {
 
     public ComboBox<String> createComboBoxString(String innerText, double v, double v1) {
         ComboBox<String> comboBox = new ComboBox<>();
-        if (innerText == null || v <= 0 || v1 <= 0) {
-            return comboBox;
-        }
+        if (innerText == null || v <= 0 || v1 <= 0) return comboBox;
 
         comboBox.setPromptText(innerText);
         comboBox.setPrefSize(v, v1);
@@ -143,15 +123,11 @@ public final class ViewObjectCreator {
     public ListView<String> createListViewString(double v, double v1, String value) {
         ListView<String> list = new ListView<>();
 
-        if (v <= 0 || v1 <= 0) {
-            return list;
-        }
+        if (v <= 0 || v1 <= 0) return list;
 
         list.setMaxSize(v, v1);
 
-        if (value != null) {
-            list.getItems().add(value);
-        }
+        if (value != null) list.getItems().add(value);
 
         return list;
     }
